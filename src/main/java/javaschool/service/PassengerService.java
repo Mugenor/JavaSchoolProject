@@ -1,4 +1,10 @@
 package javaschool.service;
 
-public class PassengerService {
+import javaschool.entity.Passenger;
+
+import java.util.List;
+
+public interface PassengerService {
+    List<Passenger> getAllPassengers();
+    void save(Passenger passenger);
 }

@@ -1,21 +1,23 @@
-package java.school.entity;
+package javaschool.entity;
 
+
+import com.sun.istack.internal.NotNull;
 
 import javax.persistence.*;
 
 @Entity
-public class Passanger {
+public class Passenger {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
     private String name;
     private String surname;
     // TODO birthday date
 
 
-    public Passanger() {}
+    public Passenger() {}
 
-    public Passanger(String name, String surname) {
+    public Passenger(String name, String surname) {
         this.name = name;
         this.surname = surname;
     }
@@ -42,5 +44,9 @@ public class Passanger {
 
     public void setSurname(String surname) {
         this.surname = surname;
+    }
+
+    public String toString() {
+        return name + " " + surname;
     }
 }
