@@ -1,10 +1,9 @@
 package javaschool.entity;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Passenger {
@@ -13,7 +12,10 @@ public class Passenger {
     private Integer id;
     private String name;
     private String surname;
-    // TODO birthday date
+    @Temporal(TemporalType.DATE)
+    private Date birthday;
+    @OneToMany(mappedBy = "passenger", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Ticket> tickets;
 
 
     public Passenger() {}
@@ -45,6 +47,22 @@ public class Passenger {
 
     public void setSurname(String surname) {
         this.surname = surname;
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public List<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
     }
 
     public String toString() {
