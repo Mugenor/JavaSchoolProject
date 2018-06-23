@@ -21,10 +21,9 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-//@EnableWebMvc
-@ComponentScan("javaschool")
+@ComponentScan({"javaschool.dao", "javaschool.entity", "javaschool.service"})
 @PropertySource("classpath:application.properties")
-public class Config {
+public class RootConfig {
     private static final String DRIVER_CLASS_NAME = "db.driver";
     private static final String DATABASE_URL = "db.url";
     private static final String DATABASE_USERNAME = "db.username";
@@ -47,23 +46,6 @@ public class Config {
         return dataSource;
     }
 
-    //    @Bean
-//    public LocalSessionFactoryBean sessionFactory() {
-//        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-//
-//        sessionFactory.setHibernateProperties(hibernateProperties());
-//        sessionFactory.setDataSource(dataSource());
-//        sessionFactory.setPackagesToScan(env.getRequiredProperty(ENTITY_PACKAGES_TO_SCAN));
-//
-//        return sessionFactory;
-//    }
-//@Bean
-//public HibernateTransactionManager transactionManager() {
-//    HibernateTransactionManager transactionManager = new HibernateTransactionManager();
-//    transactionManager.setSessionFactory(sessionFactory().getObject());
-//
-//    return transactionManager;
-//}
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();

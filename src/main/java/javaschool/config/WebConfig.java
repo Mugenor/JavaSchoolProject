@@ -1,19 +1,40 @@
 package javaschool.config;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitializer {
-    protected Class<?>[] getRootConfigClasses() {
-        return new Class[0];
+import java.util.List;
+
+@Configuration
+@EnableWebMvc
+@ComponentScan("javaschool.controller")
+public class WebConfig extends WebMvcConfigurerAdapter {
+
+    @Bean
+    public InternalResourceViewResolver viewResolver() {
+        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+        viewResolver.setOrder(1);
+        viewResolver.setPrefix("/WEB-INF/views/");
+        viewResolver.setSuffix(".jsp");
+        return viewResolver;
     }
 
-    protected Class<?>[] getServletConfigClasses() {
-        return new Class[0];
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        super.configureMessageConverters(converters);
+        converters.add(mappingJackson2HttpMessageConverter());
     }
 
-    protected String[] getServletMappings() {
-        return new String[0];
+    @Bean
+    public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
+        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+        converter.setPrettyPrint(true);
+        return converter;
     }
 }
