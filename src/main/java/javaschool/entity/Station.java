@@ -13,6 +13,13 @@ public class Station {
     @OneToMany(mappedBy = "from", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Departure> departures;
 
+    public List<Departure> getDepartures() {
+        return departures;
+    }
+
+    public void setDepartures(List<Departure> departures) {
+        this.departures = departures;
+    }
 
     public Integer getId() {
         return id;

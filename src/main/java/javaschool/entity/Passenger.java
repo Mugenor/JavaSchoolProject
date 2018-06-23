@@ -1,6 +1,8 @@
 package javaschool.entity;
 
 
+import com.sun.istack.internal.NotNull;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
@@ -10,9 +12,12 @@ public class Passenger {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+    @NotNull
     private String name;
+    @NotNull
     private String surname;
     @Temporal(TemporalType.DATE)
+    @NotNull
     private Date birthday;
     @OneToMany(mappedBy = "passenger", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Ticket> tickets;
@@ -25,12 +30,12 @@ public class Passenger {
         this.surname = surname;
     }
 
-    public int getId() {
-        return id;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public int getId() {
+        return id;
     }
 
     public String getName() {
@@ -66,6 +71,6 @@ public class Passenger {
     }
 
     public String toString() {
-        return name + " " + surname;
+        return id + " " + name + " " + surname + " " + birthday;
     }
 }

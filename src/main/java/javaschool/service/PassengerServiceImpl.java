@@ -1,6 +1,7 @@
 package javaschool.service;
 
 import javaschool.dao.PassengerDAO;
+import javaschool.dao.PassengerDAOImpl;
 import javaschool.entity.Passenger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,10 +20,15 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Transactional(readOnly = true)
     public List<Passenger> getAllPassengers() {
-        return passengerDAO.list();
+        return passengerDAO.findAll();
     }
     @Transactional
     public void save(Passenger passenger) {
         passengerDAO.save(passenger);
+    }
+
+    @Override
+    public Passenger getById(Integer id) {
+        return passengerDAO.findById(id);
     }
 }

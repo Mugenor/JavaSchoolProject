@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Date;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = RootConfig.class)
 public class DBTest {
@@ -16,7 +18,10 @@ public class DBTest {
     @Test
     public void test() {
         Passenger passenger = new Passenger("Ilya", "Chernov");
+        passenger.setBirthday(new Date());
         service.save(passenger);
+        System.out.println(passenger);
+        System.out.println(service.getById(passenger.getId()));
         System.out.println(service.getAllPassengers());
     }
 }

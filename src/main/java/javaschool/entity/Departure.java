@@ -23,6 +23,30 @@ public class Departure {
     @JoinColumn(name = "station_to", nullable = false)
     private Station to;
 
+    public List<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
+    }
+
+    public Station getFrom() {
+        return from;
+    }
+
+    public void setFrom(Station from) {
+        this.from = from;
+    }
+
+    public Station getTo() {
+        return to;
+    }
+
+    public void setTo(Station to) {
+        this.to = to;
+    }
+
     public Integer getId() {
         return id;
     }

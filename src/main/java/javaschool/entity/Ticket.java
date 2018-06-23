@@ -15,6 +15,22 @@ public class Ticket {
     private Departure departure;
     private Integer siteNum;
 
+    public Departure getDeparture() {
+        return departure;
+    }
+
+    public void setDeparture(Departure departure) {
+        this.departure = departure;
+    }
+
+    public Integer getSiteNum() {
+        return siteNum;
+    }
+
+    public void setSiteNum(Integer siteNum) {
+        this.siteNum = siteNum;
+    }
+
     public Integer getId() {
         return id;
     }
