@@ -1,6 +1,7 @@
 package javaschool.service;
 
 import javaschool.dao.DepartureDAO;
+import javaschool.dao.StationDAO;
 import javaschool.entity.Departure;
 import javaschool.entity.Station;
 import org.joda.time.LocalDateTime;
@@ -13,16 +14,20 @@ import java.util.List;
 @Service
 public class DepartureServiceImpl implements DepartureService {
     private DepartureDAO departureDAO;
+    private StationDAO stationDAO;
 
     @Autowired
-    public DepartureServiceImpl(DepartureDAO departureDAO) {
+    public DepartureServiceImpl(DepartureDAO departureDAO, StationDAO stationDAO) {
+        this.stationDAO = stationDAO;
         this.departureDAO = departureDAO;
     }
 
     @Transactional(readOnly = true)
     @Override
     public List<Departure> findFromToBetween(String stFrom, String stTo, LocalDateTime dateFrom, LocalDateTime dateTo) {
-        return departureDAO.findFromToBetween(stFrom, stTo, dateFrom, dateTo);
+        Station stationFrom = stationDAO.findByTitle(stFrom);
+        Station stationTo = stationDAO.findByTitle(stTo);
+        return departureDAO.findFromToBetween(stationFrom, stationTo, dateFrom, dateTo);
     }
 
     @Transactional(readOnly = true)

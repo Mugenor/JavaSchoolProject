@@ -23,17 +23,12 @@ public class DepartureDAOImpl extends GenericAbstractDAO<Departure, Integer> imp
     }
 
     @Override
-    public List<Departure> findFromToBetween(String stFrom, String stTo, LocalDateTime dateFrom, LocalDateTime dateTo) {
+    public List<Departure> findFromToBetween(Station stFrom, Station stTo, LocalDateTime dateFrom, LocalDateTime dateTo) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-
-        Station stationFrom = stationDAO.findByTitle(stFrom);
-        Station stationTo = stationDAO.findByTitle(stTo);
-
-
         CriteriaQuery<Departure> query = builder.createQuery(Departure.class);
         Root<Departure> from = query.from(Departure.class);
-        Predicate equalStationFrom = builder.equal(from.get(Departure_.stationFrom), stationFrom);
-        Predicate equalStationTo = builder.equal(from.get(Departure_.stationTo), stationTo);
+        Predicate equalStationFrom = builder.equal(from.get(Departure_.stationFrom), stFrom);
+        Predicate equalStationTo = builder.equal(from.get(Departure_.stationTo), stTo);
         Predicate greaterThanLeftDate = builder.greaterThan(from.get(Departure_.dateFrom), dateFrom);
         Predicate lessThanRightDate = builder.lessThan(from.get(Departure_.dateFrom), dateTo);
         Predicate resultPredicate = builder.and(equalStationFrom, equalStationTo, greaterThanLeftDate, lessThanRightDate);
