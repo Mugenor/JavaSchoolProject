@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Service("passengerService")
+@Service()
 public class PassengerServiceImpl implements PassengerService {
     private PassengerDAO passengerDAO;
     @Autowired
@@ -28,6 +28,7 @@ public class PassengerServiceImpl implements PassengerService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Passenger getById(Integer id) {
         return passengerDAO.findById(id);
     }

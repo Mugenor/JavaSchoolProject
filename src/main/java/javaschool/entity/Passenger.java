@@ -1,10 +1,11 @@
 package javaschool.entity;
 
 
-import com.sun.istack.internal.NotNull;
+
+import org.hibernate.Hibernate;
+import org.joda.time.LocalDate;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -13,18 +14,19 @@ public class Passenger {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    @NotNull
+    @Column(nullable = false)
     private String name;
-    @NotNull
+    @Column(nullable = false)
     private String surname;
-    @Temporal(TemporalType.DATE)
-    @NotNull
-    private Date birthday;
+//    @Temporal(TemporalType.DATE)
+    @Column(nullable = false)
+    private LocalDate birthday;
     @OneToMany(mappedBy = "passenger", fetch = FetchType.LAZY)
     private List<Ticket> tickets;
 
 
-    public Passenger() {}
+    public Passenger() {
+    }
 
     public Passenger(String name, String surname) {
         this.name = name;
@@ -55,11 +57,11 @@ public class Passenger {
         this.surname = surname;
     }
 
-    public Date getBirthday() {
+    public LocalDate getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
 
@@ -71,7 +73,14 @@ public class Passenger {
         this.tickets = tickets;
     }
 
+    @Override
     public String toString() {
-        return id + " " + name + " " + surname + " " + birthday;
+        return "Passenger{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", birthday=" + birthday +
+                ", tickets=" + (Hibernate.isInitialized(tickets) ? tickets : "NOT INIT") +
+                '}';
     }
 }

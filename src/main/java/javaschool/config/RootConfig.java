@@ -31,6 +31,7 @@ public class RootConfig {
     private static final String HIBERNATE_DIALECT = "hibernate.dialect";
     private static final String HIBERNATE_SHOW_SQL = "hibernate.show_sql";
     private static final String ENTITY_PACKAGES_TO_SCAN = "entity.package";
+    private static final String HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
 
     @Resource
     private Environment env;
@@ -77,8 +78,7 @@ public class RootConfig {
         Properties hibernateProperties = new Properties();
         hibernateProperties.put(HIBERNATE_DIALECT, env.getRequiredProperty(HIBERNATE_DIALECT));
         hibernateProperties.put(HIBERNATE_SHOW_SQL, env.getRequiredProperty(HIBERNATE_SHOW_SQL));
-        hibernateProperties.put("hibernate.transaction.flush_before_completion", "true");
-        hibernateProperties.put("hibernate.hbm2ddl.auto", "create");
+        hibernateProperties.put(HIBERNATE_HBM2DDL_AUTO, env.getRequiredProperty(HIBERNATE_HBM2DDL_AUTO));
 
         return hibernateProperties;
     }

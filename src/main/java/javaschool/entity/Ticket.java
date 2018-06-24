@@ -1,6 +1,5 @@
 package javaschool.entity;
 
-import com.sun.istack.internal.NotNull;
 
 import javax.persistence.*;
 
@@ -15,9 +14,8 @@ public class Ticket {
     private Passenger passenger;
     @ManyToOne
     @JoinColumn(name = "departure_id", nullable = false)
-    @NotNull
     private Departure departure;
-    @NotNull
+    @Column(nullable = false)
     private Integer siteNum;
 
     public Departure getDeparture() {
@@ -50,5 +48,14 @@ public class Ticket {
 
     public void setPassenger(Passenger passenger) {
         this.passenger = passenger;
+    }
+
+    @Override
+    public String toString() {
+        return "Ticket{" +
+                "id=" + id +
+                ", departure=" + departure +
+                ", siteNum=" + siteNum +
+                '}';
     }
 }

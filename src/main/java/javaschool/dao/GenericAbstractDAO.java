@@ -1,9 +1,6 @@
 package javaschool.dao;
 
 
-import org.springframework.stereotype.Repository;
-import sun.reflect.generics.reflectiveObjects.TypeVariableImpl;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
