@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "surname", "birthday"})})
 public class Passenger {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,7 +20,7 @@ public class Passenger {
     @Temporal(TemporalType.DATE)
     @NotNull
     private Date birthday;
-    @OneToMany(mappedBy = "passenger", fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "passenger", fetch = FetchType.LAZY)
     private List<Ticket> tickets;
 
 
