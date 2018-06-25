@@ -1,10 +1,10 @@
-package javaschool.dao;
+package javaschool.dao.impl;
 
+import javaschool.dao.api.DepartureDAO;
 import javaschool.entity.Departure;
 import javaschool.entity.Departure_;
 import javaschool.entity.Station;
 import org.joda.time.LocalDateTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -15,12 +15,6 @@ import java.util.List;
 
 @Repository
 public class DepartureDAOImpl extends GenericAbstractDAO<Departure, Integer> implements DepartureDAO {
-    private StationDAO stationDAO;
-
-    @Autowired
-    public DepartureDAOImpl(StationDAO stationDAO) {
-        this.stationDAO = stationDAO;
-    }
 
     @Override
     public List<Departure> findFromToBetween(Station stFrom, Station stTo, LocalDateTime dateFrom, LocalDateTime dateTo) {

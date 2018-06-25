@@ -1,5 +1,7 @@
-package javaschool.dao;
+package javaschool.dao.impl;
 
+
+import javaschool.dao.api.GenericDAO;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

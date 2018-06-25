@@ -1,4 +1,4 @@
-package javaschool.dao;
+package javaschool.dao.api;
 
 import javaschool.entity.Departure;
 import javaschool.entity.Station;

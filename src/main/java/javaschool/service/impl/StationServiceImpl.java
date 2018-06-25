@@ -1,9 +1,9 @@
-package javaschool.service;
+package javaschool.service.impl;
 
-import javaschool.dao.GenericAbstractDAO;
-import javaschool.dao.StationDAO;
+import javaschool.dao.api.StationDAO;
 import javaschool.entity.Departure;
 import javaschool.entity.Station;
+import javaschool.service.api.StationService;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

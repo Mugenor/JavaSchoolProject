@@ -1,5 +1,6 @@
-package javaschool.dao;
+package javaschool.dao.impl;
 
+import javaschool.dao.api.TicketDAO;
 import javaschool.entity.Ticket;
 import org.springframework.stereotype.Repository;
 

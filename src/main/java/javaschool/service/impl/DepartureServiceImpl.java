@@ -1,9 +1,10 @@
-package javaschool.service;
+package javaschool.service.impl;
 
-import javaschool.dao.DepartureDAO;
-import javaschool.dao.StationDAO;
+import javaschool.dao.api.DepartureDAO;
+import javaschool.dao.api.StationDAO;
 import javaschool.entity.Departure;
 import javaschool.entity.Station;
+import javaschool.service.api.DepartureService;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,5 +1,6 @@
-package javaschool.dao;
+package javaschool.dao.impl;
 
+import javaschool.dao.api.StationDAO;
 import javaschool.entity.Station;
 import javaschool.entity.Station_;
 import org.springframework.stereotype.Repository;

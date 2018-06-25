@@ -1,4 +1,4 @@
-package javaschool.service;
+package javaschool.service.api;
 
 import javaschool.entity.Departure;
 import javaschool.entity.Station;

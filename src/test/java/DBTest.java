@@ -2,10 +2,10 @@ import javaschool.config.RootConfig;
 import javaschool.entity.Departure;
 import javaschool.entity.Passenger;
 import javaschool.entity.Station;
-import javaschool.service.DepartureService;
-import javaschool.service.PassengerService;
-import javaschool.service.StationService;
-import javaschool.service.TicketService;
+import javaschool.service.api.DepartureService;
+import javaschool.service.api.PassengerService;
+import javaschool.service.api.StationService;
+import javaschool.service.api.TicketService;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.junit.Before;
@@ -62,7 +62,7 @@ public class DBTest {
     @Test
     public void test2() {
         System.out.println(departureService.findAll());
-        System.out.println(departureService.findFromToBetween("Bol'shevikov", "Spasskayaa",
+        System.out.println(departureService.findFromToBetween("Bol'shevikov", "Spasskaya",
                 new LocalDateTime(2018, 1, 1, 6, 0, 0),
                 new LocalDateTime(2018, 3, 1,6, 0, 0)));
     }
