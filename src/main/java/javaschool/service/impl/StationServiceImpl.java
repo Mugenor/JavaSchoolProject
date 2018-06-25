@@ -1,5 +1,6 @@
 package javaschool.service.impl;
 
+import java.util.List;
 import javaschool.dao.api.StationDAO;
 import javaschool.entity.Departure;
 import javaschool.entity.Station;
@@ -8,8 +9,6 @@ import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class StationServiceImpl implements StationService {

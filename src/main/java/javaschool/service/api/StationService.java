@@ -1,9 +1,8 @@
 package javaschool.service.api;
 
+import java.util.List;
 import javaschool.entity.Departure;
 import javaschool.entity.Station;
-
-import java.util.List;
 
 public interface StationService{
     void save(Station station);

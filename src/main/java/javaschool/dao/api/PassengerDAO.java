@@ -1,9 +1,8 @@
 package javaschool.dao.api;
 
+import java.util.List;
 import javaschool.entity.Passenger;
 import org.joda.time.LocalDate;
-
-import java.util.List;
 
 public interface PassengerDAO extends GenericDAO<Passenger, Integer> {
     Passenger findByNameAndSurnameAndBirthday(String name, String surname, LocalDate birthday);

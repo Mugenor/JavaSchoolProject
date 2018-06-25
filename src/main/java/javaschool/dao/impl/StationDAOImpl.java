@@ -3,11 +3,10 @@ package javaschool.dao.impl;
 import javaschool.dao.api.StationDAO;
 import javaschool.entity.Station;
 import javaschool.entity.Station_;
-import org.springframework.stereotype.Repository;
-
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class StationDAOImpl extends GenericAbstractDAO<Station, Integer> implements StationDAO {

@@ -1,14 +1,13 @@
 package javaschool.dao.impl;
 
 
+import java.lang.reflect.ParameterizedType;
+import java.util.List;
 import javaschool.dao.api.GenericDAO;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import java.lang.reflect.ParameterizedType;
-import java.util.List;
 
 public abstract class GenericAbstractDAO<T, ID> implements GenericDAO<T, ID> {
     protected EntityManager entityManager;

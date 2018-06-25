@@ -1,18 +1,16 @@
 package javaschool.dao.impl;
 
+import java.util.List;
 import javaschool.dao.api.DepartureDAO;
 import javaschool.entity.Departure;
 import javaschool.entity.Departure_;
-import javaschool.entity.Passenger;
 import javaschool.entity.Station;
-import org.joda.time.LocalDateTime;
-import org.springframework.stereotype.Repository;
-
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.List;
+import org.joda.time.LocalDateTime;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class DepartureDAOImpl extends GenericAbstractDAO<Departure, Integer> implements DepartureDAO {

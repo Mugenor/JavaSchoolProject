@@ -1,5 +1,6 @@
 package javaschool.service.impl;
 
+import java.util.List;
 import javaschool.dao.api.DepartureDAO;
 import javaschool.dao.api.PassengerDAO;
 import javaschool.dao.api.TicketDAO;
@@ -11,14 +12,12 @@ import javaschool.service.exception.NoSiteOnDepartureException;
 import javaschool.service.exception.PassengerRegisteredException;
 import javaschool.service.exception.TicketAlreadyBoughtException;
 import javaschool.service.exception.TooLateForBuyingTicketException;
+import javax.persistence.NoResultException;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.NoResultException;
-import java.util.List;
 
 @Service()
 public class PassengerServiceImpl implements PassengerService {

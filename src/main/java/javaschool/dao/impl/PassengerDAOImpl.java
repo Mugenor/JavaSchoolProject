@@ -1,12 +1,21 @@
 package javaschool.dao.impl;
 
+import java.util.List;
 import javaschool.dao.api.PassengerDAO;
-import javaschool.entity.*;
+import javaschool.entity.Departure;
+import javaschool.entity.Departure_;
+import javaschool.entity.Passenger;
+import javaschool.entity.Passenger_;
+import javaschool.entity.Ticket;
+import javaschool.entity.Ticket_;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.ListJoin;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import org.joda.time.LocalDate;
 import org.springframework.stereotype.Repository;
-
-import javax.persistence.criteria.*;
-import java.util.List;
 
 @Repository
 public class PassengerDAOImpl extends GenericAbstractDAO<Passenger, Integer> implements PassengerDAO {

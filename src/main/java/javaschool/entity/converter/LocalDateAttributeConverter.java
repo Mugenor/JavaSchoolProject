@@ -1,10 +1,9 @@
 package javaschool.entity.converter;
 
-import org.joda.time.LocalDate;
-
+import java.sql.Date;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
-import java.sql.Date;
+import org.joda.time.LocalDate;
 
 @Converter(autoApply = true)
 public class LocalDateAttributeConverter implements AttributeConverter<LocalDate, Date> {

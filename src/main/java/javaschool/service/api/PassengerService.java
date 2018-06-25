@@ -1,8 +1,7 @@
 package javaschool.service.api;
 
-import javaschool.entity.Passenger;
-
 import java.util.List;
+import javaschool.entity.Passenger;
 
 public interface PassengerService {
     List<Passenger> getAllPassengers();

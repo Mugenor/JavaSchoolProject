@@ -1,10 +1,8 @@
 package javaschool.service.api;
 
-import javaschool.entity.Departure;
-import javaschool.entity.Passenger;
-import org.joda.time.LocalDateTime;
-
 import java.util.List;
+import javaschool.entity.Departure;
+import org.joda.time.LocalDateTime;
 
 public interface DepartureService {
     List<Departure> findAll();

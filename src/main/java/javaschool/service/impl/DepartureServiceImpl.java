@@ -1,9 +1,10 @@
 package javaschool.service.impl;
 
+import java.util.LinkedList;
+import java.util.List;
 import javaschool.dao.api.DepartureDAO;
 import javaschool.dao.api.StationDAO;
 import javaschool.entity.Departure;
-import javaschool.entity.Passenger;
 import javaschool.entity.Station;
 import javaschool.entity.Ticket;
 import javaschool.service.api.DepartureService;
@@ -11,9 +12,6 @@ import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.LinkedList;
-import java.util.List;
 
 @Service
 public class DepartureServiceImpl implements DepartureService {
