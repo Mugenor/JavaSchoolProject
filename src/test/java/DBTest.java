@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = RootConfig.class)
 public class DBTest {
@@ -39,13 +38,9 @@ public class DBTest {
         stationService.save(bolshevikov);
         stationService.save(dostoevskaya);
         stationService.save(spasskaya);
-        Departure d1 = new Departure();
-        d1.setSitsCount(5);
-        d1.setStationFrom(bolshevikov);
-        d1.setStationTo(spasskaya);
-        d1.setDateTimeFrom(new LocalDateTime(2018, 1, 1, 12, 0, 0));
-        d1.setDateTimeTo(new LocalDateTime(2018, 2, 1, 12, 0, 0));
-        departureService.save(d1);
+        departureService.save(5, bolshevikov.getTitle(), spasskaya.getTitle(),
+                new LocalDateTime(2018, 1, 1, 12, 0, 0),
+                new LocalDateTime(2018, 2, 1, 12, 0, 0));
     }
 
     @Test

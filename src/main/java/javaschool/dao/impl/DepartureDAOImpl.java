@@ -3,6 +3,7 @@ package javaschool.dao.impl;
 import javaschool.dao.api.DepartureDAO;
 import javaschool.entity.Departure;
 import javaschool.entity.Departure_;
+import javaschool.entity.Passenger;
 import javaschool.entity.Station;
 import org.joda.time.LocalDateTime;
 import org.springframework.stereotype.Repository;
@@ -23,8 +24,8 @@ public class DepartureDAOImpl extends GenericAbstractDAO<Departure, Integer> imp
         Root<Departure> from = query.from(Departure.class);
         Predicate equalStationFrom = builder.equal(from.get(Departure_.stationFrom), stFrom);
         Predicate equalStationTo = builder.equal(from.get(Departure_.stationTo), stTo);
-        Predicate greaterThanLeftDate = builder.greaterThan(from.get(Departure_.dateFrom), dateFrom);
-        Predicate lessThanRightDate = builder.lessThan(from.get(Departure_.dateFrom), dateTo);
+        Predicate greaterThanLeftDate = builder.greaterThan(from.get(Departure_.dateTimeFrom), dateFrom);
+        Predicate lessThanRightDate = builder.lessThan(from.get(Departure_.dateTimeFrom), dateTo);
         Predicate resultPredicate = builder.and(equalStationFrom, equalStationTo, greaterThanLeftDate, lessThanRightDate);
         query.where(resultPredicate);
 
@@ -38,8 +39,8 @@ public class DepartureDAOImpl extends GenericAbstractDAO<Departure, Integer> imp
         Root<Departure> from = query.from(Departure.class);
         Predicate equalStationFrom = builder.equal(from.get(Departure_.stationFrom), stFrom);
         Predicate equalStationTo = builder.equal(from.get(Departure_.stationTo), stTo);
-        Predicate equalLeftDate = builder.equal(from.get(Departure_.dateFrom), dateFrom);
-        Predicate equalRightDate = builder.equal(from.get(Departure_.dateTo), dateTo);
+        Predicate equalLeftDate = builder.equal(from.get(Departure_.dateTimeFrom), dateFrom);
+        Predicate equalRightDate = builder.equal(from.get(Departure_.dateTimeTo), dateTo);
         Predicate resultPredicate = builder.and(equalStationFrom, equalStationTo, equalLeftDate, equalRightDate);
         query.where(resultPredicate);
 

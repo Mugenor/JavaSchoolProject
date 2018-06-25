@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface StationService{
     void save(Station station);
+    void save(String title);
     List<Departure> getAllDeparturesFrom(String stationTitle);
 }

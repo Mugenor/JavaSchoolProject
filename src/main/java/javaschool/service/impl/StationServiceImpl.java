@@ -27,6 +27,14 @@ public class StationServiceImpl implements StationService {
     }
 
     @Override
+    @Transactional
+    public void save(String title) {
+        Station station = new Station();
+        station.setTitle(title);
+        stationDAO.save(station);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<Departure> getAllDeparturesFrom(String stationTitle) {
         List<Departure> departures = stationDAO.findByTitle(stationTitle).getDepartures();

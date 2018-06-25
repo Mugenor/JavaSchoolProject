@@ -9,6 +9,7 @@ import javaschool.entity.Ticket;
 import javaschool.service.api.PassengerService;
 import javaschool.service.exception.NoSiteOnDepartureException;
 import javaschool.service.exception.PassengerRegisteredException;
+import javaschool.service.exception.TicketAlreadyBoughtException;
 import javaschool.service.exception.TooLateForBuyingTicketException;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,10 @@ public class PassengerServiceImpl implements PassengerService {
         Passenger passenger = passengerDAO.findById(passengerId);
         Ticket ticket = ticketDAO.findById(ticketId);
         Departure departure = ticket.getDeparture();
+        if(ticket.getPassenger() != null) {
+            throw new TicketAlreadyBoughtException("This ticket was bought by someone else!");
+        }
+
         if(LocalDateTime.now().plusMinutes(10).isAfter(departure.getDateTimeFrom())) {
             throw new TooLateForBuyingTicketException("You must buy a ticket earlier than 10 minutes before departure!");
         }
@@ -76,5 +81,9 @@ public class PassengerServiceImpl implements PassengerService {
         departure.setFreeSitsCount(departure.getFreeSitsCount() - 1);
     }
 
-
+    @Override
+    @Transactional(readOnly = true)
+    public List<Passenger> findAllPassengersByDepartureId(Integer departureId) {
+        return passengerDAO.findAllPassengersByDepartureId(departureId);
+    }
 }

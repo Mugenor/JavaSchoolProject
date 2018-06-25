@@ -1,16 +1,12 @@
 package javaschool.dao.impl;
 
 import javaschool.dao.api.PassengerDAO;
-import javaschool.entity.Passenger;
-import javaschool.entity.Passenger_;
-import javaschool.entity.Ticket;
+import javaschool.entity.*;
 import org.joda.time.LocalDate;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
+import java.util.List;
 
 @Repository
 public class PassengerDAOImpl extends GenericAbstractDAO<Passenger, Integer> implements PassengerDAO {
@@ -27,7 +23,15 @@ public class PassengerDAOImpl extends GenericAbstractDAO<Passenger, Integer> imp
     }
 
     @Override
-    public void buyTicket(Passenger passenger, Ticket ticket) {
+    public List<Passenger> findAllPassengersByDepartureId(Integer departureId) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Passenger> query = builder.createQuery(Passenger.class);
+        Root<Departure> departureRoot = query.from(Departure.class);
+        ListJoin<Departure, Ticket> ticketsJoin = departureRoot.join(Departure_.tickets);
+        Join<Ticket, Passenger> passengerJoin = ticketsJoin.join(Ticket_.passenger);
+        Predicate departureEq = builder.equal(departureRoot.get(Departure_.id), departureId);
+        Predicate passengerNotNull = builder.isNotNull(ticketsJoin.get(Ticket_.passenger));
 
+        return entityManager.createQuery(query.select(passengerJoin).where(departureEq, passengerNotNull)).getResultList();
     }
 }

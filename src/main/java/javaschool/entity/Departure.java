@@ -8,11 +8,8 @@ import java.util.List;
 
 
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"station_from", "station_to", "dateFrom", "dateTo"})})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"station_from", "station_to", "dateTimeFrom", "dateTimeTo"})})
 public class Departure {
-    public static final int DEFAULT_SITS_COUNT=10;
-
-
     @Id
     @GeneratedValue
     private Integer id;
