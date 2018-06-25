@@ -30,4 +30,19 @@ public class DepartureDAOImpl extends GenericAbstractDAO<Departure, Integer> imp
 
         return entityManager.createQuery(query).getResultList();
     }
+
+    @Override
+    public Departure findByStFromAndStToAndDateFromAndDateTo(Station stFrom, Station stTo, LocalDateTime dateFrom, LocalDateTime dateTo) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Departure> query = builder.createQuery(Departure.class);
+        Root<Departure> from = query.from(Departure.class);
+        Predicate equalStationFrom = builder.equal(from.get(Departure_.stationFrom), stFrom);
+        Predicate equalStationTo = builder.equal(from.get(Departure_.stationTo), stTo);
+        Predicate equalLeftDate = builder.equal(from.get(Departure_.dateFrom), dateFrom);
+        Predicate equalRightDate = builder.equal(from.get(Departure_.dateTo), dateTo);
+        Predicate resultPredicate = builder.and(equalStationFrom, equalStationTo, equalLeftDate, equalRightDate);
+        query.where(resultPredicate);
+
+        return entityManager.createQuery(query).getSingleResult();
+    }
 }

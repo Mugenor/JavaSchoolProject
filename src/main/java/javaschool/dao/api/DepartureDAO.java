@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface DepartureDAO extends GenericDAO<Departure, Integer> {
     List<Departure> findFromToBetween(Station stFrom, Station stTo, LocalDateTime dateFrom, LocalDateTime dateTo);
+    Departure findByStFromAndStToAndDateFromAndDateTo(Station stFrom, Station stTo, LocalDateTime dateFrom, LocalDateTime dateTo);
 }

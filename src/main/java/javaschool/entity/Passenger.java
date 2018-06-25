@@ -7,6 +7,7 @@ import org.joda.time.LocalDate;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "surname", "birthday"})})
@@ -18,7 +19,6 @@ public class Passenger {
     private String name;
     @Column(nullable = false)
     private String surname;
-//    @Temporal(TemporalType.DATE)
     @Column(nullable = false)
     private LocalDate birthday;
     @OneToMany(mappedBy = "passenger", fetch = FetchType.LAZY)
@@ -82,5 +82,21 @@ public class Passenger {
                 ", birthday=" + birthday +
                 ", tickets=" + (Hibernate.isInitialized(tickets) ? tickets : "NOT INIT") +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Passenger passenger = (Passenger) o;
+        return Objects.equals(name, passenger.name) &&
+                Objects.equals(surname, passenger.surname) &&
+                Objects.equals(birthday, passenger.birthday);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(name, surname, birthday);
     }
 }

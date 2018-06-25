@@ -8,14 +8,18 @@ import java.util.List;
 
 
 @Entity
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"station_from", "station_to", "dateFrom", "dateTo"})})
 public class Departure {
     public static final int DEFAULT_SITS_COUNT=10;
+
 
     @Id
     @GeneratedValue
     private Integer id;
     @Column(nullable = false)
     private Integer sitsCount;
+    @Column(nullable = false)
+    private Integer freeSitsCount;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ticket> tickets;
     @ManyToOne
@@ -24,23 +28,31 @@ public class Departure {
     @ManyToOne
     @JoinColumn(name = "station_to", nullable = false)
     private Station stationTo;
-    private LocalDateTime dateFrom;
-    private LocalDateTime dateTo;
+    private LocalDateTime dateTimeFrom;
+    private LocalDateTime dateTimeTo;
 
-    public LocalDateTime getDateFrom() {
-        return dateFrom;
+    public Integer getFreeSitsCount() {
+        return freeSitsCount;
     }
 
-    public void setDateFrom(LocalDateTime dateFrom) {
-        this.dateFrom = dateFrom;
+    public void setFreeSitsCount(Integer freeSitsCount) {
+        this.freeSitsCount = freeSitsCount;
     }
 
-    public LocalDateTime getDateTo() {
-        return dateTo;
+    public LocalDateTime getDateTimeFrom() {
+        return dateTimeFrom;
     }
 
-    public void setDateTo(LocalDateTime dateTo) {
-        this.dateTo = dateTo;
+    public void setDateTimeFrom(LocalDateTime dateFrom) {
+        this.dateTimeFrom = dateFrom;
+    }
+
+    public LocalDateTime getDateTimeTo() {
+        return dateTimeTo;
+    }
+
+    public void setDateTimeTo(LocalDateTime dateTo) {
+        this.dateTimeTo = dateTo;
     }
 
     public List<Ticket> getTickets() {
@@ -81,6 +93,7 @@ public class Departure {
 
     public void setSitsCount(Integer sitsCount) {
         this.sitsCount = sitsCount;
+        this.freeSitsCount = sitsCount;
     }
 
     @Override
@@ -88,10 +101,11 @@ public class Departure {
         return "Departure{" +
                 "id=" + id +
                 ", sitsCount=" + sitsCount +
+                ", freeSitsCount=" + freeSitsCount +
                 ", stationFrom=" + stationFrom +
                 ", stationTo=" + stationTo +
-                ", dateFrom=" + dateFrom +
-                ", dateTo=" + dateTo +
+                ", dateFrom=" + dateTimeFrom +
+                ", dateTo=" + dateTimeTo +
                 '}';
     }
 }
