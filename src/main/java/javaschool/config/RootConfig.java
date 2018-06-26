@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import({JPAConfig.class})
+@Import({JPAConfig.class, SecurityConfig.class})
 @ComponentScan({"javaschool.service"})
 public class RootConfig {
 }

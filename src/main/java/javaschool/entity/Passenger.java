@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import org.hibernate.Hibernate;
@@ -29,6 +30,8 @@ public class Passenger {
     private LocalDate birthday;
     @OneToMany(mappedBy = "passenger", fetch = FetchType.LAZY)
     private List<Ticket> tickets;
+    @OneToOne(fetch = FetchType.LAZY)
+    private User user;
 
 
     public Passenger() {
@@ -79,6 +82,14 @@ public class Passenger {
         this.tickets = tickets;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public String toString() {
         return "Passenger{" +
@@ -87,6 +98,7 @@ public class Passenger {
                 ", surname='" + surname + '\'' +
                 ", birthday=" + birthday +
                 ", tickets=" + (Hibernate.isInitialized(tickets) ? tickets : "NOT INIT") +
+                ", user=" + (Hibernate.isInitialized(user) ? user : "NOT INIT") +
                 '}';
     }
 
