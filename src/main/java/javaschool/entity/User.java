@@ -45,6 +45,14 @@ public class User {
         this.password = password;
     }
 
+    public Passenger getPassenger() {
+        return passenger;
+    }
+
+    public void setPassenger(Passenger passenger) {
+        this.passenger = passenger;
+    }
+
     @Override
     public String toString() {
         return "User{" +

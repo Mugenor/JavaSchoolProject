@@ -22,7 +22,9 @@ public class PassengerController {
     @RequestMapping(path = "/passenger", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Passenger> getAllPassengers(){
         List<Passenger> passengers = new LinkedList<Passenger>();
-        passengers.add(new Passenger("Ilya","Chernov"));
+        Passenger passenger = new Passenger("Ilya", "Chernov");
+        passenger.setId(0);
+        passengers.add(passenger);
 
         return passengers;
     }

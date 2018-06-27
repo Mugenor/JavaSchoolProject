@@ -40,4 +40,9 @@ public class StationServiceImpl implements StationService {
         Hibernate.initialize(departures);
         return departures;
     }
+
+    @Override
+    public List<Station> findAll() {
+        return stationDAO.findAll();
+    }
 }

@@ -25,22 +25,6 @@ public class Ticket {
     @Column(nullable = false)
     private Integer siteNum;
 
-    public Departure getDeparture() {
-        return departure;
-    }
-
-    public void setDeparture(Departure departure) {
-        this.departure = departure;
-    }
-
-    public Integer getSiteNum() {
-        return siteNum;
-    }
-
-    public void setSiteNum(Integer siteNum) {
-        this.siteNum = siteNum;
-    }
-
     public Integer getId() {
         return id;
     }
@@ -55,6 +39,22 @@ public class Ticket {
 
     public void setPassenger(Passenger passenger) {
         this.passenger = passenger;
+    }
+
+    public Departure getDeparture() {
+        return departure;
+    }
+
+    public void setDeparture(Departure departure) {
+        this.departure = departure;
+    }
+
+    public Integer getSiteNum() {
+        return siteNum;
+    }
+
+    public void setSiteNum(Integer siteNum) {
+        this.siteNum = siteNum;
     }
 
     @Override
