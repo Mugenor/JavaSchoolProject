@@ -37,7 +37,7 @@
     <div class="container-login100" style="background-image: url('/resource/images/bg-01.jpg');">
         <div class="wrap-login100 p-l-110 p-r-110 p-t-62 p-b-33">
             <sf:form onsubmit="return validateForm()" cssClass="login100-form validate-form flex-sb flex-w"
-                     method="post" commandName="newUser">
+                     method="post" modelAttribute="newUser">
 					<span class="login100-form-title">
 						Sign Up
 					</span>

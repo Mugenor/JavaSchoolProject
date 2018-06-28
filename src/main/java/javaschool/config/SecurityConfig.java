@@ -3,6 +3,7 @@ package javaschool.config;
 import javaschool.dao.api.UserDAO;
 import javaschool.service.SecurityUserDetailService;
 import javax.sql.DataSource;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    private static final Logger log = Logger.getLogger(SecurityConfig.class);
     private DataSource dataSource;
     private UserDAO userDAO;
 
@@ -34,15 +36,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.formLogin().loginPage("/login").and()
-                .logout().logoutSuccessUrl("/login").logoutUrl("/logout").and()
+        http
+                .formLogin()
+                    .successForwardUrl("/hello")
+                    .loginPage("/login")
+                    .failureForwardUrl("/login?error").and()
+                .logout().logoutUrl("/logout").logoutSuccessUrl("/login").and()
                 .authorizeRequests()
-                .antMatchers("/hello").authenticated()
-                .anyRequest().permitAll();
-    }
-
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-
+                    .antMatchers("/hello").hasRole("PASSENGER")
+                    .anyRequest().permitAll().and()
+                .httpBasic();
+        log.info("Configuring httpSecurity: " + http);
     }
 }
