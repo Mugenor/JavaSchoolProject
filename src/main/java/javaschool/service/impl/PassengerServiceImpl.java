@@ -9,10 +9,10 @@ import javaschool.entity.Passenger;
 import javaschool.entity.Ticket;
 import javaschool.service.api.PassengerService;
 import javaschool.service.exception.NoSiteOnDepartureException;
+import javaschool.service.exception.NoSuchEntityException;
 import javaschool.service.exception.PassengerRegisteredException;
 import javaschool.service.exception.TicketAlreadyBoughtException;
 import javaschool.service.exception.TooLateForBuyingTicketException;
-import javax.persistence.NoResultException;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,15 +50,15 @@ public class PassengerServiceImpl implements PassengerService {
     }
 
     @Override
-    @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {NoSiteOnDepartureException.class, PassengerRegisteredException.class,
-            TooLateForBuyingTicketException.class, NoResultException.class})
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void buyTicket(Integer passengerId, Integer ticketId) {
         Passenger passenger = passengerDAO.findById(passengerId);
         Ticket ticket = ticketDAO.findById(ticketId);
         Departure departure = ticket.getDeparture();
-        if(ticket.getPassenger() != null) {
-            throw new TicketAlreadyBoughtException("This ticket was bought by someone else!");
-        }
+
+        notNullElseThrowException(passenger, new NoSuchEntityException("There is no such passenger", Passenger.class));
+        notNullElseThrowException(ticket, new NoSuchEntityException("There is no such ticket", Ticket.class));
+        notNullElseThrowException(ticket.getPassenger(), new TicketAlreadyBoughtException("This ticket was bought by someone else!"));
 
         if(LocalDateTime.now().plusMinutes(10).isAfter(departure.getDateTimeFrom())) {
             throw new TooLateForBuyingTicketException("You must buy a ticket earlier than 10 minutes before departure!");
@@ -84,5 +84,10 @@ public class PassengerServiceImpl implements PassengerService {
     @Transactional(readOnly = true)
     public List<Passenger> findAllPassengersByDepartureId(Integer departureId) {
         return passengerDAO.findAllPassengersByDepartureId(departureId);
+    }
+
+
+    private void notNullElseThrowException(Object obj, RuntimeException exc) {
+        if(obj == null) throw exc;
     }
 }

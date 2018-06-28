@@ -23,7 +23,7 @@ public class PassengerController {
     public List<Passenger> getAllPassengers(){
         List<Passenger> passengers = new LinkedList<Passenger>();
         Passenger passenger = new Passenger("Ilya", "Chernov");
-        passenger.setId(0);
+//        passenger.setId(0);
         passengers.add(passenger);
 
         return passengers;

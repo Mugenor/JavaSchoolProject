@@ -8,27 +8,34 @@ import javaschool.entity.Passenger;
 import javaschool.entity.Passenger_;
 import javaschool.entity.Ticket;
 import javaschool.entity.Ticket_;
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class PassengerDAOImpl extends GenericAbstractDAO<Passenger, Integer> implements PassengerDAO {
+    private static final Logger log = Logger.getLogger(PassengerDAOImpl.class);
     @Override
     public Passenger findByNameAndSurnameAndBirthday(String name, String surname, LocalDate birthday) {
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Passenger> query = builder.createQuery(Passenger.class);
-        Root<Passenger> from = query.from(Passenger.class);
-        Predicate nameEq = builder.equal(from.get(Passenger_.name), name);
-        Predicate surnameEq = builder.equal(from.get(Passenger_.surname), surname);
-        Predicate birthdayEq = builder.equal(from.get(Passenger_.birthday), birthday);
-        query.where(nameEq, surnameEq, birthdayEq);
-        return entityManager.createQuery(query).getSingleResult();
+        try {
+            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Passenger> query = builder.createQuery(Passenger.class);
+            Root<Passenger> from = query.from(Passenger.class);
+            Predicate nameEq = builder.equal(from.get(Passenger_.name), name);
+            Predicate surnameEq = builder.equal(from.get(Passenger_.surname), surname);
+            Predicate birthdayEq = builder.equal(from.get(Passenger_.birthday), birthday);
+            query.where(nameEq, surnameEq, birthdayEq);
+            return entityManager.createQuery(query).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     @Override

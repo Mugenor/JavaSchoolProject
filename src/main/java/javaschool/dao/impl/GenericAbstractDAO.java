@@ -5,6 +5,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import javaschool.dao.api.GenericDAO;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -35,12 +36,21 @@ public abstract class GenericAbstractDAO<T, ID> implements GenericDAO<T, ID> {
 
     @Override
     public T findById(ID id) {
-        return entityManager.find(entityClass, id);
+        try {
+            return entityManager.find(entityClass, id);
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     @Override
     public void save(T entity) {
         entityManager.persist(entity);
+
+    }
+
+    public T merge(T entity) {
+        return entityManager.merge(entity);
     }
 
     @Override
