@@ -48,7 +48,7 @@ public class UserController {
         if(errors.hasErrors()) {
             throw new ValidationException();
         }
-        
+
         User user = new User();
         Passenger passenger = new Passenger();
         passenger.setName(newUser.getName());
