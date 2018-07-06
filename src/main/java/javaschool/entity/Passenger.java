@@ -30,7 +30,7 @@ public class Passenger {
     private LocalDate birthday;
     @OneToMany(mappedBy = "passenger", fetch = FetchType.LAZY)
     private List<Ticket> tickets;
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "passenger")
     private User user;
 
 

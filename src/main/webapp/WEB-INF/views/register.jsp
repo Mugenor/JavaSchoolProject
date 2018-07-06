@@ -36,9 +36,14 @@
 <div class="limiter">
     <div class="container-login100" style="background-image: url('/resource/images/bg-01.jpg');">
         <div class="wrap-login100 p-l-110 p-r-110 p-t-62 p-b-33">
-            <sf:form onsubmit="return validateForm()" cssClass="login100-form validate-form flex-sb flex-w"
+            <sf:form cssClass="login100-form validate-form flex-sb flex-w"
                      method="post" modelAttribute="newUser">
-					<span class="login100-form-title">
+                <c:if test="${not empty error}">
+                    <div class="alert alert-danger w-full text-center">
+                        <p>${error}</p>
+                    </div>
+                </c:if>
+                <span class="login100-form-title">
 						Sign Up
 					</span>
 
@@ -48,8 +53,7 @@
 						</span>
                 </div>
                 <div class="wrap-input100 validate-input" data-validate="Name is required">
-                    <sf:input cssClass="input100" path="name" maxlength="15" minlength="2"
-                              pattern="/^[A-ZА-Я][a-zа-я]+$/"/>
+                    <sf:input cssClass="input100" path="name" maxlength="15" minlength="2"/>
                     <span class="focus-input100"></span>
                 </div>
 

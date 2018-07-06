@@ -27,11 +27,11 @@ public class UserServiceImpl implements UserService {
     public void save(User user) {
         Passenger passenger = user.getPassenger();
         if(userDAO.findByUsername(user.getUsername()) != null) {
-            throw new EntityAlreadyExistsException("User with " + user.getUsername() + " username already exists");
+            throw new EntityAlreadyExistsException("User with \"" + user.getUsername() + "\" username already exists!");
         } else if(passengerDAO.findByNameAndSurnameAndBirthday
                 (passenger.getName(), passenger.getSurname(), passenger.getBirthday()) != null) {
             throw new EntityAlreadyExistsException("Passenger " + passenger.getName() + " " + passenger.getSurname() +
-                                " " + passenger.getBirthday().toString("dd.mm.yyyy") + " date of birth");
+                    " " + passenger.getBirthday().toString("dd.mm.yyyy") + " date of birth!");
         }
 
         passengerDAO.save(passenger);

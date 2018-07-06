@@ -21,6 +21,6 @@ public class MyController {
     public ModelAndView getHello() {
         log.debug("DEBUG IS WORKING!!!");
         log.info("INFO IS WORKING!!!");
-        return new ModelAndView("hello");
+        return new ModelAndView("client");
     }
 }

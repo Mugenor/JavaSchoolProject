@@ -28,7 +28,7 @@ public class SecurityUserDetailService implements UserDetailsService {
         log.info(username + " trying to find");
         if(user == null) throw new UsernameNotFoundException(username + " not found");
         List<GrantedAuthority> grantedAuthorities = new LinkedList<>();
-        if (user.getPassword() == null) {
+        if (user.getPassenger() == null) {
             grantedAuthorities.add(new SimpleGrantedAuthority(ROLE_ADMIN));
         } else {
             grantedAuthorities.add(new SimpleGrantedAuthority(ROLE_PASSENGER));
