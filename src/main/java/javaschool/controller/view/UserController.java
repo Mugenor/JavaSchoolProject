@@ -62,7 +62,7 @@ public class UserController {
             throw new ValidationException();
         }
 
-        userService.save(userConverter.convert(newUser));
+        userService.save(userConverter.convertTo(newUser));
 
         log.info("User registered! Redirecting user to login page");
         return "redirect:" + LOGIN_VIEW;

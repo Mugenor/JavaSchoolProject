@@ -8,7 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class NewUserToUserConverter {
+public class NewUserToUserConverter implements ClassConverter<NewUser, User> {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -16,7 +16,7 @@ public class NewUserToUserConverter {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User convert(NewUser newUser) {
+    public User convertTo(NewUser newUser) {
         User user = new User();
         Passenger passenger = new Passenger();
         passenger.setName(newUser.getName());
@@ -28,5 +28,17 @@ public class NewUserToUserConverter {
         user.setPassenger(passenger);
 
         return user;
+    }
+
+    @Override
+    public NewUser convertFrom(User user) {
+        NewUser newUser = new NewUser();
+        newUser.setUsername(user.getUsername());
+        if(user.getPassenger() != null) {
+            newUser.setName(user.getPassenger().getName());
+            newUser.setSurname(user.getPassenger().getSurname());
+            newUser.setBirthday(user.getPassenger().getBirthday());
+        }
+        return newUser;
     }
 }
