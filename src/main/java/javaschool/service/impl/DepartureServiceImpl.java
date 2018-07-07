@@ -34,8 +34,8 @@ public class DepartureServiceImpl implements DepartureService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<Departure> findAll() {
-        return departureDAO.findAll();
+    public List<Departure> findAll(boolean fetchStations, boolean fetchTickets) {
+        return departureDAO.findAll(fetchStations, fetchTickets);
     }
 
     @Override

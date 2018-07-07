@@ -1,4 +1,4 @@
-$(function () {
+function showAllDepartures() {
     $('#main-block').children().remove();
     let table = $('<table/>', {
         id: 'departures',
@@ -29,4 +29,5 @@ $(function () {
             { data: 'freeSitsCount'},
         ]
     });
-});
+}
+$('#all-departures').click(showAllDepartures);

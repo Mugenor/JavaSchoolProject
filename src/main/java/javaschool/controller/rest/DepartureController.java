@@ -25,7 +25,7 @@ public class DepartureController {
 
     @GetMapping
     public List<DepartureDTO> getAllDepartures() {
-        return departureService.findAll()
+        return departureService.findAll(true, false)
                 .parallelStream().map((departure -> departureDTOConverter.convertTo(departure)))
                 .collect(Collectors.toList());
     }

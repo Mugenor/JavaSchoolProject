@@ -65,7 +65,7 @@ public class DBTest {
     @Test
     public void test2() {
         log.info("All stations: " + stationService.findAll());
-        log.info(departureService.findAll());
+        log.info(departureService.findAll(true, false));
         log.info(departureService.findFromToBetween("Bol'shevikov", "Spasskaya",
                 new LocalDateTime(2018, 1, 1, 6, 0, 0),
                 new LocalDateTime(2018, 1, 1,9, 0, 0)));

@@ -43,7 +43,7 @@
                     <i class="fa fa-fw fa-link"></i> Departures
                 </a>
                 <ul id="sm_expand_1" class="list-unstyled collapse">
-                    <li><a href="#">All departures</a></li>
+                    <li id="all-departures"><a href="#all-departures">All departures</a></li>
                     <li><a href="#">Find departure</a></li>
                 </ul>
             </li>
@@ -62,11 +62,13 @@
     </div>
 </div>
 
-<script src="<c:url value="/resource/vendor/jquery/jquery-3.2.1.min.js"/>"></script>
-<script src="<c:url value="/resource/vendor/bootstrap/js/bootstrap.bundle.min.js"/>"></script>
-<script src="<c:url value="/resource/vendor/bootadmin/js/bootadmin.min.js"/>"></script>
-<script src="<c:url value="/resource/vendor/datatables/js/datatables.min.js"/>"></script>
+<script src="<c:url value="/resource/vendor/jquery/jquery-3.3.1.js"/>"></script>
+<script src="<c:url value="/resource/vendor/bootstrap/js/popper.js"/>"></script>
+<script src="<c:url value="/resource/vendor/bootstrap/js/bootstrap.bundle.js"/>"></script>
+<script src="<c:url value="/resource/vendor/bootadmin/js/bootadmin.js"/>"></script>
+<script src="<c:url value="/resource/vendor/datatables/js/datatables.js"/>"></script>
 <script src="<c:url value="/resource/js/client-get-all-departures.js"/>"></script>
+<script src="<c:url value="/resource/js/client-get-all-stations.js"/>"></script>
 
 </body>
 </html>

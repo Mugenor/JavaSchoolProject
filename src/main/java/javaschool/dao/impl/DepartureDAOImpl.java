@@ -49,4 +49,19 @@ public class DepartureDAOImpl extends GenericAbstractDAO<Departure, Integer> imp
             return null;
         }
     }
+
+    @Override
+    public List<Departure> findAll(boolean fetchStations, boolean fetchTickets) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Departure> query = builder.createQuery(Departure.class);
+        Root<Departure> from = query.from(Departure.class);
+        if (fetchStations) {
+            from.fetch(Departure_.stationTo);
+            from.fetch(Departure_.stationFrom);
+        }
+        if(fetchTickets) {
+            from.fetch(Departure_.tickets);
+        }
+        return entityManager.createQuery(query).getResultList();
+    }
 }
