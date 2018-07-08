@@ -47,7 +47,7 @@
                     <li><a href="#">Find departure</a></li>
                 </ul>
             </li>
-            <li><a href="#"><i class="fa fa-fw fa-link"></i> Stations</a></li>
+            <li id="all-stations"><a href="#all-stations"><i class="fa fa-fw fa-link"></i> Stations</a></li>
         </ul>
     </div>
 

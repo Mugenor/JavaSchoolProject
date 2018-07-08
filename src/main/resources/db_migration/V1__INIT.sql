@@ -34,12 +34,10 @@ create table departure
 		foreign key (station_from) references station (id),
 	constraint FKj8oeidcmw26i2cs7w6vyl3370
 		foreign key (station_to) references station (id)
-)
-;
+);
 
 create index FKj8oeidcmw26i2cs7w6vyl3370
-	on departure (station_to)
-;
+	on departure (station_to);
 
 create table ticket
 (
@@ -68,17 +66,29 @@ create table departure_ticket
 		foreign key (tickets_id) references ticket (id)
 );
 
+create table ticket_passenger
+(
+  ticket_id int not null,
+  passenger_id int not null,
+  constraint TICKET_PASSENGER_UNIQUE_CONSTRAINT
+    unique (ticket_id, passenger_id),
+  constraint TPT_CONSTRAINT
+    foreign key (ticket_id) references ticket (id),
+  constraint TPP_CONSTRAINT
+    foreign key (passenger_id) references passenger (id)
+);
+
+create index TICKET_PASSENGER_INDEX
+  on ticket_passenger (ticket_id, passenger_id);
+
 create index FKl0ndj9ry2b83lyncc60emhy11
-	on departure_ticket (Departure_id)
-;
+	on departure_ticket (Departure_id);
 
 create index FK6jtu14ysy67xmci4u9agei7me
-	on ticket (departure_id)
-;
+	on ticket (departure_id);
 
 create index FK7xdva6e0sknsfbit0xop9y050
-	on ticket (passenger_id)
-;
+	on ticket (passenger_id);
 
 create table user
 (

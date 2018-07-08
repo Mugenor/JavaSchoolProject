@@ -1,33 +1,23 @@
-function showAllDepartures() {
+function showAllStations() {
     $('#main-block').children().remove();
     let table = $('<table/>', {
-        id: 'departures',
+        id: 'stations',
         class: 'table table-striped table-bordered table-light'
     });
     let thead = $('<thead/>')
         .append($('<tr/>')
-            .append($('<th/>').html('Station of departure'))
-            .append($('<th/>').html('Arrival station'))
-            .append($('<th/>').html('Time of departure'))
-            .append($('<th/>').html('Arrival time'))
-            .append($('<th/>').html('Number of available seats'))).appendTo(table);
-    // let tbody = $('<tbody/>')
-    //     .append($('<tr/>')
-    //         .append($('<th/>').html('Bla'))
-    //         .append($('<th/>').html('Bla'))).appendTo(table);
+            .append($('<th/>').html('Station'))).appendTo(table);
     table.appendTo($('#main-block'));
-    $('#departures').DataTable({
+    $('#stations').DataTable({
+        select: true,
+        paging: false,
         ajax: {
-            url: '/departure',
+            url: '/station',
             dataSrc: ''
         },
         columns: [
-            { data: 'stationFrom'},
-            { data: 'stationTo'},
-            { data: 'dateTimeFrom'},
-            { data: 'dateTimeTo'},
-            { data: 'freeSitsCount'},
+            { data: 'name'},
         ]
     });
 }
-$('#all-departures').click(showAllDepartures);
+$('#all-stations').click(showAllStations);

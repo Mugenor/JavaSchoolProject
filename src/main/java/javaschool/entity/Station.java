@@ -20,6 +20,12 @@ public class Station {
     @OneToMany(mappedBy = "stationFrom", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Departure> departures;
 
+    public Station() {}
+
+    public Station(String title) {
+        this.title = title;
+    }
+
     public List<Departure> getDepartures() {
         return departures;
     }

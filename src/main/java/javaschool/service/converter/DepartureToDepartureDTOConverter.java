@@ -4,6 +4,7 @@ import javaschool.controller.dtoentity.DepartureDTO;
 import javaschool.entity.Departure;
 import javaschool.entity.Station;
 import javaschool.service.exception.ClassConvertingException;
+import org.joda.time.Instant;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,12 +23,13 @@ public class DepartureToDepartureDTOConverter implements ClassConverter<Departur
     @Override
     public DepartureDTO convertTo(Departure departure) {
         try {
-            return new DepartureDTO(departure.getSitsCount(),
+            return new DepartureDTO(departure.getId(),
+                    departure.getSitsCount(),
                     departure.getFreeSitsCount(),
                     departure.getStationFrom().getTitle(),
                     departure.getStationTo().getTitle(),
-                    converter.convertFrom(departure.getDateTimeFrom()),
-                    converter.convertFrom(departure.getDateTimeTo()));
+                    Instant.parse(departure.getDateTimeFrom().toString()).getMillis(),
+                    Instant.parse(departure.getDateTimeTo().toString()).getMillis());
         } catch (NullPointerException e) {
             throw new ClassConvertingException(CONVERTING_EXC_MESSAGE, e);
         }
@@ -36,14 +38,11 @@ public class DepartureToDepartureDTOConverter implements ClassConverter<Departur
     @Override
     public Departure convertFrom(DepartureDTO departureDTO) {
         Departure departure = new Departure();
-        departure.setDateTimeTo(converter.convertTo(departureDTO.getDateTimeTo()));
-        departure.setDateTimeFrom(converter.convertTo(departureDTO.getDateTimeFrom()));
-        Station station = new Station();
-        station.setTitle(departureDTO.getStationTo());
-        departure.setStationTo(station);
-        station = new Station();
-        station.setTitle(departureDTO.getStationFrom());
-        departure.setStationFrom(station);
+        departure.setId(departureDTO.getId());
+        departure.setDateTimeTo(new LocalDateTime(departureDTO.getDateTimeTo()));
+        departure.setDateTimeFrom(new LocalDateTime(departureDTO.getDateTimeFrom()));
+        departure.setStationTo(new Station(departureDTO.getStationTo()));
+        departure.setStationFrom(new Station(departureDTO.getStationFrom()));
         departure.setFreeSitsCount(departureDTO.getFreeSitsCount());
         departure.setSitsCount(departureDTO.getFreeSitsCount());
         return departure;

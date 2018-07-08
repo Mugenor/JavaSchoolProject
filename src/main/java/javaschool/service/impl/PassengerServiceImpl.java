@@ -50,7 +50,7 @@ public class PassengerServiceImpl implements PassengerService {
     }
 
     @Override
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional()
     public void buyTicket(Integer passengerId, Integer ticketId) {
         Passenger passenger = passengerDAO.findById(passengerId);
         Ticket ticket = ticketDAO.findById(ticketId);

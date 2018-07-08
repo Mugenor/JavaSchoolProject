@@ -2,7 +2,7 @@ package javaschool.controller.rest;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import javaschool.entity.Station;
+import javaschool.controller.dtoentity.StationName;
 import javaschool.service.api.StationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -21,9 +21,9 @@ public class StationController {
     }
 
     @GetMapping
-    public List<String> getAllStations() {
+    public List<StationName> getAllStations() {
         return stationService.findAll()
-                .parallelStream().map(Station::getTitle)
+                .parallelStream().map(station -> new StationName(station.getTitle()))
                 .collect(Collectors.toList());
     }
 }

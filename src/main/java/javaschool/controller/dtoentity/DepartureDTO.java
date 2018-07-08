@@ -2,21 +2,31 @@ package javaschool.controller.dtoentity;
 
 
 public class DepartureDTO {
+    private Integer id;
     private int sitsCount;
     private int freeSitsCount;
     private String stationFrom;
     private String stationTo;
-    private String dateTimeFrom;
-    private String dateTimeTo;
+    private long dateTimeFrom;
+    private long dateTimeTo;
 
-    public DepartureDTO(int sitsCount, int freeSitsCount, String stationFrom, String stationTo
-            , String dateTimeFrom, String dateTimeTo) {
+    public DepartureDTO(Integer id, int sitsCount, int freeSitsCount, String stationFrom, String stationTo
+            , long dateTimeFrom, long dateTimeTo) {
         this.sitsCount = sitsCount;
         this.freeSitsCount = freeSitsCount;
         this.stationFrom = stationFrom;
         this.stationTo = stationTo;
         this.dateTimeFrom = dateTimeFrom;
         this.dateTimeTo = dateTimeTo;
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public int getSitsCount() {
@@ -51,19 +61,19 @@ public class DepartureDTO {
         this.stationTo = stationTo;
     }
 
-    public String getDateTimeFrom() {
+    public long getDateTimeFrom() {
         return dateTimeFrom;
     }
 
-    public void setDateTimeFrom(String dateTimeFrom) {
+    public void setDateTimeFrom(long dateTimeFrom) {
         this.dateTimeFrom = dateTimeFrom;
     }
 
-    public String getDateTimeTo() {
+    public long getDateTimeTo() {
         return dateTimeTo;
     }
 
-    public void setDateTimeTo(String dateTimeTo) {
+    public void setDateTimeTo(long dateTimeTo) {
         this.dateTimeTo = dateTimeTo;
     }
 
@@ -78,4 +88,5 @@ public class DepartureDTO {
                 ", dateTimeTo=" + dateTimeTo +
                 '}';
     }
+
 }

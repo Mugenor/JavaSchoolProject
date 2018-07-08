@@ -1,4 +1,6 @@
+import java.util.UUID;
 import org.apache.log4j.Logger;
+import org.joda.time.Instant;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -17,6 +19,13 @@ public class TMPTest {
     public void tst1() {
         log.info(new LocalDateTime());
         DateTimeFormatter format = DateTimeFormat.forPattern("dd.MM.yyyy HH:mm");
-        log.info(new LocalDateTime().toString(format));
+    }
+
+    @Test
+    public void tst2() {
+        log.info(System.nanoTime());
+        log.info(System.currentTimeMillis());
+        log.info(new LocalDateTime(Instant.parse(new LocalDateTime().toString()).getMillis()));
+        log.info(UUID.randomUUID());
     }
 }
