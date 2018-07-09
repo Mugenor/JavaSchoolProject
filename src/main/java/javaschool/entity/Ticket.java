@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"siteNum", "departure_id"})})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"siteNum", "coach_id"})})
 public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,8 +21,8 @@ public class Ticket {
     @JoinColumn(name = "passenger_id")
     private Passenger passenger;
     @ManyToOne
-    @JoinColumn(name = "departure_id", nullable = false)
-    private Departure departure;
+    @JoinColumn(name = "coach_id", nullable = false)
+    private Coach coach;
     @Column(nullable = false)
     private Integer siteNum;
 
@@ -42,12 +42,12 @@ public class Ticket {
         this.passenger = passenger;
     }
 
-    public Departure getDeparture() {
-        return departure;
+    public Coach getCoach() {
+        return coach;
     }
 
-    public void setDeparture(Departure departure) {
-        this.departure = departure;
+    public void setCoach(Coach coach) {
+        this.coach = coach;
     }
 
     public Integer getSiteNum() {
@@ -62,7 +62,6 @@ public class Ticket {
     public String toString() {
         return "Ticket{" +
                 "id=" + id +
-                ", departure=" + departure +
                 ", siteNum=" + siteNum +
                 '}';
     }

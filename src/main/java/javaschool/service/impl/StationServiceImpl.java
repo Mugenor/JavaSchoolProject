@@ -5,7 +5,6 @@ import javaschool.dao.api.StationDAO;
 import javaschool.entity.Departure;
 import javaschool.entity.Station;
 import javaschool.service.api.StationService;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,9 +35,7 @@ public class StationServiceImpl implements StationService {
     @Override
     @Transactional(readOnly = true)
     public List<Departure> getAllDeparturesFrom(String stationTitle) {
-        List<Departure> departures = stationDAO.findByTitle(stationTitle).getDepartures();
-        Hibernate.initialize(departures);
-        return departures;
+        return stationDAO.findByTitle(stationTitle).getDepartures();
     }
 
     @Override

@@ -8,5 +8,6 @@ public interface PassengerService {
     void save(Passenger passenger);
     Passenger getById(Integer id);
     void buyTicket(Integer passengerId, Integer ticketId);
+    void buyTicketTransactional(Integer passengerId, Integer ticketId);
     List<Passenger> findAllPassengersByDepartureId(Integer departureId);
 }

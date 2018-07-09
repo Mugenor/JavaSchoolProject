@@ -1,4 +1,4 @@
-function showAllDepartures() {
+$(function showAllDepartures() {
     function timeRender(data, type, row, meta) {
         switch(type) {
             case "filter":
@@ -24,28 +24,11 @@ function showAllDepartures() {
 
         return $('<a/>', {
             class: 'btn btn-primary',
-            href: '/buy/' + row.id,
+            href: '/select/' + row.id,
             target: '_blank'
         }).html('Buy ticket!').get(0).outerHTML;
     }
 
-    $('#main-block').children().remove();
-    let div = $('<div/>', {
-        class: 'container-fluid'
-    });
-    let table = $('<table/>', {
-        id: 'departures',
-        class: 'table table-striped table-bordered table-light'
-    }).appendTo(div);
-    let thead = $('<thead/>')
-        .append($('<tr/>')
-            .append($('<th/>').html('Station of departure'))
-            .append($('<th/>').html('Arrival station'))
-            .append($('<th/>').html('Time of departure'))
-            .append($('<th/>').html('Arrival time'))
-            .append($('<th/>').html('Number of available seats'))
-            .append($('<th/>').html('Get ticket'))).appendTo(table);
-    div.appendTo($('#main-block'));
     $('#departures').DataTable({
         responsive: true,
         paging: false,
@@ -67,5 +50,4 @@ function showAllDepartures() {
             render: chooseDepartureButton
         }]
     });
-}
-$('#all-departures').click(showAllDepartures);
+});

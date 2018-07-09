@@ -19,18 +19,6 @@
     <script src="<c:url value="/resource/vendor/bootstrap/js/bootstrap-datepicker.js"/>"></script>
     <script src="<c:url value="/resource/js/register.js"/>"></script>
 
-    <%--<script src="<c:url value="/resource/vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"/>"></script>--%>
-
-    <%--<script src="<c:url value="/resource/vendor/jquery-ui/jquery-ui.js"/>"></script>--%>
-    <%--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>--%>
-    <%--<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>--%>
-    <%--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>--%>
-    <%--<script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>--%>
-    <%--<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>--%>
-    <%--<link rel="stylesheet" type="text/css"--%>
-    <%--href="<c:url value="/resource/vendor/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"/>"/>--%>
-    <%--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">--%>
-    <%--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">--%>
 </head>
 <body>
 <div class="limiter">

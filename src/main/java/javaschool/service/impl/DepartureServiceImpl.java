@@ -4,10 +4,12 @@ import java.util.LinkedList;
 import java.util.List;
 import javaschool.dao.api.DepartureDAO;
 import javaschool.dao.api.StationDAO;
+import javaschool.entity.Coach;
 import javaschool.entity.Departure;
 import javaschool.entity.Station;
 import javaschool.entity.Ticket;
 import javaschool.service.api.DepartureService;
+import javaschool.service.exception.NoSuchEntityException;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,16 @@ public class DepartureServiceImpl implements DepartureService {
     public DepartureServiceImpl(DepartureDAO departureDAO, StationDAO stationDAO) {
         this.stationDAO = stationDAO;
         this.departureDAO = departureDAO;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Departure findById(Integer id) {
+        Departure departure = departureDAO.findById(id);
+        if(departure == null) {
+            throw new NoSuchEntityException("Departure is not found!", Departure.class);
+        }
+        return departure;
     }
 
     @Transactional(readOnly = true)
@@ -40,26 +52,33 @@ public class DepartureServiceImpl implements DepartureService {
 
     @Override
     @Transactional
-    public void save(int sitsCount, String stationFrom, String stationTo, LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo) {
+    public void save(int coachesNum, String stationFrom, String stationTo, LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo) {
         Departure departure = new Departure();
         Station station = stationDAO.findByTitle(stationFrom);
         station.getDepartures().add(departure);
 
-        departure.setSitsCount(sitsCount);
-        departure.setFreeSitsCount(sitsCount);
+        departure.setSitsCount(coachesNum * Coach.DEFAULT_SEATS_NUM);
+        departure.setFreeSitsCount(coachesNum * Coach.DEFAULT_SEATS_NUM);
         departure.setStationFrom(station);
         departure.setStationTo(stationDAO.findByTitle(stationTo));
         departure.setDateTimeFrom(dateTimeFrom);
         departure.setDateTimeTo(dateTimeTo);
 
-        List<Ticket> tickets = new LinkedList<>();
-        for(int i=1; i <= sitsCount; ++i) {
-            Ticket ticket = new Ticket();
-            ticket.setDeparture(departure);
-            ticket.setSiteNum(i);
-            tickets.add(ticket);
+        List<Coach> coaches = new LinkedList<>();
+        for(int i=1; i <= coachesNum; ++i) {
+            Coach coach = new Coach();
+            coach.setDeparture(departure);
+            coach.setCoachNumber(i);
+            List<Ticket> tickets = new LinkedList<>();
+            for(int j = 1; j <= Coach.DEFAULT_SEATS_NUM; ++j) {
+                Ticket ticket = new Ticket();
+                ticket.setCoach(coach);
+                ticket.setSiteNum(j);
+                tickets.add(ticket);
+            }
+            coach.setTickets(tickets);
         }
-        departure.setTickets(tickets);
+        departure.setCoaches(coaches);
 
         departureDAO.save(departure);
     }

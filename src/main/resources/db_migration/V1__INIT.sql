@@ -39,32 +39,41 @@ create table departure
 create index FKj8oeidcmw26i2cs7w6vyl3370
 	on departure (station_to);
 
+create table coach
+(
+	id int not null primary key auto_increment,
+	departure_id int not null,
+	coach_number int not null,
+	constraint C_DID_FOREIGN_KEY_CONSTRAINT
+	  foreign key (departure_id) references departure (id)
+);
+
 create table ticket
 (
 	id int not null
 		primary key auto_increment,
 	siteNum int not null,
-	departure_id int not null,
+	coach_id int not null,
 	passenger_id int null,
 	constraint UKoueqw8wdsknigkwchpv0c8s53
-		unique (siteNum, departure_id),
+		unique (siteNum, coach_id),
 	constraint FK6jtu14ysy67xmci4u9agei7me
-		foreign key (departure_id) references departure (id),
+		foreign key (coach_id) references coach (id),
 	constraint FK7xdva6e0sknsfbit0xop9y050
 		foreign key (passenger_id) references passenger (id)
 );
 
-create table departure_ticket
-(
-	Departure_id int not null,
-	tickets_id int not null,
-	constraint UK_yg492rpp4kd2vcjj63xcy5pw
-		unique (tickets_id),
-	constraint FKl0ndj9ry2b83lyncc60emhy11
-		foreign key (Departure_id) references departure (id),
-	constraint FKoysmwrvdkhby7deopmwl9fcqh
-		foreign key (tickets_id) references ticket (id)
-);
+-- create table coach_ticket
+-- (
+-- 	coach_id int not null,
+-- 	tickets_id int not null,
+-- 	constraint UK_yg492rpp4kd2vcjj63xcy5pw
+-- 		unique (tickets_id),
+-- 	constraint FKl0ndj9ry2b83lyncc60emhy11
+-- 		foreign key (coach_id) references coach (id),
+-- 	constraint FKoysmwrvdkhby7deopmwl9fcqh
+-- 		foreign key (tickets_id) references ticket (id)
+-- );
 
 create table ticket_passenger
 (
@@ -81,11 +90,11 @@ create table ticket_passenger
 create index TICKET_PASSENGER_INDEX
   on ticket_passenger (ticket_id, passenger_id);
 
-create index FKl0ndj9ry2b83lyncc60emhy11
-	on departure_ticket (Departure_id);
+-- create index FKl0ndj9ry2b83lyncc60emhy1
+-- 	on coach_ticket (tickets_id);
 
 create index FK6jtu14ysy67xmci4u9agei7me
-	on ticket (departure_id);
+	on ticket (coach_id);
 
 create index FK7xdva6e0sknsfbit0xop9y050
 	on ticket (passenger_id);

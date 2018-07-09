@@ -27,8 +27,9 @@ public class Departure {
     private Integer sitsCount;
     @Column(nullable = false)
     private Integer freeSitsCount;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Ticket> tickets;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,
+            orphanRemoval = true, mappedBy = "departure")
+    private List<Coach> coaches;
     @ManyToOne
     @JoinColumn(name = "station_from", nullable = false)
     private Station stationFrom;
@@ -62,12 +63,12 @@ public class Departure {
         this.dateTimeTo = dateTo;
     }
 
-    public List<Ticket> getTickets() {
-        return tickets;
+    public List<Coach> getCoaches() {
+        return coaches;
     }
 
-    public void setTickets(List<Ticket> tickets) {
-        this.tickets = tickets;
+    public void setCoaches(List<Coach> coaches) {
+        this.coaches = coaches;
     }
 
     public Station getStationFrom() {
