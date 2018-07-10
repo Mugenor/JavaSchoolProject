@@ -2,19 +2,25 @@ package javaschool.dao.impl;
 
 import java.util.List;
 import javaschool.dao.api.PassengerDAO;
+import javaschool.entity.Coach;
+import javaschool.entity.Coach_;
 import javaschool.entity.Departure;
 import javaschool.entity.Departure_;
 import javaschool.entity.Passenger;
 import javaschool.entity.Passenger_;
 import javaschool.entity.Ticket;
 import javaschool.entity.Ticket_;
+import javaschool.entity.User;
+import javaschool.entity.User_;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Fetch;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.SetJoin;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.springframework.stereotype.Repository;
@@ -43,11 +49,27 @@ public class PassengerDAOImpl extends GenericAbstractDAO<Passenger, Integer> imp
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Passenger> query = builder.createQuery(Passenger.class);
         Root<Departure> departureRoot = query.from(Departure.class);
-        ListJoin<Departure, Ticket> ticketsJoin = departureRoot.join(Departure_.tickets);
+        SetJoin<Departure, Coach> coachesJoin = departureRoot.join(Departure_.coaches);
+        SetJoin<Coach, Ticket> ticketsJoin = coachesJoin.join(Coach_.tickets);
         Join<Ticket, Passenger> passengerJoin = ticketsJoin.join(Ticket_.passenger);
         Predicate departureEq = builder.equal(departureRoot.get(Departure_.id), departureId);
         Predicate passengerNotNull = builder.isNotNull(ticketsJoin.get(Ticket_.passenger));
 
         return entityManager.createQuery(query.select(passengerJoin).where(departureEq, passengerNotNull)).getResultList();
+    }
+
+    @Override
+    public Passenger findByUsername(String username) {
+        try {
+            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Passenger> query = builder.createQuery(Passenger.class);
+            Root<Passenger> from = query.from(Passenger.class);
+            Join<Passenger, User> userJoin = from.join(Passenger_.user);
+            from.fetch(Passenger_.user);
+            query.where(builder.equal(userJoin.get(User_.username), username));
+            return entityManager.createQuery(query).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 }

@@ -2,6 +2,7 @@ package javaschool.entity;
 
 
 import java.util.List;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,7 +30,7 @@ public class Departure {
     private Integer freeSitsCount;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,
             orphanRemoval = true, mappedBy = "departure")
-    private List<Coach> coaches;
+    private Set<Coach> coaches;
     @ManyToOne
     @JoinColumn(name = "station_from", nullable = false)
     private Station stationFrom;
@@ -63,11 +64,11 @@ public class Departure {
         this.dateTimeTo = dateTo;
     }
 
-    public List<Coach> getCoaches() {
+    public Set<Coach> getCoaches() {
         return coaches;
     }
 
-    public void setCoaches(List<Coach> coaches) {
+    public void setCoaches(Set<Coach> coaches) {
         this.coaches = coaches;
     }
 

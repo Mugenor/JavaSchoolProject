@@ -1,5 +1,6 @@
 package javaschool.service.impl;
 
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import javaschool.dao.api.DepartureDAO;
@@ -28,8 +29,8 @@ public class DepartureServiceImpl implements DepartureService {
 
     @Override
     @Transactional(readOnly = true)
-    public Departure findById(Integer id) {
-        Departure departure = departureDAO.findById(id);
+    public Departure findById(Integer id, boolean fetchStations, boolean fetchTickets) {
+        Departure departure = departureDAO.findById(id, fetchStations, fetchTickets);
         if(departure == null) {
             throw new NoSuchEntityException("Departure is not found!", Departure.class);
         }
@@ -64,12 +65,12 @@ public class DepartureServiceImpl implements DepartureService {
         departure.setDateTimeFrom(dateTimeFrom);
         departure.setDateTimeTo(dateTimeTo);
 
-        List<Coach> coaches = new LinkedList<>();
+        LinkedHashSet<Coach> coaches = new LinkedHashSet<>();
         for(int i=1; i <= coachesNum; ++i) {
             Coach coach = new Coach();
             coach.setDeparture(departure);
             coach.setCoachNumber(i);
-            List<Ticket> tickets = new LinkedList<>();
+            LinkedHashSet<Ticket> tickets = new LinkedHashSet<>();
             for(int j = 1; j <= Coach.DEFAULT_SEATS_NUM; ++j) {
                 Ticket ticket = new Ticket();
                 ticket.setCoach(coach);

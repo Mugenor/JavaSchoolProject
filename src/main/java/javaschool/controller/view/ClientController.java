@@ -8,11 +8,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
+@RequestMapping(path = "/client")
 public class ClientController {
     private static final Logger log = Logger.getLogger(ClientController.class);
     private static final String CLIENT_VIEW = "/client";
@@ -26,7 +28,7 @@ public class ClientController {
         this.departureService = departureService;
     }
 
-    @GetMapping("/client")
+    @GetMapping
     public ModelAndView getClientPage() {
         return new ModelAndView(CLIENT_VIEW);
     }
@@ -34,7 +36,7 @@ public class ClientController {
     @GetMapping("/select/{departureId}")
     public ModelAndView getSelectSeatView(@PathVariable int departureId) {
         ModelAndView modelAndView = new ModelAndView(SELECT_SEAT_VIEW);
-        modelAndView.addObject("departure", departureService.findById(departureId));
+        modelAndView.addObject("departure", departureService.findById(departureId, true, true));
         return modelAndView;
     }
 

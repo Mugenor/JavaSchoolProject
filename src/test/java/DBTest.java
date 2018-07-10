@@ -1,6 +1,9 @@
 import javaschool.config.RootConfig;
+import javaschool.dao.api.PassengerDAO;
+import javaschool.dao.api.TicketDAO;
 import javaschool.entity.Passenger;
 import javaschool.entity.Station;
+import javaschool.entity.Ticket;
 import javaschool.service.api.DepartureService;
 import javaschool.service.api.PassengerService;
 import javaschool.service.api.StationService;
@@ -27,29 +30,33 @@ public class DBTest {
     private StationService stationService;
     @Autowired
     private TicketService ticketService;
+    @Autowired
+    private TicketDAO ticketDAO;
+    @Autowired
+    private PassengerDAO passengerDAO;
 
     private static boolean isBefore = false;
 
     @Before
     public void prepareDB() {
-        log.info("isBefore: " + isBefore);
-        if(isBefore) {
-            return;
-        }
-        isBefore = true;
-        log.info("IN BEFORE, isBefore: " + isBefore);
-        Station bolshevikov = new Station();
-        bolshevikov.setTitle("Bol'shevikov");
-        Station dostoevskaya = new Station();
-        dostoevskaya.setTitle("Dostoevskaya");
-        Station spasskaya = new Station();
-        spasskaya.setTitle("Spasskaya");
-        stationService.save(bolshevikov);
-        stationService.save(dostoevskaya);
-        stationService.save(spasskaya);
-        departureService.save(5, bolshevikov.getTitle(), spasskaya.getTitle(),
-                new LocalDateTime(2018, 1, 1, 12, 0, 0),
-                new LocalDateTime(2018, 2, 1, 12, 0, 0));
+//        log.info("isBefore: " + isBefore);
+//        if(isBefore) {
+//            return;
+//        }
+//        isBefore = true;
+//        log.info("IN BEFORE, isBefore: " + isBefore);
+//        Station bolshevikov = new Station();
+//        bolshevikov.setTitle("Bol'shevikov");
+//        Station dostoevskaya = new Station();
+//        dostoevskaya.setTitle("Dostoevskaya");
+//        Station spasskaya = new Station();
+//        spasskaya.setTitle("Spasskaya");
+//        stationService.save(bolshevikov);
+//        stationService.save(dostoevskaya);
+//        stationService.save(spasskaya);
+//        departureService.save(5, bolshevikov.getTitle(), spasskaya.getTitle(),
+//                new LocalDateTime(2018, 1, 1, 12, 0, 0),
+//                new LocalDateTime(2018, 2, 1, 12, 0, 0));
     }
 
     @Test
@@ -69,5 +76,13 @@ public class DBTest {
         log.info(departureService.findFromToBetween("Bol'shevikov", "Spasskaya",
                 new LocalDateTime(2018, 1, 1, 6, 0, 0),
                 new LocalDateTime(2018, 1, 1,9, 0, 0)));
+    }
+
+    @Test
+    public void test3() {
+        Passenger passenger = passengerDAO.findByUsername("Mugenor");
+        Ticket ticket = ticketDAO.findTicketByDepartureAndCoachNumAndSeatNum(1, 1, 1);
+
+        passengerService.buyTicket("Mugenor", 1, 1, 1);
     }
 }

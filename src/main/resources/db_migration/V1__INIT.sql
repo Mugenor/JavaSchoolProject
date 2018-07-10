@@ -63,35 +63,28 @@ create table ticket
 		foreign key (passenger_id) references passenger (id)
 );
 
--- create table coach_ticket
--- (
--- 	coach_id int not null,
--- 	tickets_id int not null,
--- 	constraint UK_yg492rpp4kd2vcjj63xcy5pw
--- 		unique (tickets_id),
--- 	constraint FKl0ndj9ry2b83lyncc60emhy11
--- 		foreign key (coach_id) references coach (id),
--- 	constraint FKoysmwrvdkhby7deopmwl9fcqh
--- 		foreign key (tickets_id) references ticket (id)
--- );
-
-create table ticket_passenger
+create table ticket_passenger_departure
 (
   ticket_id int not null,
   passenger_id int not null,
+  departure_id int not null,
   constraint TICKET_PASSENGER_UNIQUE_CONSTRAINT
     unique (ticket_id, passenger_id),
+  constraint PASSENGER_DEPARTURE_UNIQUE_CONSTRAINT
+    unique (passenger_id, departure_id),
   constraint TPT_CONSTRAINT
     foreign key (ticket_id) references ticket (id),
   constraint TPP_CONSTRAINT
     foreign key (passenger_id) references passenger (id)
 );
 
-create index TICKET_PASSENGER_INDEX
-  on ticket_passenger (ticket_id, passenger_id);
 
--- create index FKl0ndj9ry2b83lyncc60emhy1
--- 	on coach_ticket (tickets_id);
+create index TICKET_PASSENGER_INDEX
+  on ticket_passenger_departure (ticket_id, passenger_id);
+
+create index DEPARTURE_PASSENGER_INDEX
+  on ticket_passenger_departure (departure_id, passenger_id);
+
 
 create index FK6jtu14ysy67xmci4u9agei7me
 	on ticket (coach_id);

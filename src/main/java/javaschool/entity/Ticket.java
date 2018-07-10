@@ -1,6 +1,7 @@
 package javaschool.entity;
 
 
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -64,5 +65,19 @@ public class Ticket {
                 "id=" + id +
                 ", siteNum=" + siteNum +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Ticket ticket = (Ticket) o;
+        return Objects.equals(id, ticket.id) || (this.siteNum.equals(ticket.siteNum) && this.coach.equals(ticket.coach));
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(siteNum, this.coach);
     }
 }

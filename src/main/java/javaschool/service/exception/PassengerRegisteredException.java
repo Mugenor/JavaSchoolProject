@@ -5,6 +5,10 @@ public class PassengerRegisteredException extends RuntimeException {
         super(message);
     }
 
+    public PassengerRegisteredException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
     public PassengerRegisteredException() {
     }
 }

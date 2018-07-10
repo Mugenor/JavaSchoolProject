@@ -90,9 +90,12 @@ public class DepartureDAOImpl extends GenericAbstractDAO<Departure, Integer> imp
         }
 
         if(fetchTickets) {
-            ListJoin<Departure, Coach> coachesJoin = from.join(Departure_.coaches);
-            ListJoin<Coach, Ticket> ticketsJoin = coachesJoin.join(Coach_.tickets);
-            query.orderBy(builder.asc(ticketsJoin.get(Ticket_.siteNum)));
+//            ListJoin<Departure, Coach> coachesJoin = from.join(Departure_.coaches);
+//            ListJoin<Coach, Ticket> ticketsJoin = coachesJoin.join(Coach_.tickets);
+//            query.orderBy(builder.asc(ticketsJoin.get(Ticket_.siteNum)));
+            Fetch<Departure, Coach> coachFetch = from.fetch(Departure_.coaches);
+            coachFetch.fetch(Coach_.tickets);
+//            query.orderBy(builder.asc(Ticket_.siteNum));
         }
     }
 }

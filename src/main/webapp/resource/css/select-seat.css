@@ -1,0 +1,43 @@
+.coach {
+    display: none;
+}
+
+.active {
+    display: block;
+}
+
+.layer {
+    position: absolute;
+}
+.pic {
+    position: relative;
+    height: 127px;
+}
+
+.seat {
+    font-size: 15px;
+    text-align: center;
+    cursor: pointer;
+    z-index: 101;
+    width: 23px;
+    height: 25px;
+    line-height: 25px;
+}
+
+.seat:hover {
+    background-color: #7ba865;
+}
+
+.engaged {
+    cursor: default !important;
+    color: #9ba884;
+    background-color: #a87e83;
+}
+
+.engaged:hover {
+    background-color: #a81912
+}
+
+.chosen {
+    background-color: #565db9 !important;
+}

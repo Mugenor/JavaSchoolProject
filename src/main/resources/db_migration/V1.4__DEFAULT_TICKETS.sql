@@ -35,6 +35,7 @@ insert into ticket (siteNum, coach_id)
   (33, 1),
   (34, 1),
   (35, 1),
+  (36, 1),
 
   (1, 2),
   (2, 2),
@@ -71,6 +72,7 @@ insert into ticket (siteNum, coach_id)
   (33, 2),
   (34, 2),
   (35, 2),
+  (36, 2),
 
   (1, 3),
   (2, 3),
@@ -107,6 +109,7 @@ insert into ticket (siteNum, coach_id)
   (33, 3),
   (34, 3),
   (35, 3),
+  (36, 3),
 
   (1, 4),
   (2, 4),
@@ -143,6 +146,7 @@ insert into ticket (siteNum, coach_id)
   (33, 4),
   (34, 4),
   (35, 4),
+  (36, 4),
 
   (1, 5),
   (2, 5),
@@ -178,4 +182,5 @@ insert into ticket (siteNum, coach_id)
   (32, 5),
   (33, 5),
   (34, 5),
-  (35, 5);
+  (35, 5),
+  (36, 5);

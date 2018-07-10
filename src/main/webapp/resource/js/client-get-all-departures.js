@@ -24,7 +24,7 @@ $(function showAllDepartures() {
 
         return $('<a/>', {
             class: 'btn btn-primary',
-            href: '/select/' + row.id,
+            href: '/client/select/' + row.id,
             target: '_blank'
         }).html('Buy ticket!').get(0).outerHTML;
     }

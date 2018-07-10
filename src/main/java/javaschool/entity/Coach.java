@@ -1,6 +1,8 @@
 package javaschool.entity;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,10 +12,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 
 @Entity
 public class Coach {
-    public static final int DEFAULT_SEATS_NUM = 35;
+    public static final int DEFAULT_SEATS_NUM = 36;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +27,8 @@ public class Coach {
     @Column(name = "coach_number", nullable = false)
     private int coachNumber;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "coach")
-    private List<Ticket> tickets;
+    @OrderBy("siteNum")
+    private Set<Ticket> tickets;
 
     public Coach() {
     }
@@ -53,11 +57,25 @@ public class Coach {
         this.departure = departure;
     }
 
-    public List<Ticket> getTickets() {
+    public Set<Ticket> getTickets() {
         return tickets;
     }
 
-    public void setTickets(List<Ticket> tickets) {
+    public void setTickets(Set<Ticket> tickets) {
         this.tickets = tickets;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Coach coach = (Coach) o;
+        return coachNumber == coach.coachNumber;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(coachNumber);
     }
 }
