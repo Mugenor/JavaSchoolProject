@@ -130,6 +130,7 @@ $(function showAllDepartures() {
             {data: 'dateTimeTo', render: timeRender},
             {data: 'freeSitsCount'},
         ],
+        bAutoWidth: false,
         columnDefs: [{
             targets: 5,
             searchable: false,

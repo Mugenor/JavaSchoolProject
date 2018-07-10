@@ -4,7 +4,7 @@
 
 <nav class="navbar navbar-expand navbar-dark bg-primary">
     <a class="sidebar-toggle mr-3" href="#"><i class="fa fa-bars"></i></a>
-    <a class="navbar-brand" href="#">BootAdmin</a>
+    <a class="navbar-brand" href="#">Railway Travels</a>
 
     <div class="navbar-collapse collapse">
         <ul class="navbar-nav ml-auto">

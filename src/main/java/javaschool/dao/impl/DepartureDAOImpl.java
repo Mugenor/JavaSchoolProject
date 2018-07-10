@@ -7,6 +7,7 @@ import javaschool.entity.Coach_;
 import javaschool.entity.Departure;
 import javaschool.entity.Departure_;
 import javaschool.entity.Station;
+import javaschool.entity.Station_;
 import javaschool.entity.Ticket;
 import javaschool.entity.Ticket_;
 import javax.persistence.NoResultException;
@@ -14,6 +15,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Fetch;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
@@ -23,6 +25,26 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class DepartureDAOImpl extends GenericAbstractDAO<Departure, Integer> implements DepartureDAO {
+
+    @Override
+    public List<Departure> findByStationTitleFrom(String stationTitle, boolean fetchStations, boolean fetchTickets) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Departure> query = builder.createQuery(Departure.class);
+        Root<Departure> from = query.from(Departure.class);
+        Join<Departure, Station> stationFromJoin = from.join(Departure_.stationFrom);
+        Predicate stationTitleEq = builder.equal(stationFromJoin.get(Station_.title), stationTitle);
+        if(fetchStations) {
+            from.fetch(Departure_.stationFrom);
+            from.fetch(Departure_.stationTo);
+        }
+        if(fetchTickets) {
+            from.fetch(Departure_.coaches).fetch(Coach_.tickets);
+            query.distinct(true); // returns many duplicates
+        }
+        query.select(from).where(stationTitleEq);
+
+        return entityManager.createQuery(query).getResultList();
+    }
 
     @Override
     public List<Departure> findFromToBetween(Station stFrom, Station stTo, LocalDateTime dateFrom, LocalDateTime dateTo) {
@@ -90,12 +112,8 @@ public class DepartureDAOImpl extends GenericAbstractDAO<Departure, Integer> imp
         }
 
         if(fetchTickets) {
-//            ListJoin<Departure, Coach> coachesJoin = from.join(Departure_.coaches);
-//            ListJoin<Coach, Ticket> ticketsJoin = coachesJoin.join(Coach_.tickets);
-//            query.orderBy(builder.asc(ticketsJoin.get(Ticket_.siteNum)));
             Fetch<Departure, Coach> coachFetch = from.fetch(Departure_.coaches);
             coachFetch.fetch(Coach_.tickets);
-//            query.orderBy(builder.asc(Ticket_.siteNum));
         }
     }
 }

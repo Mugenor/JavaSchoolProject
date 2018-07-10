@@ -1,6 +1,7 @@
 package javaschool.controller.view;
 
 import javaschool.service.api.DepartureService;
+import javaschool.service.api.StationService;
 import javaschool.service.exception.NoSuchEntityException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +20,17 @@ public class ClientController {
     private static final Logger log = Logger.getLogger(ClientController.class);
     private static final String CLIENT_VIEW = "/client";
     private static final String SELECT_SEAT_VIEW = "/select-seat";
-    private static final String ALL_DEPARTURES_VIEW = "/all-departures";
+    private static final String DEPARTURES_VIEW = "/departures";
     private static final String FIND_DEPARTURE_VIEW = "/find-departure";
+    private static final String STATIONS_VIEW = "/stations";
 
     private DepartureService departureService;
+    private StationService stationService;
 
     @Autowired
-    public ClientController(DepartureService departureService) {
+    public ClientController(DepartureService departureService, StationService stationService) {
         this.departureService = departureService;
+        this.stationService = stationService;
     }
 
     @GetMapping
@@ -42,12 +46,24 @@ public class ClientController {
     }
 
     @GetMapping("/all-departures")
-    public String getAllDeparturesView(){
-        return ALL_DEPARTURES_VIEW;
+    public ModelAndView getAllDeparturesView(){
+        ModelAndView modelAndView = new ModelAndView(DEPARTURES_VIEW);
+        modelAndView.addObject("departures", departureService.findAll(true, false));
+        return modelAndView;
+    }
+
+    @GetMapping("/departures/{stationName}")
+    public ModelAndView getAllDeparturesByStationName(@PathVariable String stationName){
+        return new ModelAndView(DEPARTURES_VIEW).addObject("departures", departureService.findByStationTitle(stationName, true, false));
     }
 
     @GetMapping("/find-departure")
     public String getFindDepartureView() {
         return FIND_DEPARTURE_VIEW;
+    }
+
+    @GetMapping("/stations")
+    public ModelAndView getStationsView() {
+        return new ModelAndView(STATIONS_VIEW).addObject("stations", stationService.findAllStationNames());
     }
 }

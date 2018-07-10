@@ -1,23 +1,14 @@
-function showAllStations() {
-    $('#main-block').children().remove();
-    let table = $('<table/>', {
-        id: 'stations',
-        class: 'table table-striped table-bordered table-light'
-    });
-    let thead = $('<thead/>')
-        .append($('<tr/>')
-            .append($('<th/>').html('Station'))).appendTo(table);
-    table.appendTo($('#main-block'));
+$(function () {
     $('#stations').DataTable({
-        select: true,
         paging: false,
-        ajax: {
-            url: '/station',
-            dataSrc: ''
-        },
         columns: [
-            { data: 'name'},
-        ]
+            { data: 'name'}
+        ],
+        columnDefs: [{
+            targets: 1,
+            searchable: false,
+            orderable: false,
+        }],
+        bAutoWidth: false
     });
-}
-$('#all-stations').click(showAllStations);
+});

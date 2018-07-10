@@ -11,5 +11,6 @@ public interface DepartureService {
     List<DepartureDTO> findAll(boolean fetchStations, boolean fetchTickets);
     List<DepartureDTO> findFromToBetween(String stFrom, String stTo, LocalDateTime dateFrom, LocalDateTime dateTo);
     List<DepartureDTO> findFromToBetween(String stFrom, String stTo, String dateFrom, String dateTo);
+    List<DepartureDTO> findByStationTitle(String stationTitle, boolean fetchStations, boolean fetchTickets);
     void save(int sitsCount, String stationFrom, String stationTo, LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo);
 }

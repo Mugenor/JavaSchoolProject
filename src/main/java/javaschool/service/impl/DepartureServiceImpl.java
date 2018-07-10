@@ -76,6 +76,14 @@ public class DepartureServiceImpl implements DepartureService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<DepartureDTO> findByStationTitle(String stationTitle, boolean fetchStations, boolean fetchTickets) {
+        return departureDAO.findByStationTitleFrom(stationTitle, fetchStations, fetchTickets).parallelStream()
+                .map(departure -> departureToDepartureDTOConverter.convertTo(departure))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional
     public void save(int coachesNum, String stationFrom, String stationTo, LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo) {
         Departure departure = new Departure();

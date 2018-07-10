@@ -1,6 +1,8 @@
 package javaschool.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import javaschool.controller.dtoentity.StationName;
 import javaschool.dao.api.StationDAO;
 import javaschool.entity.Departure;
 import javaschool.entity.Station;
@@ -39,7 +41,16 @@ public class StationServiceImpl implements StationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Station> findAll() {
         return stationDAO.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<StationName> findAllStationNames() {
+        return findAll().parallelStream()
+                .map(station -> new StationName(station.getTitle()))
+                .collect(Collectors.toList());
     }
 }

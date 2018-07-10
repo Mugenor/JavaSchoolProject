@@ -1,6 +1,9 @@
 package javaschool.controller.dtoentity;
 
 
+import java.util.Date;
+import org.joda.time.LocalDateTime;
+
 public class DepartureDTO {
     private Integer id;
     private int sitsCount;
@@ -65,6 +68,10 @@ public class DepartureDTO {
         return dateTimeFrom;
     }
 
+    public Date getDateTimeFromAsDate() {
+        return new Date(dateTimeFrom);
+    }
+
     public void setDateTimeFrom(long dateTimeFrom) {
         this.dateTimeFrom = dateTimeFrom;
     }
@@ -73,9 +80,21 @@ public class DepartureDTO {
         return dateTimeTo;
     }
 
+    public Date getDateTimeToAsDate() {
+        return new Date(dateTimeTo);
+    }
+
     public void setDateTimeTo(long dateTimeTo) {
         this.dateTimeTo = dateTimeTo;
     }
+
+    public boolean isTooLate() {
+        LocalDateTime now = new LocalDateTime();
+        now.plusMinutes(10);
+        return now.compareTo(new LocalDateTime(dateTimeFrom)) > 0;
+    }
+
+
 
     @Override
     public String toString() {

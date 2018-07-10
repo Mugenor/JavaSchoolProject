@@ -1,6 +1,9 @@
+import java.util.List;
 import javaschool.config.RootConfig;
+import javaschool.dao.api.DepartureDAO;
 import javaschool.dao.api.PassengerDAO;
 import javaschool.dao.api.TicketDAO;
+import javaschool.entity.Departure;
 import javaschool.entity.Passenger;
 import javaschool.entity.Station;
 import javaschool.entity.Ticket;
@@ -34,6 +37,8 @@ public class DBTest {
     private TicketDAO ticketDAO;
     @Autowired
     private PassengerDAO passengerDAO;
+    @Autowired
+    private DepartureDAO departureDAO;
 
     private static boolean isBefore = false;
 
@@ -80,9 +85,6 @@ public class DBTest {
 
     @Test
     public void test3() {
-        Passenger passenger = passengerDAO.findByUsername("Mugenor");
-        Ticket ticket = ticketDAO.findTicketByDepartureAndCoachNumAndSeatNum(1, 1, 1);
-
-        passengerService.buyTicket("Mugenor", 1, 1, 1);
+        List<Departure> departures = departureDAO.findByStationTitleFrom("Bolshevikov", true, true);
     }
 }

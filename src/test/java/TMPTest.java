@@ -1,3 +1,4 @@
+import java.util.Date;
 import java.util.UUID;
 import org.apache.log4j.Logger;
 import org.joda.time.Instant;
@@ -17,6 +18,7 @@ public class TMPTest {
 
     @Test
     public void tst1() {
+        log.info(new Date());
         log.info(new LocalDateTime());
         DateTimeFormatter format = DateTimeFormat.forPattern("dd.MM.yyyy HH:mm");
     }

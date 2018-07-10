@@ -23,13 +23,7 @@
                 </div>
             </c:when>
             <c:otherwise>
-                <h2 class="mb-4">Blank/Starter</h2>
-
-                <div class="card mb-4">
-                    <div class="card-body">
-                        This is a blank page you can use as a starting point.
-                    </div>
-                </div>
+                <h3>Welcome!</h3>
             </c:otherwise>
         </c:choose>
     </div>
