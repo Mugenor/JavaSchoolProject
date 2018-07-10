@@ -7,7 +7,7 @@
             </a>
             <ul id="sm_expand_1" class="list-unstyled collapse">
                 <li id="all-departures"><a href="<c:url value="/client/all-departures"/>">All departures</a></li>
-                <li><a href="#">Find departure</a></li>
+                <li><a href="<c:url value="/client/find-departure"/>">Find departure</a></li>
             </ul>
         </li>
         <li id="all-stations"><a href="#all-stations"><i class="fa fa-fw fa-link"></i> Stations</a></li>

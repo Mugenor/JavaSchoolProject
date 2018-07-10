@@ -20,6 +20,7 @@ public class ClientController {
     private static final String CLIENT_VIEW = "/client";
     private static final String SELECT_SEAT_VIEW = "/select-seat";
     private static final String ALL_DEPARTURES_VIEW = "/all-departures";
+    private static final String FIND_DEPARTURE_VIEW = "/find-departure";
 
     private DepartureService departureService;
 
@@ -36,12 +37,17 @@ public class ClientController {
     @GetMapping("/select/{departureId}")
     public ModelAndView getSelectSeatView(@PathVariable int departureId) {
         ModelAndView modelAndView = new ModelAndView(SELECT_SEAT_VIEW);
-        modelAndView.addObject("departure", departureService.findById(departureId, true, true));
+        modelAndView.addObject("departure", departureService.findByIdRaw(departureId, true, true));
         return modelAndView;
     }
 
     @GetMapping("/all-departures")
     public String getAllDeparturesView(){
         return ALL_DEPARTURES_VIEW;
+    }
+
+    @GetMapping("/find-departure")
+    public String getFindDepartureView() {
+        return FIND_DEPARTURE_VIEW;
     }
 }

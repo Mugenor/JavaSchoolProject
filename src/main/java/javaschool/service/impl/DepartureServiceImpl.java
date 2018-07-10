@@ -1,8 +1,9 @@
 package javaschool.service.impl;
 
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
+import javaschool.controller.dtoentity.DepartureDTO;
 import javaschool.dao.api.DepartureDAO;
 import javaschool.dao.api.StationDAO;
 import javaschool.entity.Coach;
@@ -10,6 +11,8 @@ import javaschool.entity.Departure;
 import javaschool.entity.Station;
 import javaschool.entity.Ticket;
 import javaschool.service.api.DepartureService;
+import javaschool.service.converter.DepartureToDepartureDTOConverter;
+import javaschool.service.converter.StringToLocalDateTimeConverter;
 import javaschool.service.exception.NoSuchEntityException;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,20 +21,31 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class DepartureServiceImpl implements DepartureService {
+    private StringToLocalDateTimeConverter stringToLocalDateTimeConverter;
+    private DepartureToDepartureDTOConverter departureToDepartureDTOConverter;
     private DepartureDAO departureDAO;
     private StationDAO stationDAO;
 
     @Autowired
-    public DepartureServiceImpl(DepartureDAO departureDAO, StationDAO stationDAO) {
+    public DepartureServiceImpl(DepartureDAO departureDAO, StationDAO stationDAO,
+                                StringToLocalDateTimeConverter converter, DepartureToDepartureDTOConverter departureDTOConverter) {
         this.stationDAO = stationDAO;
         this.departureDAO = departureDAO;
+        this.stringToLocalDateTimeConverter = converter;
+        this.departureToDepartureDTOConverter = departureDTOConverter;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Departure findById(Integer id, boolean fetchStations, boolean fetchTickets) {
+    public DepartureDTO findById(Integer id, boolean fetchStations, boolean fetchTickets) {
+        return departureToDepartureDTOConverter.convertTo(findByIdRaw(id, fetchStations, fetchTickets));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Departure findByIdRaw(Integer id, boolean fetchStations, boolean fetchTickets) {
         Departure departure = departureDAO.findById(id, fetchStations, fetchTickets);
-        if(departure == null) {
+        if (departure == null) {
             throw new NoSuchEntityException("Departure is not found!", Departure.class);
         }
         return departure;
@@ -39,16 +53,26 @@ public class DepartureServiceImpl implements DepartureService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<Departure> findFromToBetween(String stFrom, String stTo, LocalDateTime dateFrom, LocalDateTime dateTo) {
+    public List<DepartureDTO> findFromToBetween(String stFrom, String stTo, LocalDateTime dateFrom, LocalDateTime dateTo) {
         Station stationFrom = stationDAO.findByTitle(stFrom);
         Station stationTo = stationDAO.findByTitle(stTo);
-        return departureDAO.findFromToBetween(stationFrom, stationTo, dateFrom, dateTo);
+        return departureDAO.findFromToBetween(stationFrom, stationTo, dateFrom, dateTo)
+                .parallelStream().map(departure -> departureToDepartureDTOConverter.convertTo(departure))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<DepartureDTO> findFromToBetween(String stFrom, String stTo, String dateFrom, String dateTo) {
+        return findFromToBetween(stFrom, stTo, stringToLocalDateTimeConverter.convertTo(dateFrom), stringToLocalDateTimeConverter.convertTo(dateTo));
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<Departure> findAll(boolean fetchStations, boolean fetchTickets) {
-        return departureDAO.findAll(fetchStations, fetchTickets);
+    public List<DepartureDTO> findAll(boolean fetchStations, boolean fetchTickets) {
+        return departureDAO.findAll(fetchStations, fetchTickets).parallelStream()
+                .map(departure -> departureToDepartureDTOConverter.convertTo(departure))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -66,12 +90,12 @@ public class DepartureServiceImpl implements DepartureService {
         departure.setDateTimeTo(dateTimeTo);
 
         LinkedHashSet<Coach> coaches = new LinkedHashSet<>();
-        for(int i=1; i <= coachesNum; ++i) {
+        for (int i = 1; i <= coachesNum; ++i) {
             Coach coach = new Coach();
             coach.setDeparture(departure);
             coach.setCoachNumber(i);
             LinkedHashSet<Ticket> tickets = new LinkedHashSet<>();
-            for(int j = 1; j <= Coach.DEFAULT_SEATS_NUM; ++j) {
+            for (int j = 1; j <= Coach.DEFAULT_SEATS_NUM; ++j) {
                 Ticket ticket = new Ticket();
                 ticket.setCoach(coach);
                 ticket.setSiteNum(j);
