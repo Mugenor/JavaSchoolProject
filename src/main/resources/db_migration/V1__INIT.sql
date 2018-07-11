@@ -98,7 +98,7 @@ create table user
 		primary key auto_increment,
 	password varchar(255) not null,
 	username varchar(255) not null,
-	passenger_id int null,
+	passenger_id int null unique,
 	constraint UK_jreodf78a7pl5qidfh43axdfb
 		unique (username),
 	constraint FKfq0a97ispsqdvk2buxdme7ufp

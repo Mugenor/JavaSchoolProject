@@ -11,7 +11,7 @@
     <title>Client page</title>
 </head>
 <body class="bg-light">
-    <jsp:include page="include/header.jsp"/>
+<jsp:include page="include/header.jsp"/>
 <div class="d-flex">
     <jsp:include page="include/client_menu.jsp"/>
 
@@ -19,7 +19,7 @@
         <c:choose>
             <c:when test="${not empty error}">
                 <div class="alert alert-danger">
-                    ${error}
+                        ${error}
                 </div>
             </c:when>
             <c:otherwise>

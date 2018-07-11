@@ -1,5 +1,6 @@
 package javaschool.config;
 
+import javaschool.controller.handler.UserAdminUrlAuthenticationSuccessHandler;
 import javaschool.dao.api.UserDAO;
 import javaschool.service.SecurityUserDetailService;
 import javax.sql.DataSource;
@@ -38,15 +39,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .formLogin()
-                .defaultSuccessUrl("/client")
                     .loginPage("/login")
-                .failureUrl("/login?error").and()
+                    .failureUrl("/login?error").successHandler(authenticationSuccessHandler()).and()
                 .logout().logoutUrl("/logout").logoutSuccessUrl("/login?logout").permitAll()
-                .and()
+                    .and()
                 .authorizeRequests()
                     .antMatchers("/client/**", "/logout").authenticated()
-                    .anyRequest().permitAll().and()
-                .httpBasic();
+                .anyRequest().permitAll().and()
+                    .httpBasic();
+    }
+    
+    @Bean
+    public UserAdminUrlAuthenticationSuccessHandler authenticationSuccessHandler() {
+        return new UserAdminUrlAuthenticationSuccessHandler();
     }
 
     @Bean

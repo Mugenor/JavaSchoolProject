@@ -7,6 +7,7 @@ import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class TMPTest {
     private static final Logger log = Logger.getLogger(TMPTest.class);
@@ -21,6 +22,9 @@ public class TMPTest {
         log.info(new Date());
         log.info(new LocalDateTime());
         DateTimeFormatter format = DateTimeFormat.forPattern("dd.MM.yyyy HH:mm");
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        log.info(bCryptPasswordEncoder.encode("passenger"));
+        log.info(bCryptPasswordEncoder.encode("admin"));
     }
 
     @Test

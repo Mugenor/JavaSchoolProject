@@ -12,7 +12,7 @@
     <title>Client page</title>
 </head>
 <body class="bg-light">
-<jsp:include page="include/client_header.jsp"/>
+<jsp:include page="include/header.jsp"/>
 <div class="d-flex">
     <jsp:include page="include/client_menu.jsp"/>
 
