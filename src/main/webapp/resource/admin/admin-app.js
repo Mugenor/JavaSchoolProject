@@ -15,8 +15,8 @@ let adminApp = angular.module('adminApp', ['ngRoute'])
                 })
             .when('/stations',
                 {
-                    templateUrl: '/resource/admin/template/stations.html'
-                    // controller: ''
+                    templateUrl: '/resource/admin/template/stations.html',
+                    controller: 'stationsController'
                 })
             .when('/',
                 {

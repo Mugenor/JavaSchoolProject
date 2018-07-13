@@ -26,11 +26,13 @@
 </div>
 <jsp:include page="include/admin_js.jsp"/>
 <script src="/resource/admin/admin-app.js"></script>
-<script src="/resource/admin/controller/all-departures-controller.js"></script>
-<script src="/resource/admin/controller/departure-controller.js"></script>
 <script src="/resource/admin/service/departure-table-service.js"></script>
 <script src="/resource/admin/service/departure-passengers-service.js"></script>
 <script src="/resource/admin/service/station-service.js"></script>
+<script src="/resource/admin/service/station-table-service.js"></script>
 <script src="/resource/admin/directive/contained-in-validator.js"></script>
+<script src="/resource/admin/controller/all-departures-controller.js"></script>
+<script src="/resource/admin/controller/departure-controller.js"></script>
+<script src="/resource/admin/controller/stations-controller.js"></script>
 </body>
 </html>
