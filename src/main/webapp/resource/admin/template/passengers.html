@@ -1,0 +1,27 @@
+<div class="container-fluid">
+    <table ng-if="passengers.length !== 0" id="departures" class="table table-striped table-bordered table-light">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Birthday</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="passenger in passengers">
+            <td>
+                {{passenger.name}}
+            </td>
+            <td>
+                {{passenger.surname}}
+            </td>
+            <td data-order="{{passenger.birthdayMilliseconds}}">
+                {{passenger.birthday}}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div ng-if="passengers.length === 0" class="alert alert-info">
+        No one is registered!
+    </div>
+</div>

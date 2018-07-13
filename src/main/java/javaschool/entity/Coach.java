@@ -1,6 +1,5 @@
 package javaschool.entity;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -22,7 +21,7 @@ public class Coach {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ManyToOne
-    @JoinColumn(name = "departure_id")
+    @JoinColumn(name = "departure_id", nullable = false)
     private Departure departure;
     @Column(name = "coach_number", nullable = false)
     private int coachNumber;

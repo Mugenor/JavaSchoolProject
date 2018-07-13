@@ -2,15 +2,13 @@ $(function () {
     let csrfToken = $("meta[name='_csrf']").attr("content");
     let csrfHeader = $("meta[name='_csrf_header']").attr("content");
     let coach = $('.pic');
-    let coachNotHover = $(coach.children()[0]);
-    let coachHover = $(coach.children()[1]);
     coach.on('mouseover', function (event) {
-        coachNotHover.removeClass('active');
-        coachHover.addClass('active');
+        $($(this).children()[0]).removeClass('active');
+        $($(this).children()[1]).addClass('active');
     });
     coach.on('mouseout', function (event) {
-        coachHover.removeClass('active');
-        coachNotHover.addClass('active');
+        $($(this).children()[1]).removeClass('active');
+        $($(this).children()[0]).addClass('active');
     });
     let seats = $('.seat');
     let awaiting = false;

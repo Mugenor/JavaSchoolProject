@@ -87,4 +87,9 @@ public class DBTest {
     public void test3() {
         List<Departure> departures = departureDAO.findByStationTitleFrom("Bolshevikov", true, true);
     }
+
+    @Test
+    public void test4() {
+        Departure departure = departureService.save(2, "Bolshevikov", "Spasskaya", new LocalDateTime(), new LocalDateTime().plusHours(5));
+    }
 }

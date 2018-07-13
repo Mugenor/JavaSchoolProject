@@ -1,6 +1,5 @@
 package javaschool.controller.dtoentity;
 
-import java.util.Date;
 import javaschool.controller.validator.annotation.LocalDateConstraint;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;

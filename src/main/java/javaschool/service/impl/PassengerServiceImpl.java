@@ -1,16 +1,17 @@
 package javaschool.service.impl;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
+import java.util.stream.Collectors;
+import javaschool.controller.dtoentity.PassengerWithoutTickets;
 import javaschool.dao.api.DepartureDAO;
 import javaschool.dao.api.PassengerDAO;
 import javaschool.dao.api.PassengerWithTicketDAO;
 import javaschool.dao.api.TicketDAO;
 import javaschool.entity.Departure;
 import javaschool.entity.Passenger;
-import javaschool.entity.PassengerWithTicket_;
 import javaschool.entity.Ticket;
 import javaschool.service.api.PassengerService;
+import javaschool.service.converter.PassengerToPassengerWithoutTicketsConverter;
 import javaschool.service.exception.NoSiteOnDepartureException;
 import javaschool.service.exception.NoSuchEntityException;
 import javaschool.service.exception.PassengerRegisteredException;
@@ -24,7 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service()
+@Service
 public class PassengerServiceImpl implements PassengerService {
     private static final Logger log = Logger.getLogger(PassengerServiceImpl.class);
 
@@ -32,15 +33,18 @@ public class PassengerServiceImpl implements PassengerService {
     private TicketDAO ticketDAO;
     private DepartureDAO departureDAO;
     private PassengerWithTicketDAO passengerWithTicketDAO;
+    private PassengerToPassengerWithoutTicketsConverter passengerConverter;
     private PassengerService selfProxy;
 
     @Autowired
     public PassengerServiceImpl(PassengerDAO passengerDAO, TicketDAO ticketDAO,
-                                DepartureDAO departureDAO, PassengerWithTicketDAO passengerWithTicketDAO) {
+                                DepartureDAO departureDAO, PassengerWithTicketDAO passengerWithTicketDAO,
+                                PassengerToPassengerWithoutTicketsConverter passengerConverter) {
         this.passengerDAO = passengerDAO;
         this.ticketDAO = ticketDAO;
         this.departureDAO = departureDAO;
         this.passengerWithTicketDAO = passengerWithTicketDAO;
+        this.passengerConverter = passengerConverter;
     }
 
     @Autowired
@@ -50,8 +54,10 @@ public class PassengerServiceImpl implements PassengerService {
 
 
     @Transactional(readOnly = true)
-    public List<Passenger> getAllPassengers() {
-        return passengerDAO.findAll();
+    public List<PassengerWithoutTickets> getAllPassengers() {
+        return passengerDAO.findAll().parallelStream()
+                .map(passenger -> passengerConverter.convertTo(passenger))
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -112,8 +118,10 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Passenger> findAllPassengersByDepartureId(Integer departureId) {
-        return passengerDAO.findAllPassengersByDepartureId(departureId);
+    public List<PassengerWithoutTickets> findAllPassengersByDepartureId(Integer departureId) {
+        return passengerDAO.findAllPassengersByDepartureId(departureId).parallelStream()
+                .map(passenger -> passengerConverter.convertTo(passenger))
+                .collect(Collectors.toList());
     }
 
 

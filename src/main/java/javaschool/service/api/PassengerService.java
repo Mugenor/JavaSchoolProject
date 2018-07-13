@@ -1,15 +1,14 @@
 package javaschool.service.api;
 
 import java.util.List;
-import javaschool.entity.Departure;
+import javaschool.controller.dtoentity.PassengerWithoutTickets;
 import javaschool.entity.Passenger;
-import javaschool.entity.Ticket;
 
 public interface PassengerService {
-    List<Passenger> getAllPassengers();
+    List<PassengerWithoutTickets> getAllPassengers();
     void save(Passenger passenger);
     Passenger getById(Integer id);
     void buyTicket(String username, Integer departureId, Integer coachNumber, Integer seatNumber);
     void buyTicketTransactional(String username, Integer departureId, Integer coachNumber, Integer seatNumber);
-    List<Passenger> findAllPassengersByDepartureId(Integer departureId);
+    List<PassengerWithoutTickets> findAllPassengersByDepartureId(Integer departureId);
 }

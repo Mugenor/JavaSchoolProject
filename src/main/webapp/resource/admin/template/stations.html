@@ -1,0 +1,23 @@
+<div class="container col-4">
+    <div class="card">
+        <div class="card-header">
+
+        </div>
+        <div class="card-body">
+            <table id="stations" class="table table-striped table-bordered table-light">
+                <thead>
+                <tr>
+                    <th>Station</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="station in stations">
+                    <td>
+                        {{station.name}}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

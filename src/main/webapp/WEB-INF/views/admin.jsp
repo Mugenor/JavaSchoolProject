@@ -5,29 +5,32 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="_csrf" content="${_csrf.token}"/>
+    <meta name="_csrf_header" content="${_csrf.headerName}"/>
+
 
     <jsp:include page="include/client_css.jsp"/>
+    <link rel="stylesheet" href="/resource/vendor/jquery-ui/jquery-ui.css"/>
+    <link rel="stylesheet" href="/resource/css/validation-feedback.css"/>
+    <link rel="stylesheet"
+          href="/resource/vendor/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"/>
 
-    <title>Client page</title>
+    <title>Admin page</title>
 </head>
-<body class="bg-light">
+<body class="bg-light" ng-app="adminApp">
 <jsp:include page="include/header.jsp"/>
 <div class="d-flex">
-    <jsp:include page="include/client_menu.jsp"/>
-
-    <div id="main-block" class="content p-4">
-        <c:choose>
-            <c:when test="${not empty error}">
-                <div class="alert alert-danger">
-                        ${error}
-                </div>
-            </c:when>
-            <c:otherwise>
-                <h3>Welcome!</h3>
-            </c:otherwise>
-        </c:choose>
+    <jsp:include page="include/admin_menu.jsp"/>
+    <div id="main-block" class="content p-4" ng-view>
     </div>
 </div>
-<jsp:include page="include/client_js.jsp"/>
+<jsp:include page="include/admin_js.jsp"/>
+<script src="/resource/admin/admin-app.js"></script>
+<script src="/resource/admin/controller/all-departures-controller.js"></script>
+<script src="/resource/admin/controller/departure-controller.js"></script>
+<script src="/resource/admin/service/departure-table-service.js"></script>
+<script src="/resource/admin/service/departure-passengers-service.js"></script>
+<script src="/resource/admin/service/station-service.js"></script>
+<script src="/resource/admin/directive/contained-in-validator.js"></script>
 </body>
 </html>

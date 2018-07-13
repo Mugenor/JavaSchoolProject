@@ -1,6 +1,7 @@
 package javaschool.controller.dtoentity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import org.joda.time.LocalDateTime;
 
@@ -68,6 +69,7 @@ public class DepartureDTO {
         return dateTimeFrom;
     }
 
+    @JsonIgnore
     public Date getDateTimeFromAsDate() {
         return new Date(dateTimeFrom);
     }
@@ -80,6 +82,7 @@ public class DepartureDTO {
         return dateTimeTo;
     }
 
+    @JsonIgnore
     public Date getDateTimeToAsDate() {
         return new Date(dateTimeTo);
     }
@@ -88,6 +91,7 @@ public class DepartureDTO {
         this.dateTimeTo = dateTimeTo;
     }
 
+    @JsonIgnore
     public boolean isTooLate() {
         LocalDateTime now = new LocalDateTime();
         now.plusMinutes(10);

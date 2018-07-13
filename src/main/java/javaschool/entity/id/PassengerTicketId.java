@@ -3,13 +3,8 @@ package javaschool.entity.id;
 import java.io.Serializable;
 import java.util.Objects;
 import javaschool.entity.Passenger;
-import javaschool.entity.PassengerWithTicket;
 import javaschool.entity.Ticket;
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 

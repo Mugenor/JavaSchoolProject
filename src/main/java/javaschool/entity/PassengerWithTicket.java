@@ -1,7 +1,6 @@
 package javaschool.entity;
 
 import javaschool.entity.id.PassengerTicketId;
-import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;

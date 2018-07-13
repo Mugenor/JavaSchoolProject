@@ -42,6 +42,12 @@ public class Passenger {
         this.surname = surname;
     }
 
+    public Passenger(String name, String surname, LocalDate birthday) {
+        this.name = name;
+        this.surname = surname;
+        this.birthday = birthday;
+    }
+
     public Integer getId() {
         return id;
     }

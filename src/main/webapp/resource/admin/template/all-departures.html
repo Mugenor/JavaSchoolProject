@@ -1,0 +1,82 @@
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header">
+            <form class="form-inline" name="departureForm" autocomplete="off">
+                <div>
+                    <input ng-model="newDeparture.stationFrom" type="text" class="autocomplete form-control mr-sm-2"
+                           ng-model-options="{ updateOn: 'blur'}"
+                           id="stationFrom" name="stationFrom" ng-blur="checkStation(departureForm.stationFrom)"
+                           placeholder="Station from" required/>
+                </div>
+                <div>
+                    <input ng-model="newDeparture.stationTo" type="text" class="autocomplete form-control mr-sm-2"
+                           ng-model-options="{ updateOn: 'blur'}"
+                           id="stationTo" name="stationTo" ng-blur="checkStation(departureForm.stationTo)" placeholder="Station to"
+                           required/>
+                </div>
+                <div>
+                    <input ng-model="newDeparture.dateTimeFrom" type="text" class="form-control mr-sm-2"
+                           id="dateTimeFrom" placeholder="Departure time" ng-class="dateTimeFromClass.class"
+                           required/>
+                    <div>
+                    </div>
+                </div>
+                <div>
+                    <input ng-model="newDeparture.dateTimeTo" type="text" class="form-control mr-sm-2" id="dateTimeTo"
+                           placeholder="Arrival time" ng-class="dateTimeToClass.class"
+                           required/>
+                    <div id="validDateTimeTo">
+                    </div>
+                </div>
+                <div>
+                    <input ng-model="newDeparture.coachCount" type="number" class="form-control mr-sm-2" id="coachCount"
+                           placeholder="Coach count" ng-style="numberInputStyle"
+                           required step="1" min="1" max="50"/>
+                </div>
+                <button id="search" type="submit" class="btn btn-primary" ng-disabled="addButtonDisabled"
+                        ng-click="sendNewDeparture(newDeparture, departureForm)">Add new
+                </button>
+            </form>
+        </div>
+        <div class="card-body">
+            <table id="departures" class="table table-striped table-bordered table-light">
+                <thead>
+                <tr>
+                    <th>Station of departure</th>
+                    <th>Arrival station</th>
+                    <th>Time of departure</th>
+                    <th>Arrival time</th>
+                    <th>Total number of seats</th>
+                    <th>Number of available seats</th>
+                    <th>Watch registered passengers</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="departure in departures">
+                    <td>
+                        {{departure.stationFrom}}
+                    </td>
+                    <td>
+                        {{departure.stationTo}}
+                    </td>
+                    <td data-order="{{departure.dateTimeFromMilliseconds}}">
+                        {{departure.dateTimeFrom}}
+                    </td>
+                    <td data-order="{{departure.dateTimeToMilliseconds}}">
+                        {{departure.dateTimeTo}}
+                    </td>
+                    <td>
+                        {{departure.seatsCount}}
+                    </td>
+                    <td>
+                        {{departure.freeSeatsCount}}
+                    </td>
+                    <td>
+                        <a href="#!departure/{{departure.id}}" class="btn btn-primary">Watch registered passengers</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

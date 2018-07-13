@@ -4,6 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import javaschool.controller.dtoentity.DepartureDTO;
+import javaschool.controller.dtoentity.NewDepartureDTO;
 import javaschool.dao.api.DepartureDAO;
 import javaschool.dao.api.StationDAO;
 import javaschool.entity.Coach;
@@ -85,20 +86,20 @@ public class DepartureServiceImpl implements DepartureService {
 
     @Override
     @Transactional
-    public void save(int coachesNum, String stationFrom, String stationTo, LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo) {
+    public Departure save(int coachesCount, String stationFrom, String stationTo, LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo) {
         Departure departure = new Departure();
         Station station = stationDAO.findByTitle(stationFrom);
         station.getDepartures().add(departure);
 
-        departure.setSitsCount(coachesNum * Coach.DEFAULT_SEATS_NUM);
-        departure.setFreeSitsCount(coachesNum * Coach.DEFAULT_SEATS_NUM);
+        departure.setSitsCount(coachesCount * Coach.DEFAULT_SEATS_NUM);
+        departure.setFreeSitsCount(coachesCount * Coach.DEFAULT_SEATS_NUM);
         departure.setStationFrom(station);
         departure.setStationTo(stationDAO.findByTitle(stationTo));
         departure.setDateTimeFrom(dateTimeFrom);
         departure.setDateTimeTo(dateTimeTo);
 
         LinkedHashSet<Coach> coaches = new LinkedHashSet<>();
-        for (int i = 1; i <= coachesNum; ++i) {
+        for (int i = 1; i <= coachesCount; ++i) {
             Coach coach = new Coach();
             coach.setDeparture(departure);
             coach.setCoachNumber(i);
@@ -110,9 +111,19 @@ public class DepartureServiceImpl implements DepartureService {
                 tickets.add(ticket);
             }
             coach.setTickets(tickets);
+            coaches.add(coach);
         }
         departure.setCoaches(coaches);
 
         departureDAO.save(departure);
+
+        return departure;
+    }
+
+    @Override
+    @Transactional
+    public Departure save(NewDepartureDTO newDepartureDTO) {
+        return save(newDepartureDTO.getCoachCount(), newDepartureDTO.getStationFrom(), newDepartureDTO.getStationTo(),
+                newDepartureDTO.getDateTimeFrom(), newDepartureDTO.getDateTimeTo());
     }
 }

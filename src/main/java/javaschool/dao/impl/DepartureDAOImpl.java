@@ -8,16 +8,11 @@ import javaschool.entity.Departure;
 import javaschool.entity.Departure_;
 import javaschool.entity.Station;
 import javaschool.entity.Station_;
-import javaschool.entity.Ticket;
-import javaschool.entity.Ticket_;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Fetch;
 import javax.persistence.criteria.Join;
-import javax.persistence.criteria.ListJoin;
-import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.joda.time.LocalDateTime;
@@ -101,7 +96,11 @@ public class DepartureDAOImpl extends GenericAbstractDAO<Departure, Integer> imp
 
         query.where(builder.equal(from.get(Departure_.id), id));
 
-        return entityManager.createQuery(query).getSingleResult();
+        try {
+            return entityManager.createQuery(query).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     private void findDeparture(CriteriaBuilder builder, CriteriaQuery<Departure> query,

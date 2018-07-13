@@ -1,16 +1,19 @@
 package javaschool.controller.rest;
 
-import java.util.LinkedList;
 import java.util.List;
-import javaschool.entity.Passenger;
+import javaschool.controller.dtoentity.PassengerWithoutTickets;
 import javaschool.service.api.PassengerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 @RestController
+@RequestMapping(path = "/passenger", produces = APPLICATION_JSON_VALUE)
 public class PassengerController {
     private PassengerService passengerService;
 
@@ -19,13 +22,13 @@ public class PassengerController {
         this.passengerService = passengerService;
     }
 
-    @RequestMapping(path = "/passenger", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Passenger> getAllPassengers(){
-        List<Passenger> passengers = new LinkedList<Passenger>();
-        Passenger passenger = new Passenger("Ilya", "Chernov");
-//        passenger.setId(0);
-        passengers.add(passenger);
+    @GetMapping
+    public List<PassengerWithoutTickets> getAllPassengers(){
+        return passengerService.getAllPassengers();
+    }
 
-        return passengers;
+    @GetMapping("/{departureId}")
+    public List<PassengerWithoutTickets> getAllPassengersRegisteredOnDeparture(@PathVariable Integer departureId) {
+        return passengerService.findAllPassengersByDepartureId(departureId);
     }
 }

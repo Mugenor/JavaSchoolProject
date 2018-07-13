@@ -2,6 +2,7 @@ package javaschool.service.api;
 
 import java.util.List;
 import javaschool.controller.dtoentity.DepartureDTO;
+import javaschool.controller.dtoentity.NewDepartureDTO;
 import javaschool.entity.Departure;
 import org.joda.time.LocalDateTime;
 
@@ -12,5 +13,6 @@ public interface DepartureService {
     List<DepartureDTO> findFromToBetween(String stFrom, String stTo, LocalDateTime dateFrom, LocalDateTime dateTo);
     List<DepartureDTO> findFromToBetween(String stFrom, String stTo, String dateFrom, String dateTo);
     List<DepartureDTO> findByStationTitle(String stationTitle, boolean fetchStations, boolean fetchTickets);
-    void save(int sitsCount, String stationFrom, String stationTo, LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo);
+    Departure save(int coachesCount, String stationFrom, String stationTo, LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo);
+    Departure save(NewDepartureDTO newDepartureDTO);
 }

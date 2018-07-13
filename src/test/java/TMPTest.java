@@ -34,4 +34,10 @@ public class TMPTest {
         log.info(new LocalDateTime(Instant.parse(new LocalDateTime().toString()).getMillis()));
         log.info(UUID.randomUUID());
     }
+
+    @Test
+    public void tst3() {
+        DateTimeFormatter format = DateTimeFormat.forPattern("dd.MM.yyyy, HH:mm:ss");
+        log.info(LocalDateTime.parse("01.04.2000, 13:03:44", format));
+    }
 }

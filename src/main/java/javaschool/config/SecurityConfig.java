@@ -14,6 +14,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+
+import static javaschool.service.SecurityUserDetailService.ROLE_ADMIN;
+import static javaschool.service.SecurityUserDetailService.ROLE_PASSENGER;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -44,11 +48,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout().logoutUrl("/logout").logoutSuccessUrl("/login?logout").permitAll()
                     .and()
                 .authorizeRequests()
-                    .antMatchers("/client/**", "/logout").authenticated()
+                    .antMatchers("/client/**").hasAnyAuthority(ROLE_PASSENGER)
+                    .antMatchers("/admin/**", "/departure/add").hasAnyAuthority(ROLE_ADMIN)
+                    .antMatchers("/logout").authenticated()
                 .anyRequest().permitAll().and()
                     .httpBasic();
     }
-    
+
     @Bean
     public UserAdminUrlAuthenticationSuccessHandler authenticationSuccessHandler() {
         return new UserAdminUrlAuthenticationSuccessHandler();
