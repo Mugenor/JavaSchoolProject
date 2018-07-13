@@ -36,7 +36,9 @@ public class Departure {
     @ManyToOne
     @JoinColumn(name = "station_to", nullable = false)
     private Station stationTo;
+    @Column(nullable = false)
     private LocalDateTime dateTimeFrom;
+    @Column(nullable = false)
     private LocalDateTime dateTimeTo;
 
     public Integer getFreeSitsCount() {

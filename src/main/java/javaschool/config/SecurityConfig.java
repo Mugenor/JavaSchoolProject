@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -43,16 +44,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .formLogin()
-                    .loginPage("/login")
-                    .failureUrl("/login?error").successHandler(authenticationSuccessHandler()).and()
+                .loginPage("/login")
+                .failureUrl("/login?error").successHandler(authenticationSuccessHandler()).and()
                 .logout().logoutUrl("/logout").logoutSuccessUrl("/login?logout").permitAll()
-                    .and()
+                .and()
                 .authorizeRequests()
-                    .antMatchers("/client/**").hasAnyAuthority(ROLE_PASSENGER)
-                    .antMatchers("/admin/**", "/departure/add").hasAnyAuthority(ROLE_ADMIN)
-                    .antMatchers("/logout").authenticated()
+                .antMatchers("/client/**").hasAnyAuthority(ROLE_PASSENGER)
+                .antMatchers("/admin/**", "/departure/add", "/passenger/*").hasAnyAuthority(ROLE_ADMIN)
+                .antMatchers(HttpMethod.POST, "/station").hasAnyAuthority(ROLE_ADMIN)
+                .antMatchers("/logout").authenticated()
                 .anyRequest().permitAll().and()
-                    .httpBasic();
+                .httpBasic();
     }
 
     @Bean

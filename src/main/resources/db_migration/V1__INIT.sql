@@ -22,8 +22,8 @@ create table departure
 (
 	id int not null
 		primary key auto_increment,
-	dateTimeFrom datetime null,
-	dateTimeTo datetime null,
+	dateTimeFrom datetime not null,
+	dateTimeTo datetime not null,
 	freeSitsCount int not null,
 	sitsCount int not null,
 	station_from int not null,

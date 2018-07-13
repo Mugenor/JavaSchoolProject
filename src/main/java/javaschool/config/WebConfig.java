@@ -1,6 +1,7 @@
 package javaschool.config;
 
 import java.util.List;
+import javaschool.service.converter.LongToLocalDateTimeConverter;
 import javaschool.service.converter.StringToLocalDateConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -51,6 +52,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(new StringToLocalDateConverter());
+        registry.addConverter(new LongToLocalDateTimeConverter());
     }
 
     @Bean

@@ -16,4 +16,8 @@ public class NoSuchEntityException extends RuntimeException {
         super(message, cause);
         this.entityClass = entityClass;
     }
+
+    public Class getEntityClass() {
+        return entityClass;
+    }
 }

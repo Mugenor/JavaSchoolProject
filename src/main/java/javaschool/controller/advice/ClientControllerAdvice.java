@@ -7,7 +7,9 @@ import javaschool.service.exception.PassengerRegisteredException;
 import javaschool.service.exception.TicketAlreadyBoughtException;
 import javaschool.service.exception.TooLateForBuyingTicketException;
 import org.apache.log4j.Logger;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -31,5 +33,11 @@ public class ClientControllerAdvice {
     @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
     public String handleTicketBuyExceptions(Exception exc) throws IOException {
         return exc.getMessage();
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<?> handleDataIntegrityViolationException(DataIntegrityViolationException exc) {
+        log.error("Exception while trying to save something: ", exc);
+        return ResponseEntity.badRequest().body(exc.getMessage());
     }
 }

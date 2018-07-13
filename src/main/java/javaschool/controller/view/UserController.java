@@ -56,7 +56,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@Valid NewUser newUser, Errors errors, RedirectAttributes model) {
+    public String registerUser(@Valid NewUser newUser, Errors errors) {
         log.info("Trying to register new user: " + newUser);
         if (errors.hasErrors()) {
             throw new ValidationException();
