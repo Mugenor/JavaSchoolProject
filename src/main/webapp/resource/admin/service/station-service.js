@@ -8,5 +8,17 @@ adminApp.service('stationService', function ($http, $q) {
             deferred.reject(response.status);
         });
         return deferred.promise;
+    };
+    this.sendNewStation = function (stationName) {
+        let deferred = $q.defer();
+
+        $http.post('/station', {name: stationName}).then(
+            function success(response) {
+                deferred.resolve()
+            }, function error(response) {
+                deferred.reject(response.status);
+            }
+        );
+        return deferred.promise;
     }
 });

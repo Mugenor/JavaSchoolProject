@@ -31,6 +31,7 @@
 <script src="/resource/admin/service/station-service.js"></script>
 <script src="/resource/admin/service/station-table-service.js"></script>
 <script src="/resource/admin/directive/contained-in-validator.js"></script>
+<script src="/resource/admin/directive/not-contained-in-validator.js"></script>
 <script src="/resource/admin/controller/all-departures-controller.js"></script>
 <script src="/resource/admin/controller/departure-controller.js"></script>
 <script src="/resource/admin/controller/stations-controller.js"></script>
