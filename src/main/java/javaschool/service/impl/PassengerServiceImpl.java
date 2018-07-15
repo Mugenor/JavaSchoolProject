@@ -54,7 +54,7 @@ public class PassengerServiceImpl implements PassengerService {
 
 
     @Transactional(readOnly = true)
-    public List<PassengerWithoutTickets> getAllPassengers() {
+    public List<PassengerWithoutTickets> findAllPassengers() {
         return passengerDAO.findAll().parallelStream()
                 .map(passenger -> passengerConverter.convertTo(passenger))
                 .collect(Collectors.toList());
@@ -67,7 +67,7 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     @Transactional(readOnly = true)
-    public Passenger getById(Integer id) {
+    public Passenger findById(Integer id) {
         return passengerDAO.findById(id);
     }
 
@@ -113,7 +113,7 @@ public class PassengerServiceImpl implements PassengerService {
 
         ticket.setPassenger(passenger);
         passenger.getTickets().add(ticket);
-        departure.setFreeSitsCount(departure.getFreeSitsCount() - 1);
+        departure.decrementFreeSeatsCount();
     }
 
     @Override

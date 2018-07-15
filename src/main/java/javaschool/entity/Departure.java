@@ -1,7 +1,9 @@
 package javaschool.entity;
 
 
+import java.util.Objects;
 import java.util.Set;
+import javaschool.service.exception.NoSiteOnDepartureException;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -104,6 +106,33 @@ public class Departure {
     public void setSitsCount(Integer sitsCount) {
         this.sitsCount = sitsCount;
         this.freeSitsCount = sitsCount;
+    }
+
+    public void decrementFreeSeatsCount() {
+        int newFreeSeatsCount = freeSitsCount - 1;
+        if(newFreeSeatsCount < 0) {
+            throw new NoSiteOnDepartureException();
+        }
+        freeSitsCount = newFreeSeatsCount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Departure departure = (Departure) o;
+        return Objects.equals(sitsCount, departure.sitsCount) &&
+                Objects.equals(freeSitsCount, departure.freeSitsCount) &&
+                Objects.equals(stationFrom, departure.stationFrom) &&
+                Objects.equals(stationTo, departure.stationTo) &&
+                Objects.equals(dateTimeFrom, departure.dateTimeFrom) &&
+                Objects.equals(dateTimeTo, departure.dateTimeTo);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(sitsCount, freeSitsCount, stationFrom, stationTo, dateTimeFrom, dateTimeTo);
     }
 
     @Override

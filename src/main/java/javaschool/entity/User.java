@@ -1,5 +1,6 @@
 package javaschool.entity;
 
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -53,6 +54,21 @@ public class User {
 
     public void setPassenger(Passenger passenger) {
         this.passenger = passenger;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(username, user.username) &&
+                Objects.equals(passenger, user.passenger);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(username, passenger);
     }
 
     @Override

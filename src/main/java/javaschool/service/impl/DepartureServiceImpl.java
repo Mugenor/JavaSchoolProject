@@ -19,6 +19,7 @@ import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 @Service
 public class DepartureServiceImpl implements DepartureService {
@@ -54,18 +55,18 @@ public class DepartureServiceImpl implements DepartureService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<DepartureDTO> findFromToBetween(String stFrom, String stTo, LocalDateTime dateFrom, LocalDateTime dateTo) {
+    public List<DepartureDTO> findFromToBetween(String stFrom, String stTo, LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo) {
         Station stationFrom = stationDAO.findByTitle(stFrom);
         Station stationTo = stationDAO.findByTitle(stTo);
-        return departureDAO.findFromToBetween(stationFrom, stationTo, dateFrom, dateTo)
+        return departureDAO.findFromToBetween(stationFrom, stationTo, dateTimeFrom, dateTimeTo)
                 .parallelStream().map(departure -> departureToDepartureDTOConverter.convertTo(departure))
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<DepartureDTO> findFromToBetween(String stFrom, String stTo, String dateFrom, String dateTo) {
-        return findFromToBetween(stFrom, stTo, stringToLocalDateTimeConverter.convertTo(dateFrom), stringToLocalDateTimeConverter.convertTo(dateTo));
+    public List<DepartureDTO> findFromToBetween(String stFrom, String stTo, String dateTimeFrom, String dateTimeTo) {
+        return findFromToBetween(stFrom, stTo, stringToLocalDateTimeConverter.convertTo(dateTimeFrom), stringToLocalDateTimeConverter.convertTo(dateTimeTo));
     }
 
     @Transactional(readOnly = true)

@@ -24,7 +24,7 @@ public class PassengerController {
 
     @GetMapping
     public List<PassengerWithoutTickets> getAllPassengers(){
-        return passengerService.getAllPassengers();
+        return passengerService.findAllPassengers();
     }
 
     @GetMapping("/{departureId}")
