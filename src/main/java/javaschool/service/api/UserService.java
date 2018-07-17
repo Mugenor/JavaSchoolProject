@@ -1,6 +1,7 @@
 package javaschool.service.api;
 
 import java.util.List;
+import javaschool.entity.AlmostUser;
 import javaschool.entity.User;
 
 public interface UserService {
@@ -33,4 +34,6 @@ public interface UserService {
      * @return List with all users
      */
     List<User> findAll();
+
+    void save(AlmostUser almostUser);
 }

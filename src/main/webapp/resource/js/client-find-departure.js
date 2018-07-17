@@ -78,7 +78,7 @@ $(function showAllDepartures() {
         startDate: today,
         endDate: lastDate,
         immediateUpdates: true
-    }).blur(function (event) {
+    }).change(function (event) {
         if (dateTimeFromInput.data('datetimepicker').getDate().getTime() >= dateTimeToInput.data('datetimepicker').getDate().getTime()) {
             dateTimeToInput.addClass('is-invalid');
         } else {

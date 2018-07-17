@@ -1,6 +1,8 @@
 package javaschool.controller.dtoentity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import javaschool.controller.validator.annotation.LocalDateConstraint;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 import org.joda.time.LocalDate;
@@ -19,18 +21,30 @@ public class NewUser {
     @Length(min = 5, max = 20)
     private String password;
     @NotNull
+    @Email
+    private String email;
+    @NotNull
     @LocalDateConstraint(minDate = "01.01.1950", maxDate = "01.01.2018")
     private LocalDate birthday;
 
     public NewUser() {
     }
 
-    public NewUser(String name, String surname, String username, String password, LocalDate birthday) {
+    public NewUser(String name, String surname, String username, String password, String email, LocalDate birthday) {
         this.name = name;
         this.surname = surname;
         this.username = username;
         this.password = password;
         this.birthday = birthday;
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getName() {

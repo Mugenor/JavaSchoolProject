@@ -99,6 +99,7 @@ create table user
 	password varchar(255) not null,
 	username varchar(255) not null,
 	passenger_id int null unique,
+	email varchar(255) not null unique,
 	constraint UK_jreodf78a7pl5qidfh43axdfb
 		unique (username),
 	constraint FKfq0a97ispsqdvk2buxdme7ufp
@@ -107,4 +108,21 @@ create table user
 
 create index FKfq0a97ispsqdvk2buxdme7ufp
 	on user (passenger_id);
+
+create index EMAIL_INDEX
+	on user (email);
+
+create table almost_user
+(
+	hash varchar(255) primary key not null unique,
+	password varchar(255) not null,
+	username varchar(255) not null unique,
+	email varchar(255) not null unique,
+	name varchar(255) not null,
+	surname varchar(255) NOT NULL,
+	birthday date not null,
+	registered datetime not null,
+	constraint NAME_SURNAME_BIRTHDAY_UNIQUE_CONSTRAINT
+		unique (name, surname, birthday)
+);
 

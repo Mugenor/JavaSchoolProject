@@ -17,8 +17,8 @@
     <script src="<c:url value="/resource/vendor/moment/moment.js"/>"></script>
     <script src="<c:url value="/resource/vendor/bootstrap/js/bootstrap.js"/>"></script>
     <script src="<c:url value="/resource/vendor/bootstrap/js/bootstrap-datepicker.js"/>"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script src="<c:url value="/resource/js/register.js"/>"></script>
-
 </head>
 <body>
 <div class="limiter">
@@ -65,6 +65,17 @@
                     <span class="focus-input100"></span>
                 </div>
 
+                <div class="p-t-31 p-b-9">
+                    <span class="txt1">
+                        Email
+                    </span>
+                </div>
+
+                <div class="wrap-input100 validate-input" data-validate="Username is required">
+                    <sf:input cssClass="input100" path="email" maxlength="50" minlength="2"/>
+                    <span class="focus-input100"></span>
+                </div>
+
                 <div class="p-t-13 p-b-9">
 						<span class="txt1">
 							Password
@@ -87,6 +98,12 @@
                     <span class="focus-input100"></span>
                 </div>
 
+                <div style="margin-top: 20px">
+                    <div class="g-recaptcha"
+                         data-sitekey="6LfxSmQUAAAAANYKXBvo5SjSGsBTPYAIbBefIiRg"
+                         data-callback="reCaptchaCallback"
+                         data-expired-callback="reCaptchaExpiredCallback"></div>
+                </div>
 
                 <div class="container-login100-form-btn m-t-17">
                     <button class="login100-form-btn">

@@ -498,6 +498,14 @@ iframe {
   opacity: 1;
 }
 
+.login100-form-btn:disabled {
+  background: white;
+  cursor: default;
+}
+.login100-form-btn:disabled::before {
+  background: white;
+}
+
 @media (max-width: 992px) {
   .alert-validate::before {
     visibility: visible;
