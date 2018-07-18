@@ -45,7 +45,7 @@ public class ClientController {
     @GetMapping("/all-departures")
     public ModelAndView getAllDeparturesView(){
         ModelAndView modelAndView = new ModelAndView(DEPARTURES_VIEW);
-        modelAndView.addObject("departures", departureService.findAll(true, false));
+        modelAndView.addObject("departures", departureService.findAllAvailable(true, false));
         return modelAndView;
     }
 

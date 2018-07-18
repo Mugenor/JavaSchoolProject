@@ -13,7 +13,6 @@ $(function showAllDepartures() {
             $('.autocomplete').autocomplete({
                 source: stations,
                 change: function (event, ui) {
-                    console.log(event, ui);
                     if (ui.item) {
                         $(this).val(ui.item.label);
                         $(this).removeClass('is-invalid');
@@ -53,7 +52,6 @@ $(function showAllDepartures() {
 
     function chooseDepartureButton(data, type, row, meta) {
         let departureDate = new Date(row.dateTimeFrom);
-        debugger;
         departureDate.setMinutes(departureDate.getMinutes() - 10);
         if (departureDate.getTime() < new Date().getTime()) {
             return '<p>Too late!</p>';
@@ -91,7 +89,6 @@ $(function showAllDepartures() {
 
 
     $('#stationFrom, #stationTo').change(function (event) {
-        console.log(event);
         if (stationFromInput.val() === stationToInput.val()) {
             stationFromInput.addClass('is-invalid');
             stationToInput.addClass('is-invalid');
@@ -109,8 +106,6 @@ $(function showAllDepartures() {
                     dateTimeFrom: dateTimeFromInput.data('datetimepicker').getDate().getTime(),
                     dateTimeTo: dateTimeToInput.data('datetimepicker').getDate().getTime()},
                 success: function (resp) {
-                    console.log(resp);
-                    debugger;
                     departureTable.DataTable().rows().remove().draw();
                     departureTable.DataTable().rows.add(resp).draw();
                 }

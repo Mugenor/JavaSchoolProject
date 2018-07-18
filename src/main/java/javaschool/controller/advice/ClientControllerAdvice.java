@@ -29,10 +29,8 @@ public class ClientControllerAdvice {
 
     @ExceptionHandler({TooLateForBuyingTicketException.class, TicketAlreadyBoughtException.class,
             PassengerRegisteredException.class, NoSiteOnDepartureException.class})
-    @ResponseBody
-    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
-    public String handleTicketBuyExceptions(Exception exc) throws IOException {
-        return exc.getMessage();
+    public ResponseEntity<String> handleTicketBuyExceptions(Exception exc) throws IOException {
+        return ResponseEntity.badRequest().body(exc.getMessage());
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)

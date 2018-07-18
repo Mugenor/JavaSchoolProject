@@ -3,7 +3,6 @@ adminApp.controller('stationsController', function ($scope, stationService, stat
     $scope.stations = [];
     $scope.addButtonDisabled = false;
     stationsPromise.then(function (value) {
-        console.log(value);
         stationTableService.addStationsToTable(value, $scope.stations);
     });
 

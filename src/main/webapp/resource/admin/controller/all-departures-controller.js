@@ -12,12 +12,10 @@ adminApp.controller('allDeparturesController', function ($scope, departureTableS
     let stationsPromise = stationService.getAllStationNames();
 
     departuresPromise.then(function (value) {
-        console.log('in promise resolve', value);
         $scope.departures = value;
     });
 
     stationsPromise.then(function (stationNames) {
-        console.log('in promise resolve', stationNames);
         $scope.stationNames = stationNames;
         $('.autocomplete').autocomplete({
             source: stationNames,
@@ -40,6 +38,7 @@ adminApp.controller('allDeparturesController', function ($scope, departureTableS
     let dateTimeFromInput = $('#dateTimeFrom');
     let dateTimeToInput = $('#dateTimeTo');
     let today = new Date();
+    today.setMinutes(today.getMinutes() + 10);
     let endDate = new Date();
     endDate.setFullYear(endDate.getFullYear() + 5);
 
@@ -47,22 +46,30 @@ adminApp.controller('allDeparturesController', function ($scope, departureTableS
     $scope.dateTimeFromClass = {class: ''};
 
     $("#dateTimeFrom, #dateTimeTo").datetimepicker({
-        format: "dd.mm.yyyy, HH:ii",
+        format: "dd.mm.yyyy, hh:ii",
         startDate: today,
         endDate: endDate,
         immediateUpdates: true
-    }).change(function (event) {
-        let dateTimeFromValid = true, dateTimeToValid = true;
-        if (dateTimeToInput.val() === '' ||
-            dateTimeFromInput.data('datetimepicker').getDate().getTime() >= dateTimeToInput.data('datetimepicker').getDate().getTime()) {
-            dateTimeToValid = false;
+    });
+
+    dateTimeFromInput.on('change.dp', function (event) {
+        let now = new Date();
+        now.setMinutes(now.getMinutes() + 10);
+        let departureTime = dateTimeFromInput.data('datetimepicker').getDate();
+        if (now.getTime() >= departureTime.getTime()) {
+            dateTimeFromInput.val('');
+        } else {
+            dateTimeToInput.data('datetimepicker').setStartDate(departureTime);
         }
-        console.log(dateTimeFromInput.val());
-        if (dateTimeFromInput.val().trim() === '') {
-            dateTimeFromValid = false;
+    });
+    dateTimeToInput.on('change.dp', function (event) {
+        let departureTime = dateTimeFromInput.data('datetimepicker').getDate();
+        let arrivalTime = dateTimeToInput.data('datetimepicker').getDate();
+        if(departureTime.getTime() >= arrivalTime.getTime()) {
+            dateTimeToInput.val('');
+        } else {
+            dateTimeFromInput.data('datetimepicker').setEndDate(arrivalTime);
         }
-        setValidClass(dateTimeFromValid, $scope.dateTimeFromClass);
-        setValidClass(dateTimeToValid, $scope.dateTimeToClass);
     });
 
     $scope.sendNewDeparture = function (newDeparture, departureForm) {
@@ -83,9 +90,43 @@ adminApp.controller('allDeparturesController', function ($scope, departureTableS
             $scope.dateTimeToClass.class = '';
             $scope.dateTimeFromClass.class = '';
             $scope.newDeparture = {};
+            departureForm.$setPristine(true);
         }
     };
 
+    $scope.notTheSame = function (v1, v2) {
+        if (v1.$viewValue && v2.$viewValue) {
+            return v1.$viewValue !== v2.$viewValue;
+        } else {
+            return true;
+        }
+    };
+
+    $scope.afterNow = function () {
+        if (!dateTimeFromInput.val() || dateTimeFromInput.val() === '') {
+            return true;
+        }
+        let now = new Date();
+        now.setMinutes(now.getMinutes() + 10);
+        let inputDate = dateTimeFromInput.data('datetimepicker').getDate();
+        return now.getTime() < inputDate.getTime();
+    };
+    $scope.beforeArrival = function () {
+        if (!dateTimeToInput.val() || dateTimeToInput.val() === '' || !dateTimeFromInput.val() ||  dateTimeFromInput.val() === '') {
+            return true;
+        }
+        let arrivalTime = dateTimeToInput.data('datetimepicker').getDate();
+        let departureTime = dateTimeFromInput.data('datetimepicker').getDate();
+        return departureTime.getTime() < arrivalTime.getTime();
+    };
+    $scope.afterDeparture = function () {
+        if(!dateTimeFromInput.val() || dateTimeFromInput === '' || !dateTimeToInput.val() || dateTimeToInput.val() === '') {
+            return true;
+        }
+        let departureTime = dateTimeFromInput.data('datetimepicker').getDate();
+        let arrivalTime = dateTimeToInput.data('datetimepicker').getDate();
+        return departureTime.getTime() < arrivalTime.getTime();
+    }
 
     // $scope.createDataTable = function () {
     //     departureTableService.createDataTable('departures', {

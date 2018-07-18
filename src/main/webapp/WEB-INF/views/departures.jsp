@@ -43,7 +43,7 @@
                                             pattern="dd.MM.yyyy, HH:mm"/>
                         </td>
                         <td data-order="${departure.dateTimeTo}">
-                            <fmt:formatDate value="${departure.dateTimeFromAsDate}" type="both"
+                            <fmt:formatDate value="${departure.dateTimeToAsDate}" type="both"
                                             pattern="dd.MM.yyyy, HH:mm"/>
                         </td>
                         <td>

@@ -93,9 +93,7 @@ public class DepartureDTO {
 
     @JsonIgnore
     public boolean isTooLate() {
-        LocalDateTime now = new LocalDateTime();
-        now.plusMinutes(10);
-        return now.compareTo(new LocalDateTime(dateTimeFrom)) > 0;
+        return LocalDateTime.now().plusMinutes(10).compareTo(new LocalDateTime(dateTimeFrom)) > 0;
     }
 
 

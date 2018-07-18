@@ -20,7 +20,6 @@ adminApp.service('departureTableService', function ($http, $q) {
     this.load = function () {
         let deferred = $q.defer();
         $http.get('/departure').then(function success(response) {
-            console.log(response);
             deferred.resolve(response.data.map(convertDeparture));
         }, function error(response) {
             deferred.reject(response.status);

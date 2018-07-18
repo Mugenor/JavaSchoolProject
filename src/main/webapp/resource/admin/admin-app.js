@@ -1,7 +1,7 @@
 let csrfToken = $("meta[name='_csrf']").attr("content");
 let csrfHeader = $("meta[name='_csrf_header']").attr("content");
 
-let adminApp = angular.module('adminApp', ['ngRoute'])
+let adminApp = angular.module('adminApp', ['ngRoute', 'ui.validate'])
     .config(function ($routeProvider) {
         $routeProvider.when('/all-departures',
             {

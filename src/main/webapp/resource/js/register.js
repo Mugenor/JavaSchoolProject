@@ -12,7 +12,6 @@ $(function(){
     let reCaptchaDone = false;
 
     function validateForm() {
-        console.log("in form validate");
         $('.alert').remove();
         let nameRegexp = /^[A-ZА-Я][a-zа-я]+$/;
         let usernameRegexp = /^[a-zа-я0-9]{2,}$/i;

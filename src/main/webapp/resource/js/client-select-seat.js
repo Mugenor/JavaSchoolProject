@@ -51,7 +51,6 @@ $(function () {
             },
             error: function (jqXHR, status, error) {
                 awaiting = false;
-                console.log(jqXHR);
                 $('.card-footer .alert').remove();
                 $('.card-footer').append($('<div/>', {
                     class: 'alert alert-danger'

@@ -58,7 +58,7 @@ public class DepartureServiceImpl implements DepartureService {
     public List<DepartureDTO> findFromToBetween(String stFrom, String stTo, LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo) {
         Station stationFrom = stationDAO.findByTitle(stFrom);
         Station stationTo = stationDAO.findByTitle(stTo);
-        return departureDAO.findFromToBetween(stationFrom, stationTo, dateTimeFrom, dateTimeTo)
+        return departureDAO.findFromToBetween(stationFrom, stationTo, dateTimeFrom, dateTimeTo, true)
                 .parallelStream().map(departure -> departureToDepartureDTOConverter.convertTo(departure))
                 .collect(Collectors.toList());
     }
@@ -72,7 +72,16 @@ public class DepartureServiceImpl implements DepartureService {
     @Transactional(readOnly = true)
     @Override
     public List<DepartureDTO> findAll(boolean fetchStations, boolean fetchTickets) {
-        return departureDAO.findAll(fetchStations, fetchTickets).parallelStream()
+        return departureDAO.findAll(fetchStations, fetchTickets, true).parallelStream()
+                .map(departure -> departureToDepartureDTOConverter.convertTo(departure))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<DepartureDTO> findAllAvailable(boolean fetchStations, boolean fetchTickets) {
+        return departureDAO.findAfterDateTime(LocalDateTime.now(), fetchStations, fetchTickets, true)
+                .stream()
                 .map(departure -> departureToDepartureDTOConverter.convertTo(departure))
                 .collect(Collectors.toList());
     }
@@ -80,7 +89,7 @@ public class DepartureServiceImpl implements DepartureService {
     @Override
     @Transactional(readOnly = true)
     public List<DepartureDTO> findByStationTitle(String stationTitle, boolean fetchStations, boolean fetchTickets) {
-        return departureDAO.findByStationTitleFrom(stationTitle, fetchStations, fetchTickets).parallelStream()
+        return departureDAO.findByStationTitleFrom(stationTitle, fetchStations, fetchTickets, true).parallelStream()
                 .map(departure -> departureToDepartureDTOConverter.convertTo(departure))
                 .collect(Collectors.toList());
     }

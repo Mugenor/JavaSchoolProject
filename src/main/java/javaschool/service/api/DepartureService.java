@@ -64,6 +64,8 @@ public interface DepartureService {
      */
     List<DepartureDTO> findFromToBetween(String stFrom, String stTo, String dateTimeFrom, String dateTimeTo);
 
+    List<DepartureDTO> findAllAvailable(boolean fetchStations, boolean fetchTickets);
+
     /**
      * Finds all departures specified by the title of the station of departure
      *

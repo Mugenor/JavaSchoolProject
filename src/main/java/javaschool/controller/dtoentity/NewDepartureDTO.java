@@ -3,6 +3,8 @@ package javaschool.controller.dtoentity;
 import javaschool.controller.validator.LocalDateTimeValidator;
 import javaschool.controller.validator.annotation.LocalDateConstraint;
 import javaschool.controller.validator.annotation.LocalDateTimeConstraint;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import org.joda.time.LocalDateTime;
 
@@ -17,6 +19,8 @@ public class NewDepartureDTO {
     @NotNull
     @LocalDateTimeConstraint(minDateTime = LocalDateTimeValidator.NOW)
     private LocalDateTime dateTimeTo;
+    @Min(1)
+    @Max(50)
     private int coachCount;
 
     public NewDepartureDTO() {
