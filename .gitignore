@@ -1,4 +1,6 @@
 .idea/*
+*/.idea/*
 *.iml
-target/*
-src/main/resources/mail.properties
+*/.idea/*
+*/target/*
+RailwayTravels/src/main/resources/mail.properties
