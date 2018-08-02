@@ -6,9 +6,13 @@ import javaschool.entity.Coach;
 import javaschool.entity.Coach_;
 import javaschool.entity.Departure;
 import javaschool.entity.Departure_;
+import javaschool.entity.OccupiedSeat;
+import javaschool.entity.OccupiedSeat_;
 import javaschool.entity.Passenger;
 import javaschool.entity.Passenger_;
 import javaschool.entity.Seat;
+import javaschool.entity.Seat_;
+import javaschool.entity.Ticket;
 import javaschool.entity.Ticket_;
 import javaschool.entity.User;
 import javaschool.entity.User_;
@@ -47,14 +51,15 @@ public class PassengerDAOImpl extends GenericAbstractDAO<Passenger, Integer> imp
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Passenger> query = builder.createQuery(Passenger.class);
         Root<Departure> departureRoot = query.from(Departure.class);
-        SetJoin<Departure, Coach> coachesJoin = departureRoot.join(Departure_.coaches);
-//        SetJoin<Coach, Seat> ticketsJoin = coachesJoin.join(Coach_.tickets);
-//        Join<Seat, Passenger> passengerJoin = ticketsJoin.join(Ticket_.passenger);
+        Join<OccupiedSeat, Ticket> ticketJoin = departureRoot.join(Departure_.coaches)
+                .join(Coach_.seats)
+                .join(Seat_.occupiedSeat)
+                .join(OccupiedSeat_.ticket);
+        Join<Ticket, Passenger> passengerJoin = ticketJoin.join(Ticket_.passenger);
         Predicate departureEq = builder.equal(departureRoot.get(Departure_.id), departureId);
-//        Predicate passengerNotNull = builder.isNotNull(ticketsJoin.get(Ticket_.passenger));
+        Predicate passengerNotNull = builder.isNotNull(ticketJoin.get(Ticket_.passenger));
 
-//        return entityManager.createQuery(query.select(passengerJoin).where(departureEq, passengerNotNull)).getResultList();
-        return null;
+        return entityManager.createQuery(query.select(passengerJoin).where(departureEq, passengerNotNull)).getResultList();
     }
 
     @Override

@@ -1,9 +1,8 @@
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.Set;
 import javaschool.dao.api.DepartureDAO;
 import javaschool.dao.api.PassengerDAO;
-import javaschool.dao.api.TicketDAO;
+import javaschool.dao.api.SeatDAO;
 import javaschool.entity.Coach;
 import javaschool.entity.Departure;
 import javaschool.entity.Passenger;
@@ -24,7 +23,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.dao.DataIntegrityViolationException;
 
 
 import static org.mockito.Mockito.doThrow;
@@ -57,7 +55,7 @@ public class PassengerServiceTest {
     @Mock
     private PassengerDAO passengerDAO;
     @Mock
-    private TicketDAO ticketDAO;
+    private SeatDAO seatDAO;
     @Mock
     private DepartureDAO departureDAO;
     @Mock
@@ -65,7 +63,7 @@ public class PassengerServiceTest {
 
     @Before
     public void init() {
-        passengerService = new PassengerServiceImpl(passengerDAO, ticketDAO,
+        passengerService = new PassengerServiceImpl(passengerDAO, seatDAO,
                 departureDAO, passengerConverter);
         ((PassengerServiceImpl) passengerService).setSelfProxy(passengerService);
         Departure defaultDeparture = getInitializedDeparture(DEPARTURE_ID, STATION_FROM, STATION_TO, DATE_TIME_FROM, DATE_TIME_TO);
@@ -79,15 +77,15 @@ public class PassengerServiceTest {
                 getInitializedDeparture(DEPARTURE_ID + 1, STATION_FROM, STATION_TO,
                 LocalDateTime.now().plusMinutes(5), LocalDateTime.now().plusDays(2)));
         when(departureDAO.findById(DEPARTURE_ID + 2)).thenReturn(departureWithoutFreeSeats);
-        when(ticketDAO.findTicketByDepartureAndCoachNumAndSeatNum(DEPARTURE_ID, COACH_NUM, SEAT_NUM))
+        when(seatDAO.findSeatByDepartureAndCoachNumAndSeatNum(DEPARTURE_ID, COACH_NUM, SEAT_NUM))
                 .thenReturn(defaultSeat);
-        when(ticketDAO.findTicketByDepartureAndCoachNumAndSeatNum(DEPARTURE_ID + 1, COACH_NUM, SEAT_NUM))
+        when(seatDAO.findSeatByDepartureAndCoachNumAndSeatNum(DEPARTURE_ID + 1, COACH_NUM, SEAT_NUM))
                 .thenReturn(defaultSeat);
-        when(ticketDAO.findTicketByDepartureAndCoachNumAndSeatNum(DEPARTURE_ID + 2, COACH_NUM, SEAT_NUM))
+        when(seatDAO.findSeatByDepartureAndCoachNumAndSeatNum(DEPARTURE_ID + 2, COACH_NUM, SEAT_NUM))
                 .thenReturn(defaultSeat);
-        when(ticketDAO.findTicketByDepartureAndCoachNumAndSeatNum(DEPARTURE_ID, COACH_NUM, SEAT_NUM + 1))
+        when(seatDAO.findSeatByDepartureAndCoachNumAndSeatNum(DEPARTURE_ID, COACH_NUM, SEAT_NUM + 1))
                 .thenReturn(getDefaultTicket(SEAT_NUM + 1));
-        when(ticketDAO.findTicketByDepartureAndCoachNumAndSeatNum(DEPARTURE_ID, COACH_NUM, SEAT_NUM + 2))
+        when(seatDAO.findSeatByDepartureAndCoachNumAndSeatNum(DEPARTURE_ID, COACH_NUM, SEAT_NUM + 2))
                 .thenReturn(seatWithPassenger);
         when(passengerDAO.findByUsername(DEFAULT_USERNAME)).thenReturn(defaultPassenger);
         when(passengerDAO.findByUsername(NOT_DEFAULT_USERNAME))
@@ -109,7 +107,7 @@ public class PassengerServiceTest {
         passengerService.buyTicket(NOT_DEFAULT_USERNAME, DEPARTURE_ID, COACH_NUM, SEAT_NUM + 1);
         verify(departureDAO).findById(DEPARTURE_ID);
         verify(passengerDAO).findByUsername(NOT_DEFAULT_USERNAME);
-        verify(ticketDAO).findTicketByDepartureAndCoachNumAndSeatNum(DEPARTURE_ID, COACH_NUM, SEAT_NUM + 1);
+        verify(seatDAO).findSeatByDepartureAndCoachNumAndSeatNum(DEPARTURE_ID, COACH_NUM, SEAT_NUM + 1);
         Departure departure = getInitializedDeparture(DEPARTURE_ID, STATION_FROM, STATION_TO, DATE_TIME_FROM, DATE_TIME_TO);
         departure.decrementFreeSeatsCount();
 //        verify(passengerWithTicketDAO).save(getDefaultPassenger(NOT_DEFAULT_NAME, NOT_DEFAULT_SURNAME, NOT_DEFAULT_BIRTHDAY),
@@ -130,7 +128,7 @@ public class PassengerServiceTest {
         passengerService.buyTicket(DEFAULT_USERNAME, DEPARTURE_ID, COACH_NUM, SEAT_NUM);
         verify(departureDAO).findById(DEPARTURE_ID);
         verify(passengerDAO).findByUsername(DEFAULT_USERNAME);
-        verify(ticketDAO).findTicketByDepartureAndCoachNumAndSeatNum(DEPARTURE_ID, COACH_NUM, SEAT_NUM);
+        verify(seatDAO).findSeatByDepartureAndCoachNumAndSeatNum(DEPARTURE_ID, COACH_NUM, SEAT_NUM);
         Passenger defaultPassenger = getDefaultPassenger(DEFAULT_NAME, DEFAULT_SURNAME, DEFAULT_BIRTHDAY);
         Seat defaultSeat = getDefaultTicket(1);
         Departure departure = getInitializedDeparture(DEPARTURE_ID, STATION_FROM, STATION_TO, DATE_TIME_FROM, DATE_TIME_TO);

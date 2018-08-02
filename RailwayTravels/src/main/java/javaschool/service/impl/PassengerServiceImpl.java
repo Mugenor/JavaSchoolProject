@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 import javaschool.controller.dtoentity.PassengerWithoutTickets;
 import javaschool.dao.api.DepartureDAO;
 import javaschool.dao.api.PassengerDAO;
-import javaschool.dao.api.TicketDAO;
+import javaschool.dao.api.SeatDAO;
 import javaschool.entity.Departure;
 import javaschool.entity.Passenger;
 import javaschool.entity.Seat;
@@ -29,17 +29,17 @@ public class PassengerServiceImpl implements PassengerService {
     private static final Logger log = Logger.getLogger(PassengerServiceImpl.class);
 
     private PassengerDAO passengerDAO;
-    private TicketDAO ticketDAO;
+    private SeatDAO seatDAO;
     private DepartureDAO departureDAO;
     private PassengerToPassengerWithoutTicketsConverter passengerConverter;
     private PassengerService selfProxy;
 
     @Autowired
-    public PassengerServiceImpl(PassengerDAO passengerDAO, TicketDAO ticketDAO,
+    public PassengerServiceImpl(PassengerDAO passengerDAO, SeatDAO seatDAO,
                                 DepartureDAO departureDAO,
                                 PassengerToPassengerWithoutTicketsConverter passengerConverter) {
         this.passengerDAO = passengerDAO;
-        this.ticketDAO = ticketDAO;
+        this.seatDAO = seatDAO;
         this.departureDAO = departureDAO;
         this.passengerConverter = passengerConverter;
     }
@@ -70,12 +70,13 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     @Transactional(readOnly = true)
-    public void buyTicket(String username, Integer departureId, Integer coachNumber, Integer seatNumber) {
+    public void buyTicket(String username, Integer tripId, Integer leftDepartureIndex,
+                          Integer rightDepartureIndex, Integer coachNumber, Integer seatNumber) {
         try {
             selfProxy.buyTicketTransactional(username, departureId, coachNumber, seatNumber);
         } catch (DataIntegrityViolationException e) {
-            Seat seat = ticketDAO.findTicketByDepartureAndCoachNumAndSeatNum(departureId, coachNumber, seatNumber);
-            if(seat.getOccupiedSeat() == null) {
+            Seat seat = seatDAO.findSeatByDepartureAndCoachNumAndSeatNum(departureId, coachNumber, seatNumber);
+            if (seat.getOccupiedSeat() == null) {
                 log.info(username + " tried to buy few tickets on one departure!", e);
                 throw new PassengerRegisteredException("You are already have a seat on this departure!", e);
             } else {
@@ -86,10 +87,11 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void buyTicketTransactional(String username, Integer departureId, Integer coachNumber, Integer seatNumber) {
+    public void buyTicketTransactional(String username, Integer tripId, Integer leftDepartureIndex,
+                                       Integer rightDepartureIndex, Integer coachNumber, Integer seatNumber) {
         Departure departure = departureDAO.findById(departureId);
         Passenger passenger = passengerDAO.findByUsername(username);
-        Seat seat = ticketDAO.findTicketByDepartureAndCoachNumAndSeatNum(departureId, coachNumber, seatNumber);
+        Seat seat = seatDAO.findSeatByDepartureAndCoachNumAndSeatNum(departureId, coachNumber, seatNumber);
 
         notNullElseThrowException(passenger, new NoSuchEntityException("There is no such passenger", Passenger.class));
         notNullElseThrowException(seat, new NoSuchEntityException("There is no such seat", Seat.class));

@@ -31,11 +31,12 @@ public interface PassengerService {
      * Make user buy ticket for specified departure and seat. User this method instead of buyTicketTransactional method.
      *
      * @param username    User's username
-     * @param departureId Departure's id
+     * @param tripId Trip's id
      * @param coachNumber Number of coach with specified seat
      * @param seatNumber  Number of seat in specified coach
      */
-    void buyTicket(String username, Integer departureId, Integer coachNumber, Integer seatNumber);
+    void buyTicket(String username, Integer tripId, Integer leftDepartureIndex,
+                   Integer rightDepartureIndex, Integer coachNumber, Integer seatNumber);
 
     /**
      * Make user buy ticket for specified departure and seat. It does not throw custom exception.
@@ -46,7 +47,8 @@ public interface PassengerService {
      * @param coachNumber Number of coach with specified seat
      * @param seatNumber  Number of seat in specified coach
      */
-    void buyTicketTransactional(String username, Integer departureId, Integer coachNumber, Integer seatNumber);
+    void buyTicketTransactional(String username, Integer tripId, Integer leftDepartureIndex,
+                                Integer rightDepartureIndex, Integer coachNumber, Integer seatNumber);
 
     /**
      * Finds all passengers registered on specified departure

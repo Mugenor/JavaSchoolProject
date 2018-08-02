@@ -100,10 +100,6 @@ create table occupied_seat
     foreign key (ticket_id) references ticket(id)
 );
 
-
-
-
-
 create table user
 (
 	id int not null
