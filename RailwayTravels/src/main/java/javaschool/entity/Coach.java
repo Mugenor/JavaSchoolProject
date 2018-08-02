@@ -27,7 +27,7 @@ public class Coach {
     private int coachNumber;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "coach")
     @OrderBy("siteNum")
-    private Set<Ticket> tickets;
+    private Set<Seat> seats;
 
     public Coach() {
     }
@@ -56,12 +56,12 @@ public class Coach {
         this.departure = departure;
     }
 
-    public Set<Ticket> getTickets() {
-        return tickets;
+    public Set<Seat> getSeats() {
+        return seats;
     }
 
-    public void setTickets(Set<Ticket> tickets) {
-        this.tickets = tickets;
+    public void setSeats(Set<Seat> seats) {
+        this.seats = seats;
     }
 
     @Override

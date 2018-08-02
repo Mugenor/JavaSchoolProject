@@ -10,20 +10,20 @@
 </h:head>
 <h:body>
     <h:panelGroup id="departureTable">
-        <p:dataTable value="${table.allDepartures}" var="departure">
+        <p:dataTable value="${table.allDepartures}" var="trip">
             <p:column headerText="Departure station">
-                <h:outputLabel value="${departure.stationFrom}"/>
+                <h:outputLabel value="${trip.stationFrom}"/>
             </p:column>
             <p:column headerText="Arrival station">
-                <h:outputLabel value="${departure.stationTo}"/>
+                <h:outputLabel value="${trip.stationTo}"/>
             </p:column>
             <p:column headerText="Departure time">
-                <h:outputLabel value="${table.getDateTime(departure.dateTimeFrom)}">
+                <h:outputLabel value="${table.getDateTime(trip.dateTimeFrom)}">
                     <f:convertDateTime type="both"/>
                 </h:outputLabel>
             </p:column>
             <p:column headerText="Arrival time">
-                <h:outputLabel value="${table.getDateTime(departure.dateTimeTo)}">
+                <h:outputLabel value="${table.getDateTime(trip.dateTimeTo)}">
                     <f:convertDateTime type="both"/>
                 </h:outputLabel>
             </p:column>

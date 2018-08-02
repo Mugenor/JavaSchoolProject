@@ -1,4 +1,4 @@
-insert into ticket (siteNum, coach_id)
+insert into seat (siteNum, coach_id)
   values
   (1, 1),
   (2, 1),

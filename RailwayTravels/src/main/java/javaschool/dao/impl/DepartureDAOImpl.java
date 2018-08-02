@@ -140,7 +140,7 @@ public class DepartureDAOImpl extends GenericAbstractDAO<Departure, Integer> imp
             from.fetch(Departure_.stationTo);
         }
         if (fetchTickets) {
-            from.fetch(Departure_.coaches).fetch(Coach_.tickets);
+//            from.fetch(Departure_.coaches).fetch(Coach_.tickets);
             query.distinct(true); // returns many duplicates
         }
         if (orderByDateTimeFrom) {

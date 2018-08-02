@@ -23,13 +23,13 @@
     <div id="main-block" class="aling-content-center content p-4">
         <div class="card mb-4">
             <div class="card-header bg-light">
-                <div class="row">From ${departure.stationTo.title} to ${departure.stationFrom.title}</div>
-                <div class="row">Start: ${departure.dateTimeFrom.toString('dd.MM.yyyy, HH:mm')}</div>
-                <div class="row">Arrival: ${departure.dateTimeTo.toString('dd.MM.yyyy, HH:mm')}</div>
+                <div class="row">From ${trip.stationTo.title} to ${trip.stationFrom.title}</div>
+                <div class="row">Start: ${trip.dateTimeFrom.toString('dd.MM.yyyy, HH:mm')}</div>
+                <div class="row">Arrival: ${trip.dateTimeTo.toString('dd.MM.yyyy, HH:mm')}</div>
             </div>
             <div class="card-body">
-                <div data-iddeparture="${departure.id}">
-                    <c:forEach items="${departure.coaches}" var="coach">
+                <div data-iddeparture="${trip.id}">
+                    <c:forEach items="${trip.coaches}" var="coach">
                         <div class="pic">
                             <div class="layer coach active" style='z-index: 100;left: 0px; top: 0px;width: 761px; height: 127px; line-height: 127px;
                 background-image: url("https://cdn1.tu-tu.ru/images2/train/order/car/re/coupe_normal.png")'></div>
@@ -39,28 +39,28 @@
                                  style="z-index: 101;left: 36px; top: 0px; width: 22px; height: 17px; line-height: 17px; text-align: center">
                                 <span class="content">${coach.coachNumber}</span>
                             </div>
-                            <c:forEach var="ticket" items="${coach.tickets}">
-                                <div data-seatnum="${ticket.siteNum}" data-coachnum="${coach.coachNumber}"
-                                     class="layer seat<c:choose><c:when test="${ticket.passenger != null}"> engaged</c:when>
+                            <c:forEach var="seat" items="${coach.seats}">
+                                <div data-seatnum="${seat.siteNum}" data-coachnum="${coach.coachNumber}"
+                                     class="layer seat<c:choose><c:when test="${seat.passenger != null}"> engaged</c:when>
                                             <c:otherwise> free</c:otherwise></c:choose>"
-                                     <c:if test="${ticket.passenger != null}">title="Seat already engaged!"</c:if>
-                                     <c:if test="${ticket.passenger == null}">title="Buy seat!"</c:if>
+                                     <c:if test="${seat.passenger != null}">title="Seat already engaged!"</c:if>
+                                     <c:if test="${seat.passenger == null}">title="Buy seat!"</c:if>
                                      style="
                                      <c:choose>
-                                     <c:when test="${ticket.siteNum % 4 == 3}">
-                                             left: ${157 + 65 * ((ticket.siteNum - (ticket.siteNum % 4)) / 4)}px;
-                                             top: ${19 + (ticket.siteNum % 2) * 25}px;
+                                     <c:when test="${seat.siteNum % 4 == 3}">
+                                             left: ${157 + 65 * ((seat.siteNum - (seat.siteNum % 4)) / 4)}px;
+                                             top: ${19 + (seat.siteNum % 2) * 25}px;
                                      </c:when>
-                                     <c:when test="${ticket.siteNum % 4 == 0}">
-                                             left: ${157 + 65 * (((ticket.siteNum - (ticket.siteNum % 4)) / 4) - 1)}px;
-                                             top: ${19 + (ticket.siteNum % 2) * 25}px;
+                                     <c:when test="${seat.siteNum % 4 == 0}">
+                                             left: ${157 + 65 * (((seat.siteNum - (seat.siteNum % 4)) / 4) - 1)}px;
+                                             top: ${19 + (seat.siteNum % 2) * 25}px;
                                      </c:when>
                                      <c:otherwise>
-                                             left: ${117 + 65 * ((ticket.siteNum - (ticket.siteNum % 4)) / 4)}px;
-                                             top: ${19 + (ticket.siteNum % 2) * 25}px;
+                                             left: ${117 + 65 * ((seat.siteNum - (seat.siteNum % 4)) / 4)}px;
+                                             top: ${19 + (seat.siteNum % 2) * 25}px;
                                      </c:otherwise>
                                              </c:choose>">
-                                    <span class="">${ticket.siteNum}</span>
+                                    <span class="">${seat.siteNum}</span>
                                 </div>
 
                             </c:forEach>
@@ -70,7 +70,7 @@
             </div>
             <div class="card-footer">
                 <div class="row">
-                    <button id="buyTicketButton" class="btn btn-success btn-lg">Buy ticket!</button>
+                    <button id="buyTicketButton" class="btn btn-success btn-lg">Buy seat!</button>
                 </div>
             </div>
         </div>

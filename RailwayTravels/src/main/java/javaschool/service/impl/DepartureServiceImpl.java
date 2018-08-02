@@ -10,7 +10,7 @@ import javaschool.dao.api.StationDAO;
 import javaschool.entity.Coach;
 import javaschool.entity.Departure;
 import javaschool.entity.Station;
-import javaschool.entity.Ticket;
+import javaschool.entity.Seat;
 import javaschool.service.api.DepartureService;
 import javaschool.service.converter.DepartureToDepartureDTOConverter;
 import javaschool.service.converter.StringToLocalDateTimeConverter;
@@ -22,7 +22,6 @@ import org.joda.time.LocalTime;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -148,14 +147,14 @@ public class DepartureServiceImpl implements DepartureService {
             Coach coach = new Coach();
             coach.setDeparture(departure);
             coach.setCoachNumber(i);
-            LinkedHashSet<Ticket> tickets = new LinkedHashSet<>();
+            LinkedHashSet<Seat> seats = new LinkedHashSet<>();
             for (int j = 1; j <= Coach.DEFAULT_SEATS_NUM; ++j) {
-                Ticket ticket = new Ticket();
-                ticket.setCoach(coach);
-                ticket.setSiteNum(j);
-                tickets.add(ticket);
+                Seat seat = new Seat();
+                seat.setCoach(coach);
+                seat.setSiteNum(j);
+                seats.add(seat);
             }
-            coach.setTickets(tickets);
+            coach.setSeats(seats);
             coaches.add(coach);
         }
         departure.setCoaches(coaches);

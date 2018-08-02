@@ -5,11 +5,10 @@ import java.util.stream.Collectors;
 import javaschool.controller.dtoentity.PassengerWithoutTickets;
 import javaschool.dao.api.DepartureDAO;
 import javaschool.dao.api.PassengerDAO;
-import javaschool.dao.api.PassengerWithTicketDAO;
 import javaschool.dao.api.TicketDAO;
 import javaschool.entity.Departure;
 import javaschool.entity.Passenger;
-import javaschool.entity.Ticket;
+import javaschool.entity.Seat;
 import javaschool.service.api.PassengerService;
 import javaschool.service.converter.PassengerToPassengerWithoutTicketsConverter;
 import javaschool.service.exception.NoSiteOnDepartureException;
@@ -32,18 +31,16 @@ public class PassengerServiceImpl implements PassengerService {
     private PassengerDAO passengerDAO;
     private TicketDAO ticketDAO;
     private DepartureDAO departureDAO;
-    private PassengerWithTicketDAO passengerWithTicketDAO;
     private PassengerToPassengerWithoutTicketsConverter passengerConverter;
     private PassengerService selfProxy;
 
     @Autowired
     public PassengerServiceImpl(PassengerDAO passengerDAO, TicketDAO ticketDAO,
-                                DepartureDAO departureDAO, PassengerWithTicketDAO passengerWithTicketDAO,
+                                DepartureDAO departureDAO,
                                 PassengerToPassengerWithoutTicketsConverter passengerConverter) {
         this.passengerDAO = passengerDAO;
         this.ticketDAO = ticketDAO;
         this.departureDAO = departureDAO;
-        this.passengerWithTicketDAO = passengerWithTicketDAO;
         this.passengerConverter = passengerConverter;
     }
 
@@ -77,12 +74,12 @@ public class PassengerServiceImpl implements PassengerService {
         try {
             selfProxy.buyTicketTransactional(username, departureId, coachNumber, seatNumber);
         } catch (DataIntegrityViolationException e) {
-            Ticket ticket = ticketDAO.findTicketByDepartureAndCoachNumAndSeatNum(departureId, coachNumber, seatNumber);
-            if(ticket.getPassenger() == null) {
+            Seat seat = ticketDAO.findTicketByDepartureAndCoachNumAndSeatNum(departureId, coachNumber, seatNumber);
+            if(seat.getOccupiedSeat() == null) {
                 log.info(username + " tried to buy few tickets on one departure!", e);
-                throw new PassengerRegisteredException("You are already have a ticket on this departure!", e);
+                throw new PassengerRegisteredException("You are already have a seat on this departure!", e);
             } else {
-                throw new TicketAlreadyBoughtException("Sorry, but someone already got this ticket!", e);
+                throw new TicketAlreadyBoughtException("Sorry, but someone already got this seat!", e);
             }
         }
     }
@@ -92,27 +89,27 @@ public class PassengerServiceImpl implements PassengerService {
     public void buyTicketTransactional(String username, Integer departureId, Integer coachNumber, Integer seatNumber) {
         Departure departure = departureDAO.findById(departureId);
         Passenger passenger = passengerDAO.findByUsername(username);
-        Ticket ticket = ticketDAO.findTicketByDepartureAndCoachNumAndSeatNum(departureId, coachNumber, seatNumber);
+        Seat seat = ticketDAO.findTicketByDepartureAndCoachNumAndSeatNum(departureId, coachNumber, seatNumber);
 
         notNullElseThrowException(passenger, new NoSuchEntityException("There is no such passenger", Passenger.class));
-        notNullElseThrowException(ticket, new NoSuchEntityException("There is no such ticket", Ticket.class));
+        notNullElseThrowException(seat, new NoSuchEntityException("There is no such seat", Seat.class));
 
-        if (ticket.getPassenger() != null) {
-            throw new TicketAlreadyBoughtException("This ticket was bought by someone else!");
+        if (seat.getOccupiedSeat() != null) {
+            throw new TicketAlreadyBoughtException("This seat was bought by someone else!");
         }
 
         if (LocalDateTime.now().plusMinutes(10).isAfter(departure.getDateTimeFrom())) {
-            throw new TooLateForBuyingTicketException("You must buy a ticket earlier than 10 minutes before departure!");
+            throw new TooLateForBuyingTicketException("You must buy a seat earlier than 10 minutes before departure!");
         }
 
         if (departure.getFreeSitsCount() <= 0) {
             throw new NoSiteOnDepartureException("There is no free sits on this departure!");
         }
 
-        passengerWithTicketDAO.save(passenger, ticket, departure);
+//        passengerWithTicketDAO.save(passenger, seat, departure);
 
-        ticket.setPassenger(passenger);
-        passenger.getTickets().add(ticket);
+//        seat.setPassenger(passenger);
+//        passenger.getSeats().add(seat);
         departure.decrementFreeSeatsCount();
     }
 

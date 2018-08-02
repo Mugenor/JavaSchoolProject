@@ -28,8 +28,6 @@ public class Passenger {
     private String surname;
     @Column(nullable = false)
     private LocalDate birthday;
-    @OneToMany(mappedBy = "passenger", fetch = FetchType.LAZY)
-    private List<Ticket> tickets;
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "passenger")
     private User user;
 
@@ -80,14 +78,6 @@ public class Passenger {
         this.birthday = birthday;
     }
 
-    public List<Ticket> getTickets() {
-        return tickets;
-    }
-
-    public void setTickets(List<Ticket> tickets) {
-        this.tickets = tickets;
-    }
-
     public User getUser() {
         return user;
     }
@@ -103,7 +93,6 @@ public class Passenger {
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", birthday=" + birthday +
-                ", tickets=" + (Hibernate.isInitialized(tickets) ? tickets : "NOT INIT") +
                 ", user=" + (Hibernate.isInitialized(user) ? user : "NOT INIT") +
                 '}';
     }

@@ -40,10 +40,32 @@ public class Departure {
     @ManyToOne
     @JoinColumn(name = "station_to", nullable = false)
     private Station stationTo;
+    @ManyToOne
+    @JoinColumn(name = "trip_id", nullable = false)
+    private Trip trip;
     @Column(nullable = false)
     private LocalDateTime dateTimeFrom;
     @Column(nullable = false)
     private LocalDateTime dateTimeTo;
+    @Column(nullable = false)
+    private Integer numberInTrip;
+
+    public Trip getTrip() {
+        return trip;
+    }
+
+    public Departure setTrip(Trip trip) {
+        this.trip = trip;
+        return this;
+    }
+
+    public Integer getNumberInTrip() {
+        return numberInTrip;
+    }
+
+    public void setNumberInTrip(Integer numberInTrip) {
+        this.numberInTrip = numberInTrip;
+    }
 
     public Integer getFreeSitsCount() {
         return freeSitsCount;
@@ -128,13 +150,13 @@ public class Departure {
                 Objects.equals(stationFrom, departure.stationFrom) &&
                 Objects.equals(stationTo, departure.stationTo) &&
                 Objects.equals(dateTimeFrom, departure.dateTimeFrom) &&
-                Objects.equals(dateTimeTo, departure.dateTimeTo);
+                Objects.equals(dateTimeTo, departure.dateTimeTo) &&
+                Objects.equals(numberInTrip, departure.numberInTrip);
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(sitsCount, freeSitsCount, stationFrom, stationTo, dateTimeFrom, dateTimeTo);
+        return Objects.hash(sitsCount, freeSitsCount, stationFrom, stationTo, dateTimeFrom, dateTimeTo, numberInTrip);
     }
 
     @Override
@@ -145,8 +167,9 @@ public class Departure {
                 ", freeSitsCount=" + freeSitsCount +
                 ", stationFrom=" + stationFrom +
                 ", stationTo=" + stationTo +
-                ", dateFrom=" + dateTimeFrom +
-                ", dateTo=" + dateTimeTo +
+                ", dateTimeFrom=" + dateTimeFrom +
+                ", dateTimeTo=" + dateTimeTo +
+                ", numberInTrip=" + numberInTrip +
                 '}';
     }
 }

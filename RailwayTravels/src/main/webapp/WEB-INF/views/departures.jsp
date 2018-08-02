@@ -22,45 +22,45 @@
             <table id="departures" class="table table-striped table-bordered table-light">
                 <thead>
                 <tr>
-                    <th>Station of departure</th>
+                    <th>Station of trip</th>
                     <th>Arrival station</th>
-                    <th>Time of departure</th>
+                    <th>Time of trip</th>
                     <th>Arrival time</th>
                     <th>Number of available seats</th>
-                    <th>Get ticket</th>
+                    <th>Get seat</th>
                 </tr>
                 </thead>
                 <tbody>
-                <c:forEach items="${departures}" var="departure">
+                <c:forEach items="${departures}" var="trip">
                     <tr>
                         <td>
-                                ${departure.stationFrom}
+                                ${trip.stationFrom}
                         </td>
                         <td>
-                                ${departure.stationTo}
+                                ${trip.stationTo}
                         </td>
-                        <td data-order="${departure.dateTimeFrom}">
-                            <fmt:formatDate value="${departure.dateTimeFromAsDate}" type="both"
+                        <td data-order="${trip.dateTimeFrom}">
+                            <fmt:formatDate value="${trip.dateTimeFromAsDate}" type="both"
                                             pattern="dd.MM.yyyy, HH:mm"/>
                         </td>
-                        <td data-order="${departure.dateTimeTo}">
-                            <fmt:formatDate value="${departure.dateTimeToAsDate}" type="both"
+                        <td data-order="${trip.dateTimeTo}">
+                            <fmt:formatDate value="${trip.dateTimeToAsDate}" type="both"
                                             pattern="dd.MM.yyyy, HH:mm"/>
                         </td>
                         <td>
-                                ${departure.freeSitsCount}
+                                ${trip.freeSitsCount}
                         </td>
                         <td>
                             <c:choose>
-                                <c:when test="${departure.tooLate}">
+                                <c:when test="${trip.tooLate}">
                                     Too late!
                                 </c:when>
-                                <c:when test="${departure.freeSitsCount <= 0}">
+                                <c:when test="${trip.freeSitsCount <= 0}">
                                     All seats are engaged!
                                 </c:when>
                                 <c:otherwise>
-                                    <a class="btn btn-primary" href="client/select/${departure.id}" target="_blank">
-                                        Buy ticket!
+                                    <a class="btn btn-primary" href="client/select/${trip.id}" target="_blank">
+                                        Buy seat!
                                     </a>
                                 </c:otherwise>
                             </c:choose>

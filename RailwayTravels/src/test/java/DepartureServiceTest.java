@@ -4,8 +4,8 @@ import javaschool.dao.api.DepartureDAO;
 import javaschool.dao.api.StationDAO;
 import javaschool.entity.Coach;
 import javaschool.entity.Departure;
+import javaschool.entity.Seat;
 import javaschool.entity.Station;
-import javaschool.entity.Ticket;
 import javaschool.service.api.DepartureService;
 import javaschool.service.converter.DepartureToDepartureDTOConverter;
 import javaschool.service.converter.StringToLocalDateTimeConverter;
@@ -75,16 +75,16 @@ public class DepartureServiceTest {
         departure.setCoaches(coaches);
         for(int i = 1; i <= coachCount; ++i) {
             Coach coach = new Coach();
-            LinkedHashSet<Ticket> tickets = new LinkedHashSet<>();
-            coach.setTickets(tickets);
+            LinkedHashSet<Seat> seats = new LinkedHashSet<>();
+            coach.setSeats(seats);
             coach.setCoachNumber(i);
             coach.setDeparture(departure);
             coaches.add(coach);
             for(int j = 1; j <= Coach.DEFAULT_SEATS_NUM; ++j) {
-                Ticket ticket = new Ticket();
-                ticket.setSiteNum(j);
-                ticket.setCoach(coach);
-                tickets.add(ticket);
+                Seat seat = new Seat();
+                seat.setSiteNum(j);
+                seat.setCoach(coach);
+                seats.add(seat);
             }
         }
         return departure;

@@ -1,9 +1,9 @@
 package javaschool.dao.api;
 
 import javaschool.entity.Coach;
-import javaschool.entity.Ticket;
+import javaschool.entity.Seat;
 
-public interface TicketDAO extends GenericDAO<Ticket, Integer> {
-    Ticket findTicketBySitNumAndCoach(Integer sitNum, Coach coach);
-    Ticket findTicketByDepartureAndCoachNumAndSeatNum(Integer departureId, Integer coachNumber, Integer seatNumber);
+public interface TicketDAO extends GenericDAO<Seat, Integer> {
+    Seat findTicketBySitNumAndCoach(Integer sitNum, Coach coach);
+    Seat findTicketByDepartureAndCoachNumAndSeatNum(Integer departureId, Integer coachNumber, Integer seatNumber);
 }

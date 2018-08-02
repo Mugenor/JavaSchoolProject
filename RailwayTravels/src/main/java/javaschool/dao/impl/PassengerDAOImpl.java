@@ -8,7 +8,7 @@ import javaschool.entity.Departure;
 import javaschool.entity.Departure_;
 import javaschool.entity.Passenger;
 import javaschool.entity.Passenger_;
-import javaschool.entity.Ticket;
+import javaschool.entity.Seat;
 import javaschool.entity.Ticket_;
 import javaschool.entity.User;
 import javaschool.entity.User_;
@@ -48,12 +48,13 @@ public class PassengerDAOImpl extends GenericAbstractDAO<Passenger, Integer> imp
         CriteriaQuery<Passenger> query = builder.createQuery(Passenger.class);
         Root<Departure> departureRoot = query.from(Departure.class);
         SetJoin<Departure, Coach> coachesJoin = departureRoot.join(Departure_.coaches);
-        SetJoin<Coach, Ticket> ticketsJoin = coachesJoin.join(Coach_.tickets);
-        Join<Ticket, Passenger> passengerJoin = ticketsJoin.join(Ticket_.passenger);
+//        SetJoin<Coach, Seat> ticketsJoin = coachesJoin.join(Coach_.tickets);
+//        Join<Seat, Passenger> passengerJoin = ticketsJoin.join(Ticket_.passenger);
         Predicate departureEq = builder.equal(departureRoot.get(Departure_.id), departureId);
-        Predicate passengerNotNull = builder.isNotNull(ticketsJoin.get(Ticket_.passenger));
+//        Predicate passengerNotNull = builder.isNotNull(ticketsJoin.get(Ticket_.passenger));
 
-        return entityManager.createQuery(query.select(passengerJoin).where(departureEq, passengerNotNull)).getResultList();
+//        return entityManager.createQuery(query.select(passengerJoin).where(departureEq, passengerNotNull)).getResultList();
+        return null;
     }
 
     @Override

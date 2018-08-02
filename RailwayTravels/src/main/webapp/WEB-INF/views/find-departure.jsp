@@ -23,7 +23,7 @@
     <div id="main-block" class="content p-4">
         <div class="card mb-4">
             <div class="card-header">
-                <form class="form-inline" id="departure-form" autocomplete="off">
+                <form class="form-inline" id="trip-form" autocomplete="off">
                     <div>
                         <input type="text" class="autocomplete form-control mr-sm-2" id="stationFrom"
                                placeholder="Station from" required/>
@@ -53,16 +53,16 @@
                 </form>
             </div>
             <div class="card-body">
-                <div id="departure-container">
+                <div id="trip-container">
                     <table id="departures" class="table table-striped table-bordered table-light">
                         <thead>
                         <tr>
-                            <th>Station of departure</th>
+                            <th>Station of trip</th>
                             <th>Arrival station</th>
-                            <th>Time of departure</th>
+                            <th>Time of trip</th>
                             <th>Arrival time</th>
                             <th>Number of available seats</th>
-                            <th>Get ticket</th>
+                            <th>Get seat</th>
                         </tr>
                         </thead>
                     </table>
@@ -75,7 +75,7 @@
 <jsp:include page="include/client_js.jsp"/>
 <script src="<c:url value="/resource/vendor/jquery-ui/jquery-ui.js"/>"></script>
 <script src="<c:url value="/resource/vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"/>"></script>
-<script src="<c:url value="/resource/js/client-find-departure.js"/>"></script>
+<script src="<c:url value="/resource/js/client-find-trip.js"/>"></script>
 
 </body>
 </html>
