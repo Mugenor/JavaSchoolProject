@@ -1,6 +1,7 @@
 package javaschool.entity;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -35,5 +36,19 @@ public class OccupiedSeat implements Serializable {
     public OccupiedSeat setTicket(Ticket ticket) {
         this.ticket = ticket;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OccupiedSeat that = (OccupiedSeat) o;
+        return Objects.equals(seat, that.seat);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(seat);
     }
 }

@@ -21,6 +21,7 @@ public class TicketController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/client/tickets/buy")
     public void buyTicket(@Valid @RequestBody TicketBuyDTO ticketBuy, Principal principal) {
-        passengerService.buyTicket(principal.getName(), ticketBuy.getDepartureId(), ticketBuy.getCoachNumber(), ticketBuy.getSeatNum());
+        // TODO
+//        passengerService.buyTicket(principal.getName(), ticketBuy.getDepartureId(), ticketBuy.getCoachNumber(), ticketBuy.getSeatNum());
     }
 }

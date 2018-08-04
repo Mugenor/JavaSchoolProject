@@ -26,7 +26,7 @@ public class Ticket {
     @ManyToOne
     @JoinColumn(name = "passenger_id")
     private Passenger passenger;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ticket`")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ticket")
     private Set<OccupiedSeat> occupiedSeats;
 
     public Integer getId() {

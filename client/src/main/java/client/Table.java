@@ -8,38 +8,43 @@ import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeoutException;
 import javaschool.controller.dtoentity.DepartureDTO;
+import javaschool.controller.dtoentity.TripDTO;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.push.Push;
 import javax.faces.push.PushContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.joda.time.LocalDateTime;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
 
 @Named
 @ApplicationScoped
 public class Table {
     @Inject
-    private DepartureDTOService departureDTOService;
+    private TripDTOService tripDTOService;
     @Inject
     @Push(channel = "departureChannel")
     private PushContext pushContext;
 
-    private Set<DepartureDTO> departureDTOS;
+    private TreeNode rootNode;
+    private Set<TripDTO> tripDTOSet;
 
     @PostConstruct
     public void init() {
         try {
-            departureDTOS = departureDTOService.getDepartures();
-            System.out.println("In post construct");
+            tripDTOSet = tripDTOService.getTrips();
+            rootNode = new DefaultTreeNode("Today trips");
+            for(TripDTO tripDTO: tripDTOSet) {
+               createTripNode(tripDTO).setParent(rootNode);
+            }
 
             ConnectionFactory connectionFactory = new ConnectionFactory();
             Connection connection = connectionFactory.newConnection();
@@ -53,10 +58,16 @@ public class Table {
                 public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
                     try {
                         ObjectInputStream objectInputStream = new ObjectInputStream(new ByteArrayInputStream(body));
-                        DepartureDTO departureDTO = (DepartureDTO) objectInputStream.readObject();
-                        System.out.println("Received a message: " + departureDTO);
-                        pushContext.send("departureUpdate");
-                        departureDTOS.add(departureDTO);
+                        TripDTO tripDTO = (TripDTO) objectInputStream.readObject();
+                        System.out.println("Received a message: " + tripDTO);
+                        pushContext.send("tripUpdate");
+                        if(!tripDTOSet.contains(tripDTO)){
+                            createTripNode(tripDTO).setParent(rootNode);
+                        } else {
+                            TreeNode node = createTripNode(tripDTO);
+                            rootNode.getChildren().set(rootNode.getChildren().indexOf(node), node);
+                        }
+                        tripDTOSet.add(tripDTO);
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -68,11 +79,31 @@ public class Table {
         }
     }
 
-    public Set<DepartureDTO> getAllDepartures() {
-        return departureDTOS;
+    public TreeNode getAllTrips() {
+        return rootNode;
     }
 
     public Date getDateTime(long timestamp) {
         return new Date(timestamp);
+    }
+
+    private TreeNode createTripNode(TripDTO tripDTO) {
+        List<DepartureDTO> departureDTOS = tripDTO.getDepartures();
+        TreeNode tripNode = new DefaultTreeNode(new TableModel(
+                departureDTOS.get(0).getStationFrom(),
+                departureDTOS.get(departureDTOS.size() - 1).getStationTo(),
+                departureDTOS.get(0).getDateTimeFrom(),
+                departureDTOS.get(departureDTOS.size() - 1).getDateTimeTo()
+        ));
+        for(DepartureDTO departureDTO: departureDTOS) {
+            new DefaultTreeNode(new TableModel(
+                    "",
+                    departureDTO.getStationFrom(),
+                    departureDTO.getStationTo(),
+                    departureDTO.getDateTimeFrom(),
+                    departureDTO.getDateTimeFrom()
+            ), tripNode);
+        }
+        return tripNode;
     }
 }

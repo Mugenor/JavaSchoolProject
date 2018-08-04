@@ -10,30 +10,48 @@
 </h:head>
 <h:body>
     <h:panelGroup id="departureTable">
-        <p:dataTable value="${table.allDepartures}" var="trip">
+        <p:treeTable value="${table.allTrips}" var="trip">
+            <f:facet name="header">
+                Today trips
+            </f:facet>
+            <p:column headerText="Trip">
+                <h:outputText value="#{trip.nodeName}"/>
+            </p:column>
             <p:column headerText="Departure station">
-                <h:outputLabel value="${trip.stationFrom}"/>
+                <h:outputText value="#{trip.departureStation}"/>
             </p:column>
             <p:column headerText="Arrival station">
-                <h:outputLabel value="${trip.stationTo}"/>
+                <h:outputText value="#{trip.arrivalStation}"/>
             </p:column>
             <p:column headerText="Departure time">
-                <h:outputLabel value="${table.getDateTime(trip.dateTimeFrom)}">
-                    <f:convertDateTime type="both"/>
-                </h:outputLabel>
+                <h:outputText value="#{trip.departureTime}"/>
             </p:column>
             <p:column headerText="Arrival time">
-                <h:outputLabel value="${table.getDateTime(trip.dateTimeTo)}">
-                    <f:convertDateTime type="both"/>
-                </h:outputLabel>
+                <h:outputText value="#{trip.arrivalTime}"/>
             </p:column>
-        </p:dataTable>
+        </p:treeTable>
+        <!--<p:dataTable value="${table.allTrips}" var="trip">-->
+            <!--<p:column headerText="Departure station">-->
+                <!--<h:outputLabel value="${trip.stationFrom}"/>-->
+            <!--</p:column>-->
+            <!--<p:column headerText="Arrival station">-->
+                <!--<h:outputLabel value="${trip.stationTo}"/>-->
+            <!--</p:column>-->
+            <!--<p:column headerText="Departure time">-->
+                <!--<h:outputLabel value="${table.getDateTime(trip.dateTimeFrom)}">-->
+                    <!--<f:convertDateTime type="both"/>-->
+                <!--</h:outputLabel>-->
+            <!--</p:column>-->
+            <!--<p:column headerText="Arrival time">-->
+                <!--<h:outputLabel value="${table.getDateTime(trip.dateTimeTo)}">-->
+                    <!--<f:convertDateTime type="both"/>-->
+                <!--</h:outputLabel>-->
+            <!--</p:column>-->
+        <!--</p:dataTable>-->
     </h:panelGroup>
     <h:form>
-        <f:websocket channel="departureChannel" onmessage="function(message) {
-      console.log(message);
-    }">
-            <f:ajax event="departureUpdate" render=":departureTable"/>
+        <f:websocket channel="departureChannel" onmessage="">
+            <f:ajax event="tripUpdate" render=":departureTable"/>
         </f:websocket>
     </h:form>
 </h:body>
