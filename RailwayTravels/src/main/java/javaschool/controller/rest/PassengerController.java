@@ -27,8 +27,8 @@ public class PassengerController {
         return passengerService.findAllPassengers();
     }
 
-    @GetMapping("/{departureId}")
-    public List<PassengerWithoutTickets> getAllPassengersRegisteredOnDeparture(@PathVariable Integer departureId) {
-        return passengerService.findAllPassengersByDepartureId(departureId);
+    @GetMapping("/{tripId}")
+    public List<PassengerWithoutTickets> getAllPassengersRegisteredOnTrip(@PathVariable Integer tripId) {
+        return passengerService.findAllPassengersByTripId(tripId);
     }
 }

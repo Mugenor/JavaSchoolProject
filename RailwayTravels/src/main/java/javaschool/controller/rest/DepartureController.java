@@ -46,8 +46,8 @@ public class DepartureController {
         return departureService.findAllToday();
     }
 
-    @PostMapping(path = "/add", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public DepartureDTO addNewDeparture(@Valid @RequestBody NewDepartureDTO newDeparture) {
-        return converter.convertTo(departureService.saveWithNotification(newDeparture));
-    }
+//    @PostMapping(path = "/add", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+//    public DepartureDTO addNewDeparture(@Valid @RequestBody NewDepartureDTO newDeparture) {
+//        return converter.convertTo(departureService.saveWithNotification(newDeparture));
+//    }
 }
