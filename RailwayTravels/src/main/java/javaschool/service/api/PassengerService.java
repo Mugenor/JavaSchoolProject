@@ -39,21 +39,10 @@ public interface PassengerService {
                    Integer rightDepartureIndex, Integer coachNumber, Integer seatNumber);
 
     /**
-     * Make user buy ticket for specified departure and seat. It does not throw custom exception.
-     * Instead of it method can throw DataIntegrityViolationException.class. It's recommended to use buyTicket method
-     *
-     * @param username    User's username
-     * @param departureId Departure's id
-     * @param coachNumber Number of coach with specified seat
-     * @param seatNumber  Number of seat in specified coach
-     */
-    void buyTicketTransactional(String username, Integer tripId, Integer leftDepartureIndex,
-                                Integer rightDepartureIndex, Integer coachNumber, Integer seatNumber);
-
-    /**
      * Finds all passengers registered on specified departure
      * @param departureId   Departure's id
      * @return  List of passengers registered on specified departure and converted to PassengerWithoutTickets.class
      */
     List<PassengerWithoutTickets> findAllPassengersByDepartureId(Integer departureId);
+    List<PassengerWithoutTickets> findAllPassengersByTripId(Integer tripId);
 }

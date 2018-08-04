@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,7 +16,7 @@ public class Trip {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "trip")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = false, mappedBy = "trip", fetch = FetchType.EAGER)
     @OrderBy("numberInTrip")
     private List<Departure> departures;
 

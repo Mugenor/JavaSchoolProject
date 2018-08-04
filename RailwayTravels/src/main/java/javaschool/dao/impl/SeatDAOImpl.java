@@ -7,7 +7,6 @@ import javaschool.entity.Departure;
 import javaschool.entity.Departure_;
 import javaschool.entity.Seat;
 import javaschool.entity.Seat_;
-import javaschool.entity.Ticket_;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;

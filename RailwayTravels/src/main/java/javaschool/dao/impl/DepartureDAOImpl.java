@@ -2,16 +2,16 @@ package javaschool.dao.impl;
 
 import java.util.List;
 import javaschool.dao.api.DepartureDAO;
-import javaschool.entity.Coach;
 import javaschool.entity.Coach_;
 import javaschool.entity.Departure;
 import javaschool.entity.Departure_;
 import javaschool.entity.Station;
 import javaschool.entity.Station_;
+import javaschool.entity.Trip;
+import javaschool.entity.Trip_;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Fetch;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Repository;
 public class DepartureDAOImpl extends GenericAbstractDAO<Departure, Integer> implements DepartureDAO {
 
     @Override
-    public List<Departure> findByStationTitleFrom(String stationTitle, boolean fetchStations, boolean fetchTickets,
+    public List<Departure> findByStationTitleFrom(String stationTitle, boolean fetchStations, boolean fetchSeats,
                                                   boolean orderByDateTimeFrom) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Departure> query = builder.createQuery(Departure.class);
@@ -30,7 +30,7 @@ public class DepartureDAOImpl extends GenericAbstractDAO<Departure, Integer> imp
         Join<Departure, Station> stationFromJoin = from.join(Departure_.stationFrom);
         Predicate stationTitleEq = builder.equal(stationFromJoin.get(Station_.title), stationTitle);
 
-        findDeparture(builder, query, from, fetchStations, fetchTickets, orderByDateTimeFrom);
+        findDeparture(builder, query, from, fetchStations, fetchSeats, orderByDateTimeFrom);
 
         query.select(from).where(stationTitleEq);
 
@@ -73,35 +73,35 @@ public class DepartureDAOImpl extends GenericAbstractDAO<Departure, Integer> imp
     }
 
     @Override
-    public List<Departure> findAll(boolean fetchStations, boolean fetchTickets, boolean orderByDateTimeFrom) {
+    public List<Departure> findAll(boolean fetchStations, boolean fetchSeats, boolean orderByDateTimeFrom) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Departure> query = builder.createQuery(Departure.class);
         Root<Departure> from = query.from(Departure.class);
 
-        findDeparture(builder, query, from, fetchStations, fetchTickets, orderByDateTimeFrom);
+        findDeparture(builder, query, from, fetchStations, fetchSeats, orderByDateTimeFrom);
 
         return entityManager.createQuery(query).getResultList();
     }
 
     @Override
-    public List<Departure> findAfterDateTime(LocalDateTime dateTime, boolean fetchStations, boolean fetchTickets, boolean orderByDateTimeFrom) {
+    public List<Departure> findAfterDateTime(LocalDateTime dateTime, boolean fetchStations, boolean fetchSeats, boolean orderByDateTimeFrom) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Departure> query = builder.createQuery(Departure.class);
         Root<Departure> from = query.from(Departure.class);
 
-        findDeparture(builder, query, from, fetchStations, fetchTickets, orderByDateTimeFrom);
+        findDeparture(builder, query, from, fetchStations, fetchSeats, orderByDateTimeFrom);
         query.where(builder.greaterThanOrEqualTo(from.get(Departure_.dateTimeFrom), dateTime));
 
         return entityManager.createQuery(query).getResultList();
     }
 
     @Override
-    public Departure findById(Integer id, boolean fetchStations, boolean fetchTickets) {
+    public Departure findById(Integer id, boolean fetchSeats, boolean fetchTickets) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Departure> query = builder.createQuery(Departure.class);
         Root<Departure> from = query.from(Departure.class);
 
-        findDeparture(builder, query, from, fetchStations, fetchTickets, false);
+        findDeparture(builder, query, from, fetchSeats, fetchTickets, false);
 
         query.where(builder.equal(from.get(Departure_.id), id));
 
@@ -115,7 +115,7 @@ public class DepartureDAOImpl extends GenericAbstractDAO<Departure, Integer> imp
     @Override
     public List<Departure> findDateTimeFromBetweenOrDateTimeToBetween(LocalDateTime dateTimeFromLeft, LocalDateTime dateTimeFromRight,
                                                                       LocalDateTime dateTimeToLeft, LocalDateTime dateTimeToRight,
-                                                                      boolean fetchStations, boolean fetchTickets, boolean orderByDateTimeFrom) {
+                                                                      boolean fetchStations, boolean fetchSeats, boolean orderByDateTimeFrom) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Departure> query = builder.createQuery(Departure.class);
         Root<Departure> from = query.from(Departure.class);
@@ -128,9 +128,48 @@ public class DepartureDAOImpl extends GenericAbstractDAO<Departure, Integer> imp
                                 builder.greaterThanOrEqualTo(from.get(Departure_.dateTimeTo), dateTimeToLeft),
                                 builder.lessThanOrEqualTo(from.get(Departure_.dateTimeTo), dateTimeToRight)
                         )));
-        findDeparture(builder, query, from, fetchStations, fetchTickets, orderByDateTimeFrom);
+        findDeparture(builder, query, from, fetchStations, fetchSeats, orderByDateTimeFrom);
         return entityManager.createQuery(query).getResultList();
     }
+
+    @Override
+    public List<Departure> findByTripIdAndNumberInTripBetween(Integer tripId, Integer leftBound, Integer rightBound,
+                                                              boolean fetchStations, boolean fetchSeats, boolean orderByDateTimeFrom) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Departure> query = builder.createQuery(Departure.class);
+        Root<Departure> from = query.from(Departure.class);
+        Join<Departure, Trip> tripJoin = from.join(Departure_.trip);
+        query.select(from).where(
+                builder.and(
+                        builder.equal(tripJoin.get(Trip_.id), tripId),
+                        builder.and(
+                                builder.greaterThanOrEqualTo(from.get(Departure_.numberInTrip), leftBound),
+                                builder.lessThanOrEqualTo(from.get(Departure_.numberInTrip), rightBound)
+                        )
+                )
+        );
+        findDeparture(builder, query, from, fetchStations, fetchSeats, orderByDateTimeFrom);
+        return entityManager.createQuery(query).getResultList();
+    }
+
+//    @Override
+//    public List<Departure> findByStationFromDateTimeBetween(String stationFromTitle, LocalDateTime dateTimeLeftBound,
+//                                                            LocalDateTime dateTimeRightBound, boolean fetchTrip) {
+//        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+//        CriteriaQuery<Departure> query = builder.createQuery(Departure.class);
+//        Root<Departure> from = query.from(Departure.class);
+//        if(fetchTrip) {
+//            from.fetch(Departure_.trip);
+//        }
+//        query.select(from).where(
+//                builder.and(
+//                        builder.equal(from.join(Departure_.stationFrom).get(Station_.title), stationFromTitle),
+//                        builder.greaterThanOrEqualTo(from.get(Departure_.dateTimeFrom), dateTimeLeftBound),
+//                        builder.lessThanOrEqualTo(from.get(Departure_.dateTimeFrom), dateTimeRightBound)
+//                )
+//        );
+//        return entityManager.createQuery(query).getResultList();
+//    }
 
     private void findDeparture(CriteriaBuilder builder, CriteriaQuery<Departure> query,
                                Root<Departure> from, boolean fetchStations, boolean fetchTickets,

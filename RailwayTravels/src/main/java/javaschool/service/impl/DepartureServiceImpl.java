@@ -1,21 +1,18 @@
 package javaschool.service.impl;
 
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import javaschool.controller.dtoentity.DepartureDTO;
 import javaschool.controller.dtoentity.NewDepartureDTO;
 import javaschool.dao.api.DepartureDAO;
 import javaschool.dao.api.StationDAO;
-import javaschool.entity.Coach;
 import javaschool.entity.Departure;
 import javaschool.entity.Station;
-import javaschool.entity.Seat;
 import javaschool.service.api.DepartureService;
 import javaschool.service.converter.DepartureToDepartureDTOConverter;
+import javaschool.service.converter.DepartureToNewDepartureDTOConverter;
 import javaschool.service.converter.StringToLocalDateTimeConverter;
 import javaschool.service.exception.NoSuchEntityException;
-import javaschool.service.exception.StationEqualsException;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
@@ -28,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DepartureServiceImpl implements DepartureService {
     private StringToLocalDateTimeConverter stringToLocalDateTimeConverter;
     private DepartureToDepartureDTOConverter departureToDepartureDTOConverter;
+    private DepartureToNewDepartureDTOConverter departureToNewDepartureDTOConverter;
     private DepartureDAO departureDAO;
     private StationDAO stationDAO;
     private RabbitTemplate rabbitTemplate;
@@ -36,12 +34,14 @@ public class DepartureServiceImpl implements DepartureService {
     @Autowired
     public DepartureServiceImpl(DepartureDAO departureDAO, StationDAO stationDAO,
                                 StringToLocalDateTimeConverter converter, DepartureToDepartureDTOConverter departureDTOConverter,
+                                DepartureToNewDepartureDTOConverter departureToNewDepartureDTOConverter,
                                 RabbitTemplate rabbitTemplate) {
         this.stationDAO = stationDAO;
         this.departureDAO = departureDAO;
         this.stringToLocalDateTimeConverter = converter;
         this.departureToDepartureDTOConverter = departureDTOConverter;
         this.rabbitTemplate = rabbitTemplate;
+        this.departureToNewDepartureDTOConverter = departureToNewDepartureDTOConverter;
     }
 
     @Autowired
@@ -120,55 +120,21 @@ public class DepartureServiceImpl implements DepartureService {
     @Override
     @Transactional
     public Departure save(int coachesCount, String stationFromTitle, String stationToTitle, LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo) {
-        Departure departure = new Departure();
-        Station stationFrom = stationDAO.findByTitle(stationFromTitle);
-        Station stationTo = stationDAO.findByTitle(stationToTitle);
-        if (stationTo == null) {
-            throw new NoSuchEntityException("There is no station with title '" + stationToTitle + "'", Station.class);
-        }
-        if (stationFrom == null) {
-            throw new NoSuchEntityException("There is no station with title '" + stationFromTitle + "'", Station.class);
-        }
-        if (stationFrom.equals(stationTo)) {
-            throw new StationEqualsException("You can't add departure from '" + stationFromTitle + "' to '" + stationToTitle + "'");
-        }
-
-        stationFrom.getDepartures().add(departure);
-
-        departure.setSitsCount(coachesCount * Coach.DEFAULT_SEATS_NUM);
-        departure.setFreeSitsCount(coachesCount * Coach.DEFAULT_SEATS_NUM);
-        departure.setStationFrom(stationFrom);
-        departure.setStationTo(stationTo);
-        departure.setDateTimeFrom(dateTimeFrom);
-        departure.setDateTimeTo(dateTimeTo);
-
-        LinkedHashSet<Coach> coaches = new LinkedHashSet<>();
-        for (int i = 1; i <= coachesCount; ++i) {
-            Coach coach = new Coach();
-            coach.setDeparture(departure);
-            coach.setCoachNumber(i);
-            LinkedHashSet<Seat> seats = new LinkedHashSet<>();
-            for (int j = 1; j <= Coach.DEFAULT_SEATS_NUM; ++j) {
-                Seat seat = new Seat();
-                seat.setCoach(coach);
-                seat.setSiteNum(j);
-                seats.add(seat);
-            }
-            coach.setSeats(seats);
-            coaches.add(coach);
-        }
-        departure.setCoaches(coaches);
-
-        departureDAO.save(departure);
-
-        return departure;
+        NewDepartureDTO newDepartureDTO = new NewDepartureDTO();
+        newDepartureDTO.setCoachCount(coachesCount);
+        newDepartureDTO.setStationFrom(stationFromTitle);
+        newDepartureDTO.setStationTo(stationToTitle);
+        newDepartureDTO.setDateTimeFrom(dateTimeFrom);
+        newDepartureDTO.setDateTimeTo(dateTimeTo);
+        return save(newDepartureDTO);
     }
 
     @Override
     @Transactional
     public Departure save(NewDepartureDTO newDepartureDTO) {
-        return save(newDepartureDTO.getCoachCount(), newDepartureDTO.getStationFrom(), newDepartureDTO.getStationTo(),
-                newDepartureDTO.getDateTimeFrom(), newDepartureDTO.getDateTimeTo());
+        Departure departure = departureToNewDepartureDTOConverter.convertFrom(newDepartureDTO);
+        departureDAO.save(departure);
+        return departure;
     }
 
     @Override

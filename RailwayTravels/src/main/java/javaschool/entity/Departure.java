@@ -23,6 +23,7 @@ import org.joda.time.LocalDateTime;
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"station_from", "station_to", "dateTimeFrom", "dateTimeTo"})})
 public class Departure {
+    public final static Integer NUMBER_IN_TRIP_OFFSET = 1;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -63,8 +64,9 @@ public class Departure {
         return numberInTrip;
     }
 
-    public void setNumberInTrip(Integer numberInTrip) {
+    public Departure setNumberInTrip(Integer numberInTrip) {
         this.numberInTrip = numberInTrip;
+        return this;
     }
 
     public Integer getFreeSitsCount() {
