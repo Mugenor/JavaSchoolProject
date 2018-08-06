@@ -28,6 +28,30 @@ public class Ticket {
     private Passenger passenger;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "ticket")
     private Set<OccupiedSeat> occupiedSeats;
+    @ManyToOne
+    @JoinColumn(name = "departure_from")
+    private Departure from;
+    @ManyToOne
+    @JoinColumn(name = "departure_to")
+    private Departure to;
+
+    public Departure getFrom() {
+        return from;
+    }
+
+    public Ticket setFrom(Departure from) {
+        this.from = from;
+        return this;
+    }
+
+    public Departure getTo() {
+        return to;
+    }
+
+    public Ticket setTo(Departure to) {
+        this.to = to;
+        return this;
+    }
 
     public Integer getId() {
         return id;

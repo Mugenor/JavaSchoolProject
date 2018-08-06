@@ -6,13 +6,19 @@ function setValidClass(valid, obj) {
     }
 }
 
-adminApp.controller('allTripsController', function ($scope, tripTableService, stationService) {
+adminApp.controller('allTripsController', function ($scope, $location, tripTableService, stationService) {
     const SEATS_IN_COACH = 36;
     let tripsPromise = tripTableService.load();
     let stationsPromise = stationService.getAllStationNames();
-    $scope.newTrip = [];
+    $scope.departuresInNewTrip = [];
+    $scope.newTrip = {
+        departures: $scope.departuresInNewTrip
+    };
 
     tripsPromise.then(function (value) {
+        value.forEach(function (it) {
+            it.chosen = [];
+        });
         $scope.trips = value;
     });
 
@@ -22,6 +28,22 @@ adminApp.controller('allTripsController', function ($scope, tripTableService, st
             source: stationNames,
         });
     });
+
+    $scope.selectStation = function (trip, index) {
+        let chosen = trip.chosen;
+        let indexInChosen = chosen.indexOf(index);
+        if (indexInChosen !== -1) {
+            chosen.splice(indexInChosen, 1);
+        } else {
+            if (chosen.length < 2) {
+                chosen.push(index);
+            }
+        }
+        chosen.sort();
+    };
+    $scope.watchPassengers = function (trip) {
+        $location.path('/trip/' + trip.id + '/' + trip.chosen[0] + '/' + (trip.chosen[1] - 1))
+    };
 
 
     $scope.numberInputStyle = {width: '160  px'};
@@ -56,8 +78,8 @@ adminApp.controller('allTripsController', function ($scope, tripTableService, st
         }
     };
 
-    $scope.clearTrip = function() {
-        $scope.newTrip.length = 0;
+    $scope.clearTrip = function () {
+        $scope.departuresInNewTrip.length = 0;
         $scope.newDeparture = {};
         dateTimeFromInput.data('datetimepicker').setStartDate(today);
         dateTimeToInput.data('datetimepicker').setStartDate(today);
@@ -67,9 +89,9 @@ adminApp.controller('allTripsController', function ($scope, tripTableService, st
         dateTimeToInput.data('datetimepicker').setEndDate(endDate);
     };
 
-    $scope.removeLastArrival = function() {
-        $scope.newTrip.length = $scope.newTrip.length - 1;
-        let lastDeparture = $scope.newTrip.length > 0 ? $scope.newTrip[$scope.newTrip.length - 1] : undefined;
+    $scope.removeLastArrival = function () {
+        $scope.departuresInNewTrip.length = $scope.departuresInNewTrip.length - 1;
+        let lastDeparture = $scope.departuresInNewTrip.length > 0 ? $scope.departuresInNewTrip[$scope.departuresInNewTrip.length - 1] : undefined;
         $scope.newDeparture = {
             stationFrom: lastDeparture !== undefined ? lastDeparture.stationTo : ''
         };
@@ -86,11 +108,11 @@ adminApp.controller('allTripsController', function ($scope, tripTableService, st
 
     dateTimeFromInput.on('change.dp', function (event) {
         let minTime;
-        if ($scope.newTrip.length === 0) {
+        if ($scope.departuresInNewTrip.length === 0) {
             minTime = new Date();
             minTime.setMinutes(minTime.getMinutes() + 10);
         } else {
-            minTime = new Date($scope.newTrip[$scope.newTrip.length - 1].dateTimeToMilliseconds);
+            minTime = new Date($scope.departuresInNewTrip[$scope.departuresInNewTrip.length - 1].dateTimeToMilliseconds);
         }
         let departureTime = dateTimeFromInput.data('datetimepicker').getDate();
         if (minTime.getTime() >= departureTime.getTime()) {
@@ -123,7 +145,7 @@ adminApp.controller('allTripsController', function ($scope, tripTableService, st
                 dateTimeToMilliseconds: dateTimeTo.getTime(),
             };
 
-            tripTableService.addDepartureToNewDepartureList(departure, $scope.newTrip);
+            tripTableService.addDepartureToNewDepartureList(departure, $scope.departuresInNewTrip);
 
             $scope.dateTimeToClass.class = '';
             $scope.dateTimeFromClass.class = '';
@@ -141,21 +163,23 @@ adminApp.controller('allTripsController', function ($scope, tripTableService, st
         }
     };
     $scope.saveTrip = function (tripForm) {
-        if($scope.newTrip.length !== 0 && tripForm.$valid) {
+        if ($scope.departuresInNewTrip.length !== 0 && tripForm.$valid) {
             let departures = [];
-            let oldTrip = $scope.newTrip;
-            for(let i=0; i < $scope.newTrip.length; ++i) {
+            for (let i = 0; i < $scope.departuresInNewTrip.length; ++i) {
                 departures.push({
-                    stationFrom: $scope.newTrip[i].stationFrom,
-                    stationTo: $scope.newTrip[i].stationTo,
-                    dateTimeFrom: $scope.newTrip[i].dateTimeFromMilliseconds,
-                    dateTimeTo: $scope.newTrip[i].dateTimeToMilliseconds,
+                    stationFrom: $scope.departuresInNewTrip[i].stationFrom,
+                    stationTo: $scope.departuresInNewTrip[i].stationTo,
+                    dateTimeFrom: $scope.departuresInNewTrip[i].dateTimeFromMilliseconds,
+                    dateTimeTo: $scope.departuresInNewTrip[i].dateTimeToMilliseconds,
                     coachCount: $scope.coachCount
                 });
             }
-            $scope.newTrip = [];
+            $scope.departuresInNewTrip = [];
+            $scope.newTrip = {
+                departures: $scope.departuresInNewTrip
+            };
             $scope.newDeparture = {};
-            console.log($scope.newTrip);
+            console.log($scope.departuresInNewTrip);
             tripTableService.saveTrip(departures).then(function (trip) {
                 tripTableService.addDepartureToNewDepartureList(tripTableService.convertTrip(trip), $scope.trips);
             }, function (err) {
@@ -178,11 +202,11 @@ adminApp.controller('allTripsController', function ($scope, tripTableService, st
             return true;
         }
         let minTime;
-        if ($scope.newTrip.length === 0) {
+        if ($scope.departuresInNewTrip.length === 0) {
             minTime = new Date();
             minTime.setMinutes(minTime.getMinutes() + 10);
         } else {
-            minTime = new Date($scope.newTrip[$scope.newTrip.length - 1].dateTimeToMilliseconds);
+            minTime = new Date($scope.departuresInNewTrip[$scope.departuresInNewTrip.length - 1].dateTimeToMilliseconds);
         }
         let inputDate = dateTimeFromInput.data('datetimepicker').getDate();
         return minTime.getTime() < inputDate.getTime();

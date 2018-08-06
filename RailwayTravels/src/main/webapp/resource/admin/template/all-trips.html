@@ -11,7 +11,7 @@
                                    placeholder="Station from"
                                    ui-validate="{same: 'notTheSame(departureForm.stationFrom, departureForm.stationTo)'}"
                                    required="required"
-                                   ng-disabled="newTrip.length !== 0"/>
+                                   ng-disabled="departuresInNewTrip.length !== 0"/>
                             <div ng-show='departureForm.stationFrom.$error.same || departureForm.stationTo.$error.same'
                                  class="invalid-feedback">
                                 Choose different stations!
@@ -62,21 +62,23 @@
                                 Arrival time must be more then trip time!
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary mr-2 mt-1" ng-disabled="!departureForm.$valid"
+                        <button type="submit" class="btn btn-primary mr-2 mt-1"
+                                ng-disabled="!departureForm.$valid || departuresInNewTrip.length >= 10"
                                 ng-click="addNextDeparture(newDeparture, departureForm)">Add next
                         </button>
-                        <button type="button" class="btn btn-danger mr-2 mt-1" ng-disabled="newTrip.length === 0"
+                        <button type="button" class="btn btn-danger mr-2 mt-1"
+                                ng-disabled="departuresInNewTrip.length === 0"
                                 ng-click="clearTrip()">
                             Clear all
                         </button>
-                        <button type="button" class="btn btn-danger mt-1" ng-disabled="newTrip.length === 0"
+                        <button type="button" class="btn btn-danger mt-1" ng-disabled="departuresInNewTrip.length === 0"
                                 ng-click="removeLastArrival()">
                             Remove last arrival
                         </button>
                     </form>
                 </div>
                 <div class="list-group-item">
-                    <trip departures="newTrip"></trip>
+                    <trip trip="newTrip"></trip>
                 </div>
                 <div class="list-group-item">
                     <form class="form-inline" name="tripForm" autocomplete="off" novalidate>
@@ -87,8 +89,9 @@
                                    required="required" step="1" min="1" max="10"/>
                         </div>
                         <div>
-                            <button type="submit" class="btn btn-primary" ng-disabled="!tripForm.$valid || newTrip.length === 0"
-                                    ng-click="saveTrip(tripForm)">Add next
+                            <button type="submit" class="btn btn-primary"
+                                    ng-disabled="!tripForm.$valid || departuresInNewTrip.length === 0"
+                                    ng-click="saveTrip(tripForm)">Save trip
                             </button>
                         </div>
                     </form>
@@ -98,7 +101,17 @@
         <div class="card-body">
             <div class="list-group">
                 <div class="list-group-item" ng-repeat="trip in trips">
-                    <trip departures="trip.departures"></trip>
+                    <div class="card">
+                        <div class="card-header">
+                            <button ng-disabled="trip.chosen.length !== 2" ng-click="watchPassengers(trip)"
+                                    class="btn btn-primary">
+                                Watch passengers
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <trip select-station="selectStation" trip="trip"></trip>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -62,6 +62,21 @@ public class PassengerDAOImpl extends GenericAbstractDAO<Passenger, Integer> imp
     }
 
     @Override
+    public List<Passenger> findAllPassengersByTripIdAndDepartureIndexBounds(Integer tripId, Integer from, Integer to) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Passenger> query = builder.createQuery(Passenger.class);
+        Root<Ticket> root = query.from(Ticket.class);
+        Join<Ticket, Trip> tripJoin = root.join(Ticket_.trip);
+        tripJoin.on(builder.equal(tripJoin.get(Trip_.id), tripId));
+        Join<Ticket, Departure> departureFromJoin = root.join(Ticket_.from);
+        departureFromJoin.on(builder.equal(departureFromJoin.get(Departure_.id), from));
+        Join<Ticket, Departure> departureToJoin = root.join(Ticket_.to);
+        departureToJoin.on(builder.equal(departureToJoin.get(Departure_.id), to));
+        query.select(root.join(Ticket_.passenger));
+        return entityManager.createQuery(query).getResultList();
+    }
+
+    @Override
     public List<Passenger> findAllPassengersByTripId(Integer tripId) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Passenger> query = builder.createQuery(Passenger.class);

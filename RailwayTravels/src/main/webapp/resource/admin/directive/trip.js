@@ -3,7 +3,8 @@ adminApp.directive('trip', function () {
     return {
         restrict: 'E',
         scope: {
-            departures: '=departures'
+            trip: '=trip',
+            selectStation: '=selectStation'
         },
         templateUrl: 'resource/admin/template/trip.html'
     };

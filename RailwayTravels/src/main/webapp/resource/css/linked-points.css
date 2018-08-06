@@ -1,3 +1,4 @@
+
 .progress {
     overflow: visible;
     background: inherit !important;
@@ -16,7 +17,7 @@
     width: 40px;
     height: 40px;
     border-radius: 40px;
-    border: 1px solid #d5d5da;
+    border: 1px solid #656567;
     vertical-align:top;
 }
 .progress .bar {
@@ -37,11 +38,11 @@
     line-height: 32px;
     border-radius: 32px;
     margin-top: 3px;
-    color: #b5b5ba;
+    color: #262626;
     font-size: 17px;
 }
 .progress .circle .title {
-    color: #b5b5ba;
+    color: #262626;
     font-size: 13px;
     line-height: 18px;
     margin-left: -30px;

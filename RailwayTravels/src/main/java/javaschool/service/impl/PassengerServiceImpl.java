@@ -136,6 +136,13 @@ public class PassengerServiceImpl implements PassengerService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<PassengerWithoutTickets> findAllPassengersByTripIdAndDepartureIndexBounds(Integer tripId, Integer from, Integer to) {
+        return passengerDAO.findAllPassengersByTripIdAndDepartureIndexBounds(tripId, from, to).stream()
+                .map(passenger -> passengerConverter.convertTo(passenger))
+                .collect(Collectors.toList());
+    }
+
     private void notNullElseThrowException(Object obj, RuntimeException exc) {
         if (obj == null) throw exc;
     }

@@ -82,12 +82,18 @@ create table ticket
   id int not null primary key auto_increment,
   trip_id int not null,
   passenger_id int not null,
+  departure_from int not null,
+  departure_to int not null,
   constraint TRIP_PASSENGER_UNIQUE
     unique (trip_id, passenger_id),
   constraint TRIP_FK
     foreign key (trip_id) references trip(id),
   constraint PASSENGER_FK
-    foreign key (passenger_id) references passenger(id)
+    foreign key (passenger_id) references passenger(id),
+  constraint DEPARTURE_FROM_FK
+    foreign key(departure_from) references departure(id),
+  constraint DEPARTURE_TO_FK
+    foreign key(departure_to) references departure(id)
 );
 
 create table occupied_seat

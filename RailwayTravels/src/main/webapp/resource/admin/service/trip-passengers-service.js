@@ -8,9 +8,9 @@ function convertPassenger(passenger) {
 }
 
 adminApp.service('departurePassengersService', function ($http, $q) {
-    this.getAllPassengersByDepartureId = function (departureId) {
+    this.getAllPassengersByTripIdFromToDepartureIndexes = function (departureId, from, to) {
         let deferred = $q.defer();
-        $http.get('passenger/' + departureId).then(function success(response) {
+        $http.get('passenger/' + departureId + '/' + from + '/' + to).then(function success(response) {
             deferred.resolve(response.data.map(convertPassenger));
         }, function error(response) {
             deferred.reject(response.status);

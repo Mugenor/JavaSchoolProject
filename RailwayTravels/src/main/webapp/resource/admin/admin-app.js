@@ -8,7 +8,7 @@ let adminApp = angular.module('adminApp', ['ngRoute', 'ui.validate'])
                 templateUrl: 'resource/admin/template/all-trips.html',
                 controller: 'allTripsController'
             })
-            .when('/departure/:departureId',
+            .when('/trip/:tripId/:from/:to',
                 {
                     templateUrl: 'resource/admin/template/passengers.html',
                     controller: 'tripController'
