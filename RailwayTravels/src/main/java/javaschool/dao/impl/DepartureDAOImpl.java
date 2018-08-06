@@ -152,24 +152,6 @@ public class DepartureDAOImpl extends GenericAbstractDAO<Departure, Integer> imp
         return entityManager.createQuery(query).getResultList();
     }
 
-//    @Override
-//    public List<Departure> findByStationFromDateTimeBetween(String stationFromTitle, LocalDateTime dateTimeLeftBound,
-//                                                            LocalDateTime dateTimeRightBound, boolean fetchTrip) {
-//        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-//        CriteriaQuery<Departure> query = builder.createQuery(Departure.class);
-//        Root<Departure> from = query.from(Departure.class);
-//        if(fetchTrip) {
-//            from.fetch(Departure_.trip);
-//        }
-//        query.select(from).where(
-//                builder.and(
-//                        builder.equal(from.join(Departure_.stationFrom).get(Station_.title), stationFromTitle),
-//                        builder.greaterThanOrEqualTo(from.get(Departure_.dateTimeFrom), dateTimeLeftBound),
-//                        builder.lessThanOrEqualTo(from.get(Departure_.dateTimeFrom), dateTimeRightBound)
-//                )
-//        );
-//        return entityManager.createQuery(query).getResultList();
-//    }
 
     private void findDeparture(CriteriaBuilder builder, CriteriaQuery<Departure> query,
                                Root<Departure> from, boolean fetchStations, boolean fetchTickets,

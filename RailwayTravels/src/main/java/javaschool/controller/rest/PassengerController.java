@@ -30,6 +30,6 @@ public class PassengerController {
     @GetMapping("/{tripId}/{from}/{to}")
     public List<PassengerWithoutTickets> getAllPassengersRegisteredOnTrip(@PathVariable Integer tripId,
                                                                           @PathVariable Integer from, @PathVariable Integer to) {
-        return passengerService.findAllPassengersByTripId(tripId);
+        return passengerService.findAllPassengersByTripIdAndDepartureIndexBounds(tripId, from, to);
     }
 }

@@ -9,6 +9,7 @@ import javaschool.entity.Trip;
 import javaschool.entity.Trip_;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Fetch;
 import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Root;
 import org.joda.time.LocalDateTime;
@@ -18,15 +19,29 @@ import org.springframework.stereotype.Repository;
 public class TripDAOImpl extends GenericAbstractDAO<Trip, Integer> implements TripDAO {
 
     @Override
+    public List<Trip> findAll() {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Trip> query = builder.createQuery(Trip.class);
+        Root<Trip> from = query.from(Trip.class);
+        Fetch<Trip, Departure> departureFetch = from.fetch(Trip_.departures);
+        departureFetch.fetch(Departure_.stationFrom);
+        departureFetch.fetch(Departure_.stationTo);
+        query.select(from).distinct(true);
+        return entityManager.createQuery(query).getResultList();
+    }
+
+    @Override
     public List<Trip> findAllAfter(LocalDateTime dateTime) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Trip> query = builder.createQuery(Trip.class);
         Root<Trip> from = query.from(Trip.class);
         ListJoin<Trip, Departure> departureListJoin = from.join(Trip_.departures);
-        from.fetch(Trip_.departures);
+        Fetch<Trip, Departure> departureFetch = from.fetch(Trip_.departures);
+        departureFetch.fetch(Departure_.stationFrom);
+        departureFetch.fetch(Departure_.stationTo);
         query.select(from).where(
                 builder.greaterThanOrEqualTo(departureListJoin.get(Departure_.dateTimeFrom), dateTime)
-        );
+        ).distinct(true);
         return entityManager.createQuery(query).getResultList();
     }
 
@@ -36,7 +51,9 @@ public class TripDAOImpl extends GenericAbstractDAO<Trip, Integer> implements Tr
         CriteriaQuery<Trip> query = builder.createQuery(Trip.class);
         Root<Trip> from = query.from(Trip.class);
         ListJoin<Trip, Departure> departureListJoin = from.join(Trip_.departures);
-        from.fetch(Trip_.departures);
+        Fetch<Trip, Departure> departureFetch = from.fetch(Trip_.departures);
+        departureFetch.fetch(Departure_.stationFrom);
+        departureFetch.fetch(Departure_.stationTo);
         query.select(from).where(
                 builder.or(
                         builder.and(
@@ -48,7 +65,7 @@ public class TripDAOImpl extends GenericAbstractDAO<Trip, Integer> implements Tr
                                 builder.lessThanOrEqualTo(departureListJoin.get(Departure_.dateTimeFrom), end)
                         )
                 )
-        );
+        ).distinct(true);
         return entityManager.createQuery(query).getResultList();
     }
 

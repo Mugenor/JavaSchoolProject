@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>angularModule</module>
         <module>RailwayTravels</module>
         <module>client</module>
         <module>dto</module>
