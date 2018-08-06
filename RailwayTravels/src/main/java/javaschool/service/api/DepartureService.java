@@ -97,7 +97,4 @@ public interface DepartureService {
      * @return Saved departure
      */
     Departure save(NewDepartureDTO newDepartureDTO);
-    Departure saveWithNotification(int coachesCount, String stationFrom, String stationTo, LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo);
-    Departure saveWithNotification(NewDepartureDTO newDepartureDTO);
-
 }

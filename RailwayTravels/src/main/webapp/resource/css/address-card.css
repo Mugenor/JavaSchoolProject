@@ -1,0 +1,9 @@
+.address-card {
+    text-align: left;
+    margin: 20px !important;
+    left: -60px;
+    width: 200px;
+    color: #363637;
+    font-size: 13px;
+    display: inline-block;
+}

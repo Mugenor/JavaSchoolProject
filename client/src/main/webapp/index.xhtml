@@ -50,7 +50,7 @@
         <!--</p:dataTable>-->
     </h:panelGroup>
     <h:form>
-        <f:websocket channel="departureChannel" onmessage="">
+        <f:websocket channel="departureChannel">
             <f:ajax event="tripUpdate" render=":departureTable"/>
         </f:websocket>
     </h:form>

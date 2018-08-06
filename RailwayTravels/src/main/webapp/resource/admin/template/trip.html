@@ -1,0 +1,22 @@
+<div class="progress">
+    <span ng-repeat="departure in departures">
+        <div class="circle" ng-mouseenter="departure.showFrom = true"
+             ng-mouseleave="departure.showFrom = false" ng-show="$first">
+            <span class="label">{{$index + 1}}</span>
+            <span class="title">{{departure.stationFrom}}</span>
+            <div class="card address-card" ng-show="departure.showFrom">
+                <a>Departure time: {{departure.dateTimeFrom}}</a>
+            </div>
+        </div>
+        <span class="bar"></span>
+        <div class="circle" ng-mouseenter="departure.showTo = true"
+             ng-mouseleave="departure.showTo = false">
+            <span class="label">{{$index + 2}}</span>
+            <span class="title">{{departure.stationTo}}</span>
+            <div class="card address-card" ng-show="departure.showTo">
+                <a>Arrival time: {{departure.dateTimeTo}}</a>
+                <a ng-show="!$last">Departure time: {{departures[$index + 1].dateTimeFrom}}</a>
+            </div>
+        </div>
+    </span>
+</div>

@@ -43,7 +43,7 @@ public class Table {
             tripDTOSet = tripDTOService.getTrips();
             rootNode = new DefaultTreeNode("Today trips");
             for(TripDTO tripDTO: tripDTOSet) {
-               createTripNode(tripDTO).setParent(rootNode);
+               rootNode.getChildren().add(createTripNode(tripDTO));
             }
 
             ConnectionFactory connectionFactory = new ConnectionFactory();
@@ -60,14 +60,14 @@ public class Table {
                         ObjectInputStream objectInputStream = new ObjectInputStream(new ByteArrayInputStream(body));
                         TripDTO tripDTO = (TripDTO) objectInputStream.readObject();
                         System.out.println("Received a message: " + tripDTO);
-                        pushContext.send("tripUpdate");
                         if(!tripDTOSet.contains(tripDTO)){
-                            createTripNode(tripDTO).setParent(rootNode);
+                            rootNode.getChildren().add(createTripNode(tripDTO));
                         } else {
                             TreeNode node = createTripNode(tripDTO);
                             rootNode.getChildren().set(rootNode.getChildren().indexOf(node), node);
                         }
                         tripDTOSet.add(tripDTO);
+                        pushContext.send("tripUpdate");
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -101,7 +101,7 @@ public class Table {
                     departureDTO.getStationFrom(),
                     departureDTO.getStationTo(),
                     departureDTO.getDateTimeFrom(),
-                    departureDTO.getDateTimeFrom()
+                    departureDTO.getDateTimeTo()
             ), tripNode);
         }
         return tripNode;

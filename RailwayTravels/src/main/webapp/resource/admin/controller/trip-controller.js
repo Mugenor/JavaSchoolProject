@@ -1,4 +1,4 @@
-adminApp.controller('departureController', function ($scope, departurePassengersService, $routeParams) {
+adminApp.controller('tripController', function ($scope, departurePassengersService, $routeParams) {
     $scope.$on('$routeChangeSuccess', function () {
         let departureId = $routeParams['departureId'];
         if(departureId) {

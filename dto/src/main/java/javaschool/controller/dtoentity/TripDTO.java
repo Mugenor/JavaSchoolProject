@@ -1,9 +1,10 @@
 package javaschool.controller.dtoentity;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-public class TripDTO {
+public class TripDTO implements Serializable {
     private Integer id;
     private List<DepartureDTO> departures;
 

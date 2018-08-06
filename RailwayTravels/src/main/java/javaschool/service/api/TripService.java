@@ -12,5 +12,6 @@ public interface TripService {
     List<TripDTO> findAllToday();
     List<TripDTO> findAllAvailable();
     List<TripDTO> findByStationTitle(String stationTitle);
-    Trip save(List<NewDepartureDTO> departures);
+    TripDTO save(List<NewDepartureDTO> departures);
+    TripDTO saveWithNotification(List<NewDepartureDTO> departures);
 }

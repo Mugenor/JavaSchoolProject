@@ -20,7 +20,7 @@ public class NewDepartureDTO {
     @LocalDateTimeConstraint(minDateTime = LocalDateTimeValidator.NOW)
     private LocalDateTime dateTimeTo;
     @Min(1)
-    @Max(50)
+    @Max(10)
     private int coachCount;
 
     public NewDepartureDTO() {

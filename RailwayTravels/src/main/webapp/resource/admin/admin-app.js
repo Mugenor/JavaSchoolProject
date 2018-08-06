@@ -3,15 +3,15 @@ let csrfHeader = $("meta[name='_csrf_header']").attr("content");
 
 let adminApp = angular.module('adminApp', ['ngRoute', 'ui.validate'])
     .config(function ($routeProvider) {
-        $routeProvider.when('/all-departures',
+        $routeProvider.when('/all-trips',
             {
-                templateUrl: 'resource/admin/template/all-departures.html',
-                controller: 'allDeparturesController'
+                templateUrl: 'resource/admin/template/all-trips.html',
+                controller: 'allTripsController'
             })
             .when('/departure/:departureId',
                 {
                     templateUrl: 'resource/admin/template/passengers.html',
-                    controller: 'departureController'
+                    controller: 'tripController'
                 })
             .when('/stations',
                 {

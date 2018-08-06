@@ -9,6 +9,7 @@ import javaschool.dao.api.StationDAO;
 import javaschool.entity.Departure;
 import javaschool.entity.Station;
 import javaschool.service.api.DepartureService;
+import javaschool.service.api.RabbitService;
 import javaschool.service.converter.DepartureToDepartureDTOConverter;
 import javaschool.service.converter.DepartureToNewDepartureDTOConverter;
 import javaschool.service.converter.StringToLocalDateTimeConverter;
@@ -28,25 +29,16 @@ public class DepartureServiceImpl implements DepartureService {
     private DepartureToNewDepartureDTOConverter departureToNewDepartureDTOConverter;
     private DepartureDAO departureDAO;
     private StationDAO stationDAO;
-    private RabbitTemplate rabbitTemplate;
-    private DepartureService selfProxy;
 
     @Autowired
     public DepartureServiceImpl(DepartureDAO departureDAO, StationDAO stationDAO,
                                 StringToLocalDateTimeConverter converter, DepartureToDepartureDTOConverter departureDTOConverter,
-                                DepartureToNewDepartureDTOConverter departureToNewDepartureDTOConverter,
-                                RabbitTemplate rabbitTemplate) {
+                                DepartureToNewDepartureDTOConverter departureToNewDepartureDTOConverter) {
         this.stationDAO = stationDAO;
         this.departureDAO = departureDAO;
         this.stringToLocalDateTimeConverter = converter;
         this.departureToDepartureDTOConverter = departureDTOConverter;
-        this.rabbitTemplate = rabbitTemplate;
         this.departureToNewDepartureDTOConverter = departureToNewDepartureDTOConverter;
-    }
-
-    @Autowired
-    public void setSelfProxy(DepartureService selfProxy) {
-        this.selfProxy = selfProxy;
     }
 
     @Override
@@ -134,20 +126,6 @@ public class DepartureServiceImpl implements DepartureService {
     public Departure save(NewDepartureDTO newDepartureDTO) {
         Departure departure = departureToNewDepartureDTOConverter.convertFrom(newDepartureDTO);
         departureDAO.save(departure);
-        return departure;
-    }
-
-    @Override
-    public Departure saveWithNotification(int coachesCount, String stationFrom, String stationTo, LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo) {
-        Departure departure = selfProxy.save(coachesCount, stationFrom, stationTo, dateTimeFrom, dateTimeTo);
-        rabbitTemplate.convertAndSend(departureToDepartureDTOConverter.convertTo(departure));
-        return departure;
-    }
-
-    @Override
-    public Departure saveWithNotification(NewDepartureDTO newDepartureDTO) {
-        Departure departure = selfProxy.save(newDepartureDTO);
-        rabbitTemplate.convertAndSend(departureToDepartureDTOConverter.convertTo(departure));
         return departure;
     }
 }
