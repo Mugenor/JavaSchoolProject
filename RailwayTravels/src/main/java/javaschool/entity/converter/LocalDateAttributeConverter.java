@@ -3,17 +3,18 @@ package javaschool.entity.converter;
 import java.sql.Date;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
+import org.joda.time.Instant;
 import org.joda.time.LocalDate;
 
 @Converter(autoApply = true)
-public class LocalDateAttributeConverter implements AttributeConverter<LocalDate, Date> {
+public class LocalDateAttributeConverter implements AttributeConverter<LocalDate, Long> {
     @Override
-    public Date convertToDatabaseColumn(LocalDate attribute) {
-        return attribute == null ? null : Date.valueOf(attribute.toString());
+    public Long convertToDatabaseColumn(LocalDate attribute) {
+        return attribute == null ? null : attribute.toDate().getTime();
     }
 
     @Override
-    public LocalDate convertToEntityAttribute(Date dbData) {
-        return dbData == null ? null : LocalDate.fromDateFields(dbData);
+    public LocalDate convertToEntityAttribute(Long dbData) {
+        return dbData == null ? null : new LocalDate(dbData);
     }
 }

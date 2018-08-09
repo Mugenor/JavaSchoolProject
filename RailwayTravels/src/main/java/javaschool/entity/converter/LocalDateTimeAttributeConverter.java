@@ -6,14 +6,14 @@ import javax.persistence.Converter;
 import org.joda.time.LocalDateTime;
 
 @Converter(autoApply = true)
-public class LocalDateTimeAttributeConverter implements AttributeConverter<LocalDateTime, Timestamp> {
+public class LocalDateTimeAttributeConverter implements AttributeConverter<LocalDateTime, Long> {
     @Override
-    public Timestamp convertToDatabaseColumn(LocalDateTime attribute) {
-        return attribute == null ? null : new Timestamp(attribute.toDateTime().getMillis());
+    public Long convertToDatabaseColumn(LocalDateTime attribute) {
+        return attribute == null ? null : attribute.toDateTime().getMillis();
     }
 
     @Override
-    public LocalDateTime convertToEntityAttribute(Timestamp dbData) {
-        return dbData == null ? null : LocalDateTime.fromDateFields(dbData);
+    public LocalDateTime convertToEntityAttribute(Long dbData) {
+        return dbData == null ? null : new LocalDateTime(dbData);
     }
 }

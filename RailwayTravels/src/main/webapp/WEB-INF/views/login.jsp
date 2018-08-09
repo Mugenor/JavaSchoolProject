@@ -20,7 +20,7 @@
     <div class="container-login100" style="background-image: url('resource/images/bg-01.jpg');">
         <div class="wrap-login100 p-l-110 p-r-110 p-t-62 p-b-33">
             <form class="login100-form validate-form flex-sb flex-w" action="login" method="post">
-                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                <%--<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>--%>
                 <c:if test="${not empty error}">
                     <div class="alert alert-danger w-full text-center">
                         <p>${error}</p>

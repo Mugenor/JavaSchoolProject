@@ -1,6 +1,7 @@
 package javaschool.service.converter;
 
 import javaschool.controller.dtoentity.DepartureDTO;
+import javaschool.entity.Coach;
 import javaschool.entity.Departure;
 import javaschool.entity.Station;
 import javaschool.service.exception.ClassConvertingException;
@@ -29,7 +30,8 @@ public class DepartureToDepartureDTOConverter implements ClassConverter<Departur
                     departure.getStationFrom().getTitle(),
                     departure.getStationTo().getTitle(),
                     Instant.parse(departure.getDateTimeFrom().toString()).getMillis(),
-                    Instant.parse(departure.getDateTimeTo().toString()).getMillis());
+                    Instant.parse(departure.getDateTimeTo().toString()).getMillis(),
+                    departure.getNumberInTrip());
         } catch (NullPointerException e) {
             throw new ClassConvertingException(CONVERTING_EXC_MESSAGE, e);
         }
@@ -45,6 +47,7 @@ public class DepartureToDepartureDTOConverter implements ClassConverter<Departur
         departure.setStationFrom(new Station(departureDTO.getStationFrom()));
         departure.setFreeSitsCount(departureDTO.getFreeSitsCount());
         departure.setSitsCount(departureDTO.getFreeSitsCount());
+        departure.setNumberInTrip(departureDTO.getNumberInTrip());
         return departure;
     }
 }

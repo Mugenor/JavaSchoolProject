@@ -1,0 +1,26 @@
+<div class="progress">
+    <span *ngFor="let departure of trip.departures; let index = index; let first = first; let last = last">
+        <div class="circle" (mouseenter)="departure.showFrom = true"
+             [ngClass]="{active: (trip.chosen[0] === departure.numberInTrip) || (((trip.chosen.length === 2) && (trip.chosen[0] <= departure.numberInTrip) && (trip.chosen[1] >= departure.numberInTrip)))}"
+             (mouseleave)="departure.showFrom = false" *ngIf="first" (click)="selectStation(trip, departure.numberInTrip)">
+            <span class="label">{{departure.numberInTrip}}</span>
+            <span class="title">{{departure.stationFrom}}</span>
+            <div class="card address-card" *ngIf="departure.showFrom">
+                <a>Departure time: {{departure.dateTimeFromAsString}}</a>
+            </div>
+        </div>
+        <span class="bar"
+              [ngClass]="{done: (((trip.chosen.length === 2) && (trip.chosen[0] <= departure.numberInTrip + 0.5) && (trip.chosen[1] >= departure.numberInTrip + 0.5)))}"></span>
+        <div class="circle" (mouseenter)="departure.showTo = true"
+             [ngClass]="{active: (trip.chosen[0] === departure.numberInTrip + 1) || (((trip.chosen.length === 2) && (trip.chosen[0] <= departure.numberInTrip + 1) && (trip.chosen[1] >= departure.numberInTrip + 1)))}"
+             (mouseleave)="departure.showTo = false" (click)="selectStation(trip, departure.numberInTrip + 1)">
+            <span class="label">{{departure.numberInTrip + 1}}</span>
+            <span class="title">{{departure.stationTo}}</span>
+            <div class="card address-card" *ngIf="departure.showTo">
+                <a>Arrival time: {{departure.dateTimeToAsString}}</a>
+                <br/>
+                <a *ngIf="!last">Departure time: {{trip.departures[index + 1].dateTimeFromAsString}}</a>
+            </div>
+        </div>
+    </span>
+</div>

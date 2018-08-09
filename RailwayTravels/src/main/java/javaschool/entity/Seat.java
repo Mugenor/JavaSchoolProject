@@ -74,7 +74,7 @@ public class Seat {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Seat seat = (Seat) o;
-        return Objects.equals(id, seat.id) || (this.siteNum.equals(seat.siteNum) && this.coach.equals(seat.coach));
+        return (this.siteNum.equals(seat.siteNum) && this.coach.equals(seat.coach));
     }
 
     @Override

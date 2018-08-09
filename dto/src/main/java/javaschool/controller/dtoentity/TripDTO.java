@@ -6,14 +6,25 @@ import java.util.Objects;
 
 public class TripDTO implements Serializable {
     private Integer id;
+    private int coachCount;
     private List<DepartureDTO> departures;
 
     public TripDTO() {
     }
 
-    public TripDTO(Integer id, List<DepartureDTO> departures) {
+    public TripDTO(Integer id, List<DepartureDTO> departures, Integer coachCount) {
         this.id = id;
         this.departures = departures;
+        this.coachCount = coachCount;
+    }
+
+    public int getCoachCount() {
+        return coachCount;
+    }
+
+    public TripDTO setCoachCount(int coachCount) {
+        this.coachCount = coachCount;
+        return this;
     }
 
     public Integer getId() {

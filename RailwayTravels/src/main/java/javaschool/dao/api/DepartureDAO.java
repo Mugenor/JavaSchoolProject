@@ -3,6 +3,7 @@ package javaschool.dao.api;
 import java.util.List;
 import javaschool.entity.Departure;
 import javaschool.entity.Station;
+import javaschool.entity.Trip;
 import org.joda.time.LocalDateTime;
 
 public interface DepartureDAO extends GenericDAO<Departure, Integer> {
@@ -17,6 +18,4 @@ public interface DepartureDAO extends GenericDAO<Departure, Integer> {
                                                                boolean fetchStations, boolean fetchSeats, boolean orderByDateTimeFrom);
     List<Departure> findByTripIdAndNumberInTripBetween(Integer tripId, Integer leftBound, Integer rightBound,
                                             boolean fetchStations, boolean fetchSeats, boolean orderByDateTimeFrom);
-//    List<Departure> findByStationFromDateTimeBetween(String stationFromTitle, LocalDateTime dateTimeLeftBound, LocalDateTime dateTimeRightBound,
-//                                                     boolean fetchTrip);
 }

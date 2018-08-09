@@ -13,6 +13,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.joda.time.LocalDateTime;
@@ -142,10 +143,8 @@ public class DepartureDAOImpl extends GenericAbstractDAO<Departure, Integer> imp
         query.select(from).where(
                 builder.and(
                         builder.equal(tripJoin.get(Trip_.id), tripId),
-                        builder.and(
-                                builder.greaterThanOrEqualTo(from.get(Departure_.numberInTrip), leftBound),
-                                builder.lessThanOrEqualTo(from.get(Departure_.numberInTrip), rightBound)
-                        )
+                        builder.greaterThanOrEqualTo(from.get(Departure_.numberInTrip), leftBound),
+                        builder.lessThanOrEqualTo(from.get(Departure_.numberInTrip), rightBound)
                 )
         );
         findDeparture(builder, query, from, fetchStations, fetchSeats, orderByDateTimeFrom);

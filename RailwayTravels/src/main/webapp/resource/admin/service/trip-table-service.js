@@ -1,10 +1,10 @@
-let dateOptions = {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric'};
+let dateTimeOptions = {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric'};
 function convertTrip(trip) {
     for(let i=0; i < trip.departures.length; ++i) {
         trip.departures[i].dateTimeFromMilliseconds = trip.departures[i].dateTimeFrom;
         trip.departures[i].dateTimeToMilliseconds = trip.departures[i].dateTimeTo;
-        trip.departures[i].dateTimeFrom = new Date(trip.departures[i].dateTimeFrom).toLocaleTimeString(undefined, dateOptions);
-        trip.departures[i].dateTimeTo = new Date(trip.departures[i].dateTimeTo).toLocaleTimeString(undefined, dateOptions);
+        trip.departures[i].dateTimeFrom = new Date(trip.departures[i].dateTimeFrom).toLocaleTimeString(undefined, dateTimeOptions);
+        trip.departures[i].dateTimeTo = new Date(trip.departures[i].dateTimeTo).toLocaleTimeString(undefined, dateTimeOptions);
     }
     return trip;
 }

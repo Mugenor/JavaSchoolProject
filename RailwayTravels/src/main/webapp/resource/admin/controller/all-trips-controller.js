@@ -139,9 +139,9 @@ adminApp.controller('allTripsController', function ($scope, $location, tripTable
             let departure = {
                 stationFrom: newDeparture.stationFrom,
                 stationTo: newDeparture.stationTo,
-                dateTimeFrom: dateTimeFrom.toLocaleTimeString(undefined, dateOptions),
+                dateTimeFrom: dateTimeFrom.toLocaleTimeString(undefined, dateTimeOptions),
                 dateTimeFromMilliseconds: dateTimeFrom.getTime(),
-                dateTimeTo: dateTimeTo.toLocaleTimeString(undefined, dateOptions),
+                dateTimeTo: dateTimeTo.toLocaleTimeString(undefined, dateTimeOptions),
                 dateTimeToMilliseconds: dateTimeTo.getTime(),
             };
 

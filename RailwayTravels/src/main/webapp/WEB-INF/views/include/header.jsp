@@ -12,7 +12,7 @@
                         class="fa fa-user"></i><security:authentication property="principal.username"/></a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd_user">
                     <form method="POST" action="logout">
-                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                        <%--<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>--%>
                         <input type="submit" class="dropdown-item" value="Logout"/>
                     </form>
                 </div>

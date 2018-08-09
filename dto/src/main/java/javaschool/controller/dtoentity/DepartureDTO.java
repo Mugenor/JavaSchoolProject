@@ -15,12 +15,13 @@ public class DepartureDTO implements Serializable {
     private String stationTo;
     private long dateTimeFrom;
     private long dateTimeTo;
+    private int numberInTrip;
 
     public DepartureDTO() {
     }
 
     public DepartureDTO(Integer id, int sitsCount, int freeSitsCount, String stationFrom, String stationTo
-            , long dateTimeFrom, long dateTimeTo) {
+            , long dateTimeFrom, long dateTimeTo, int numberInTrip) {
         this.sitsCount = sitsCount;
         this.freeSitsCount = freeSitsCount;
         this.stationFrom = stationFrom;
@@ -28,6 +29,16 @@ public class DepartureDTO implements Serializable {
         this.dateTimeFrom = dateTimeFrom;
         this.dateTimeTo = dateTimeTo;
         this.id = id;
+        this.numberInTrip = numberInTrip;
+    }
+
+    public int getNumberInTrip() {
+        return numberInTrip;
+    }
+
+    public DepartureDTO setNumberInTrip(int numberInTrip) {
+        this.numberInTrip = numberInTrip;
+        return this;
     }
 
     public Integer getId() {

@@ -1,5 +1,5 @@
-let csrfToken = $("meta[name='_csrf']").attr("content");
-let csrfHeader = $("meta[name='_csrf_header']").attr("content");
+// let csrfToken = $("meta[name='_csrf']").attr("content");
+// let csrfHeader = $("meta[name='_csrf_header']").attr("content");
 
 let adminApp = angular.module('adminApp', ['ngRoute', 'ui.validate'])
     .config(function ($routeProvider) {
@@ -26,5 +26,5 @@ let adminApp = angular.module('adminApp', ['ngRoute', 'ui.validate'])
                 redirectTo: '/'
             });
     }).run(function ($http) {
-        $http.defaults.headers.common[csrfHeader] = csrfToken;
+        // $http.defaults.headers.common[csrfHeader] = csrfToken;
     });

@@ -1,3 +1,4 @@
+let dateOptions = {year: 'numeric', month: 'numeric', day: 'numeric'};
 function convertPassenger(passenger) {
     return {
         name: passenger.name,

@@ -4,41 +4,69 @@ import javax.validation.constraints.NotNull;
 
 public class TicketBuyDTO {
     @NotNull
-    private Integer seatNum;
+    private Integer tripId;
     @NotNull
-    private Integer departureId;
+    private Integer departureFromIndex;
+    @NotNull
+    private Integer departureToIndex;
     @NotNull
     private Integer coachNumber;
+    @NotNull
+    private Integer seatNum;
+
+    public TicketBuyDTO(@NotNull Integer tripId, @NotNull Integer departureFromIndex, @NotNull Integer departureToIndex, @NotNull Integer coachNumber, @NotNull Integer seatNum) {
+        this.tripId = tripId;
+        this.departureFromIndex = departureFromIndex;
+        this.departureToIndex = departureToIndex;
+        this.coachNumber = coachNumber;
+        this.seatNum = seatNum;
+    }
 
     public TicketBuyDTO() {
     }
 
-    public TicketBuyDTO(@NotNull Integer seatNum, @NotNull Integer departureId) {
-        this.seatNum = seatNum;
-        this.departureId = departureId;
+    public Integer getTripId() {
+        return tripId;
+    }
+
+    public TicketBuyDTO setTripId(Integer tripId) {
+        this.tripId = tripId;
+        return this;
+    }
+
+    public Integer getDepartureFromIndex() {
+        return departureFromIndex;
+    }
+
+    public TicketBuyDTO setDepartureFromIndex(Integer departureFromIndex) {
+        this.departureFromIndex = departureFromIndex;
+        return this;
+    }
+
+    public Integer getDepartureToIndex() {
+        return departureToIndex;
+    }
+
+    public TicketBuyDTO setDepartureToIndex(Integer departureToIndex) {
+        this.departureToIndex = departureToIndex;
+        return this;
     }
 
     public Integer getCoachNumber() {
         return coachNumber;
     }
 
-    public void setCoachNumber(Integer coachNumber) {
+    public TicketBuyDTO setCoachNumber(Integer coachNumber) {
         this.coachNumber = coachNumber;
+        return this;
     }
 
     public Integer getSeatNum() {
         return seatNum;
     }
 
-    public void setSeatNum(Integer seatNum) {
+    public TicketBuyDTO setSeatNum(Integer seatNum) {
         this.seatNum = seatNum;
-    }
-
-    public Integer getDepartureId() {
-        return departureId;
-    }
-
-    public void setDepartureId(Integer departureId) {
-        this.departureId = departureId;
+        return this;
     }
 }

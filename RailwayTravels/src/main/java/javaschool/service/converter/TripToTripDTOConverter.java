@@ -20,6 +20,7 @@ public class TripToTripDTOConverter implements ClassConverter<Trip, TripDTO> {
     @Override
     public TripDTO convertTo(Trip trip) {
         TripDTO tripDTO = new TripDTO();
+        tripDTO.setCoachCount(trip.getDepartures().get(0).getCoaches().size());
         LinkedList<DepartureDTO> departures = new LinkedList<>();
         tripDTO.setId(trip.getId()).setDepartures(departures);
         for(Departure departure: trip.getDepartures()) {

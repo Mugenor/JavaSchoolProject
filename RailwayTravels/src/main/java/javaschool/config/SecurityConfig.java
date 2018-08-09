@@ -49,12 +49,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout().logoutUrl("/logout").logoutSuccessUrl("/login?logout").permitAll()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/client/**").hasAnyAuthority(ROLE_PASSENGER)
+                .antMatchers("/client/**", "/trip/registered/*").hasAnyAuthority(ROLE_PASSENGER)
                 .antMatchers("/admin/**", "/departure/add", "/passenger/*").hasAnyAuthority(ROLE_ADMIN)
                 .antMatchers(HttpMethod.POST, "/station").hasAnyAuthority(ROLE_ADMIN)
                 .antMatchers("/logout").authenticated()
                 .anyRequest().permitAll().and()
-                .httpBasic();
+                .httpBasic().and()
+                .csrf().disable();
     }
 
     @Bean

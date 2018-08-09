@@ -1,8 +1,8 @@
 package javaschool.service.impl;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 import javaschool.controller.dtoentity.PassengerWithoutTickets;
 import javaschool.dao.api.DepartureDAO;
@@ -94,8 +94,10 @@ public class PassengerServiceImpl implements PassengerService {
         notNullElseThrowException(passenger, new NoSuchEntityException("There is no such passenger", Passenger.class));
 
         Ticket newTicket = new Ticket().setTrip(trip).setPassenger(passenger);
-        Set<OccupiedSeat> occupiedSeats = new TreeSet<>();
+        Set<OccupiedSeat> occupiedSeats = new HashSet<>();
         newTicket.setOccupiedSeats(occupiedSeats);
+        newTicket.setFrom(departures.get(0)).setTo(departures.get(departures.size() - 1));
+        ticketDAO.save(newTicket);
         for (Departure departure : departures) {
             Seat seat = seatDAO.findSeatByDepartureAndCoachNumAndSeatNum(departure.getId(), coachNumber, seatNumber);
             notNullElseThrowException(seat, new NoSuchEntityException("There is no such seat", Seat.class));
@@ -117,7 +119,7 @@ public class PassengerServiceImpl implements PassengerService {
 
             departure.decrementFreeSeatsCount();
         }
-        ticketDAO.save(newTicket);
+//        ticketDAO.save(newTicket);
     }
 
     @Override
@@ -141,6 +143,15 @@ public class PassengerServiceImpl implements PassengerService {
         return passengerDAO.findAllPassengersByTripIdAndDepartureIndexBounds(tripId, from, to).stream()
                 .map(passenger -> passengerConverter.convertTo(passenger))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Boolean isRegistered(Integer tripId, String username) {
+        Passenger passenger = passengerDAO.findByUsername(username);
+        if(passenger == null) {
+            throw new IllegalArgumentException("Invalid user");
+        }
+        return ticketDAO.findByTripIdAndPassenger(tripId, passenger) != null;
     }
 
     private void notNullElseThrowException(Object obj, RuntimeException exc) {

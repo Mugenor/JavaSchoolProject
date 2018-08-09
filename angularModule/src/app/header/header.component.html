@@ -1,0 +1,24 @@
+<nav class="navbar navbar-expand navbar-dark bg-primary overflow-visible">
+  <span class="sidebar-toggle mr-3" href="#"><i class="fa fa-bars"></i></span>
+  <a class="navbar-brand" routerLink="client/home">Railway Travels</a>
+
+  <div class="navbar-collapse collapse">
+    <div class="navbar-nav ml-auto">
+      <div class="nav-item">
+        <div class="btn-group" dropdown>
+          <button id="user-button" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
+                  aria-controls="dropdown-basic">
+            <i class="fa fa-user"></i> {{username}}<span class="caret"></span>
+          </button>
+          <ul id="user-dropdown" *dropdownMenu class="dropdown-menu"
+              role="menu" aria-labelledby="user-button">
+            <li role="menuitem">
+              <form method="post" action="logout">
+                <input class="dropdown-item" type="submit" value="Logout"/>
+              </form>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

@@ -46,4 +46,6 @@ public interface PassengerService {
     List<PassengerWithoutTickets> findAllPassengersByDepartureId(Integer departureId);
     List<PassengerWithoutTickets> findAllPassengersByTripId(Integer tripId);
     List<PassengerWithoutTickets> findAllPassengersByTripIdAndDepartureIndexBounds(Integer tripId, Integer from, Integer to);
+
+    Boolean isRegistered(Integer tripId, String username);
 }

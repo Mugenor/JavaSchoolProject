@@ -27,6 +27,11 @@
     <dependencies>
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
+            <artifactId>angularModule</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
             <artifactId>dto</artifactId>
             <version>1.0</version>
         </dependency>
@@ -169,12 +174,6 @@
             <groupId>org.lazyluke</groupId>
             <artifactId>log4jdbc-remix</artifactId>
             <version>0.2.7</version>
-        </dependency>
-        <dependency>
-            <groupId>javaSchool</groupId>
-            <artifactId>dto</artifactId>
-            <version>1.0</version>
-            <scope>compile</scope>
         </dependency>
 
         <!--<dependency>-->

@@ -7,15 +7,13 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
-@RequestMapping(path = "/client")
 public class ClientController {
     private static final Logger log = Logger.getLogger(ClientController.class);
     private static final String CLIENT_VIEW = "/client";
@@ -35,39 +33,40 @@ public class ClientController {
         this.stationService = stationService;
     }
 
-    @GetMapping
+    @RequestMapping(path = {"/client", "/client/{*}", "/client/{*}/{*}",
+            "/client/{*}/{*}/{*}", "client/{*}/{*}/{*}/{*}"}, method = RequestMethod.GET)
     public ModelAndView getClientPage() {
         return new ModelAndView(CLIENT_VIEW);
     }
 
-    @GetMapping("/select/{departureId}")
-    public ModelAndView getSelectSeatView(@PathVariable int departureId) {
-        ModelAndView modelAndView = new ModelAndView(SELECT_SEAT_VIEW);
-        modelAndView.addObject("departure", departureService.findByIdRaw(departureId, true, true));
-        return modelAndView;
-    }
-
-    @GetMapping("/all-departures")
-    public ModelAndView getAllDeparturesView(){
-        ModelAndView modelAndView = new ModelAndView(DEPARTURES_VIEW);
-        modelAndView.addObject("departures", departureService.findAllAvailable(true, false));
-        return modelAndView;
-    }
-
-    @GetMapping("/departures/{stationName}")
-    public ModelAndView getAllDeparturesByStationName(@PathVariable String stationName){
-        return new ModelAndView(DEPARTURES_VIEW).addObject("departures", departureService.findByStationTitle(stationName, true, false));
-    }
-
-    @GetMapping("/find-departure")
-    public String getFindDepartureView() {
-        return FIND_DEPARTURE_VIEW;
-    }
-
-    @GetMapping("/stations")
-    public ModelAndView getStationsView() {
-        return new ModelAndView(STATIONS_VIEW).addObject("stations", stationService.findAllStationNames());
-    }
+//    @GetMapping("/select/{departureId}")
+//    public ModelAndView getSelectSeatView(@PathVariable int departureId) {
+//        ModelAndView modelAndView = new ModelAndView(SELECT_SEAT_VIEW);
+//        modelAndView.addObject("departure", departureService.findByIdRaw(departureId, true, true));
+//        return modelAndView;
+//    }
+//
+//    @GetMapping("/all-departures")
+//    public ModelAndView getAllDeparturesView(){
+//        ModelAndView modelAndView = new ModelAndView(DEPARTURES_VIEW);
+//        modelAndView.addObject("departures", departureService.findAllAvailable(true, false));
+//        return modelAndView;
+//    }
+//
+//    @GetMapping("/departures/{stationName}")
+//    public ModelAndView getAllDeparturesByStationName(@PathVariable String stationName){
+//        return new ModelAndView(DEPARTURES_VIEW).addObject("departures", departureService.findByStationTitle(stationName, true, false));
+//    }
+//
+//    @GetMapping("/find-departure")
+//    public String getFindDepartureView() {
+//        return FIND_DEPARTURE_VIEW;
+//    }
+//
+//    @GetMapping("/stations")
+//    public ModelAndView getStationsView() {
+//        return new ModelAndView(STATIONS_VIEW).addObject("stations", stationService.findAllStationNames());
+//    }
 
     @ExceptionHandler(NoSuchEntityException.class)
     public String handleNoDepartureException(RedirectAttributes model, Exception exc) {

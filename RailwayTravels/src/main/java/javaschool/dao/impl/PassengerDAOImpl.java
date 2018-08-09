@@ -69,9 +69,9 @@ public class PassengerDAOImpl extends GenericAbstractDAO<Passenger, Integer> imp
         Join<Ticket, Trip> tripJoin = root.join(Ticket_.trip);
         tripJoin.on(builder.equal(tripJoin.get(Trip_.id), tripId));
         Join<Ticket, Departure> departureFromJoin = root.join(Ticket_.from);
-        departureFromJoin.on(builder.equal(departureFromJoin.get(Departure_.id), from));
+        departureFromJoin.on(builder.greaterThanOrEqualTo(departureFromJoin.get(Departure_.numberInTrip), from));
         Join<Ticket, Departure> departureToJoin = root.join(Ticket_.to);
-        departureToJoin.on(builder.equal(departureToJoin.get(Departure_.id), to));
+        departureToJoin.on(builder.lessThanOrEqualTo(departureToJoin.get(Departure_.numberInTrip), to));
         query.select(root.join(Ticket_.passenger));
         return entityManager.createQuery(query).getResultList();
     }

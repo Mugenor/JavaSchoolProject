@@ -1,0 +1,28 @@
+<div class="container col-5 ">
+  <div class="form-group">
+    <label for="filterInput">Station filter</label>
+    <input id="filterInput" type="text" placeholder="Start entering station title"
+           class="form-control w-50"
+           size="40" #filter (keyup)="0"/>
+  </div>
+  <table id="stations" class="table table-striped table-bordered table-light">
+    <thead>
+    <tr>
+      <th>Station</th>
+      <th>Watch timetable</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let station of stations | contains:filter.value">
+      <td>
+        {{station}}
+      </td>
+      <td>
+        <a class="btn btn-primary" routerLink="/client/departures/{{station}}">
+          Watch timetable
+        </a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

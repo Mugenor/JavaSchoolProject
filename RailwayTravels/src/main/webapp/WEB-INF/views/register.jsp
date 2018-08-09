@@ -32,7 +32,7 @@
                         <p>${error}</p>
                     </div>
                 </c:if>
-                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                <%--<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>--%>
                 <span class="login100-form-title">
 						Sign Up
 					</span>

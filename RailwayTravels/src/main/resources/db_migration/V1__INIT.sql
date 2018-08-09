@@ -4,7 +4,7 @@ create table passenger
 		primary key AUTO_INCREMENT,
 	name varchar(255) not null,
 	surname varchar(255) not null,
-	birthday date not null,
+	birthday bigint not null,
 	constraint UKiv5ftvs79pr8y54jajudpckof
 		unique (name, surname, birthday)
 );
@@ -28,8 +28,8 @@ create table departure
 (
 	id int not null
 		primary key auto_increment,
-	dateTimeFrom datetime not null,
-	dateTimeTo datetime not null,
+	dateTimeFrom bigint not null,
+	dateTimeTo bigint not null,
 	freeSitsCount int not null,
 	sitsCount int not null,
 	station_from int not null,
@@ -134,8 +134,8 @@ create table almost_user
 	email varchar(255) not null unique,
 	name varchar(255) not null,
 	surname varchar(255) NOT NULL,
-	birthday date not null,
-	registered datetime not null,
+	birthday bigint not null,
+	registered bigint not null,
 	constraint NAME_SURNAME_BIRTHDAY_UNIQUE_CONSTRAINT
 		unique (name, surname, birthday)
 );
