@@ -9,6 +9,7 @@ import javaschool.controller.dtoentity.TripInfo;
 import javaschool.service.api.PassengerService;
 import javaschool.service.api.TripService;
 import javax.validation.Valid;
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -72,5 +74,14 @@ public class TripController {
     @GetMapping("/timetable/{stationTitle}")
     public List<TripDTO> getTimetableOfStation(@PathVariable String stationTitle) {
         return tripService.findByStationTitle(stationTitle);
+    }
+
+    @GetMapping("/find")
+    public List<TripDTO> findTrips(@RequestParam String departureStation,
+                                   @RequestParam String arrivalStation,
+                                   @RequestParam Long dateTimeFrom,
+                                   @RequestParam Long dateTimeTo) {
+        return tripService.findFromToBetween(departureStation, arrivalStation,
+                new LocalDateTime(dateTimeFrom), new LocalDateTime(dateTimeTo));
     }
 }

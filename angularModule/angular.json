@@ -23,19 +23,15 @@
               "src/assets"
             ],
             "styles": [
-              "bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css",
               "node_modules/bootstrap/dist/css/bootstrap.css",
               "src/styles.css"
             ],
             "scripts": [
-              "node_modules/jquery/dist/jquery.js",
+              "node_modules/jquery/dist/jquery.min.js",
               "node_modules/tether/dist/js/tether.min.js",
               "node_modules/popper.js/dist/umd/popper.js",
-              "bower_components/moment/moment.js",
-              "src/jquery-ui.js",
-              "src/bootadmin.js",
               "node_modules/bootstrap/dist/js/bootstrap.bundle.js",
-              "bower_components/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"
+              "src/bootadmin.js"
             ]
           },
           "configurations": {

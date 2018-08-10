@@ -6,6 +6,7 @@ import {AllTripsComponent} from '../all-trips/all-trips.component';
 import {ChooseSeatComponent} from '../choose-seat/choose-seat.component';
 import {StationsComponent} from '../stations/stations.component';
 import {TimetableComponent} from '../timetable/timetable.component';
+import {FindTripComponent} from '../find-trip/find-trip.component';
 
 const appRoutes: Routes = [
   {path: 'client', redirectTo: '/client/home', pathMatch: 'full'},
@@ -13,6 +14,7 @@ const appRoutes: Routes = [
   {path: 'client/departures', component: AllTripsComponent},
   {path: 'client/stations', component: StationsComponent},
   {path: 'client/departures/:stationTitle', component: TimetableComponent},
+  {path: 'client/find', component: FindTripComponent},
   {path: 'client/choose-seat/:tripId/:departureFromIndex/:departureToIndex', component: ChooseSeatComponent}
 ];
 

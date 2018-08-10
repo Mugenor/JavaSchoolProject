@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {Meta} from "@angular/platform-browser";
+import {Meta} from '@angular/platform-browser';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-header',
@@ -9,12 +10,19 @@ import {Meta} from "@angular/platform-browser";
 export class HeaderComponent implements OnInit {
   public username: string;
   public showMenu = false;
-  constructor(private meta: Meta) { }
+  constructor(private meta: Meta,
+              private httpClient: HttpClient) { }
 
   ngOnInit() {
-    let usernameMetaTag: HTMLMetaElement = this.meta.getTag('name="username"');
+    const usernameMetaTag: HTMLMetaElement = this.meta.getTag('name="username"');
     console.log(usernameMetaTag.content);
     this.username = usernameMetaTag.content === null ? 'You' : usernameMetaTag.content;
+  }
+
+  logout() {
+    this.httpClient.post('logout', null).subscribe(null, (response) => {
+      window.location.href = response.url;
+    });
   }
 
 

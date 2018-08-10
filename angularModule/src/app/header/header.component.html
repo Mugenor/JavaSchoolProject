@@ -13,9 +13,7 @@
           <ul id="user-dropdown" *dropdownMenu class="dropdown-menu"
               role="menu" aria-labelledby="user-button">
             <li role="menuitem">
-              <form method="post" action="logout">
-                <input class="dropdown-item" type="submit" value="Logout"/>
-              </form>
+              <input class="dropdown-item" type="submit" value="Logout" (click)="logout()">
           </ul>
         </div>
       </div>

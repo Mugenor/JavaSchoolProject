@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="resource/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="resource/vendor/bootadmin/css/bootadmin.min.css">
     <link rel="stylesheet" href="resource/vendor/jquery-ui/jquery-ui.css">
+    <link rel="stylesheet"
+          href="resource/vendor/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"/>
+
 
     <title>Client page</title>
 </head>
@@ -21,6 +24,8 @@
 <script type="text/javascript" src="resource/client/styles.js"></script>
 <script type="text/javascript" src="resource/client/vendor.js"></script>
 <script type="text/javascript" src="resource/client/main.js"></script>
+<script src="resource/vendor/jquery-ui/jquery-ui.js"></script>
+<script src="resource/vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
 </body>
 </body>
 </html>
