@@ -12,31 +12,28 @@ public interface DepartureService {
      *
      * @param id            Departure id
      * @param fetchStations If you want to work with departure's stations
-     * @param fetchTickets  If you want to work with departure's tickets
      * @return Departure with transmitted id and converted to DepartureDTO.class
      * or null if there is no departure with specified id
      */
-    DepartureDTO findById(Integer id, boolean fetchStations, boolean fetchTickets);
+    DepartureDTO findById(Integer id, boolean fetchStations);
 
     /**
      * Finds departure by id and returns it. This method does not convert departure to DepartureDTO.class
      *
      * @param id            Departure id
      * @param fetchStations If you want to work with departure's stations
-     * @param fetchTickets  If you want to work with departure's tickets
      * @return Departure with transmitted id
      * or null if there is no departure with specified id
      */
-    Departure findByIdRaw(Integer id, boolean fetchStations, boolean fetchTickets);
+    Departure findByIdRaw(Integer id, boolean fetchStations);
 
     /**
      * Finds all departures
      *
      * @param fetchStations If you want to work with departure's stations
-     * @param fetchTickets  If you want to work with departure's tickets
      * @return List of departures converted to DepartureDTO.class
      */
-    List<DepartureDTO> findAll(boolean fetchStations, boolean fetchTickets);
+    List<DepartureDTO> findAll(boolean fetchStations);
 
     /**
      * Finds all departures which station of departure is stFrom,
@@ -66,17 +63,16 @@ public interface DepartureService {
 
     List<DepartureDTO> findAllToday();
 
-    List<DepartureDTO> findAllAvailable(boolean fetchStations, boolean fetchTickets);
+    List<DepartureDTO> findAllAvailable(boolean fetchStations);
 
     /**
      * Finds all departures specified by the title of the station of departure
      *
      * @param stationTitle  Station title of departure
      * @param fetchStations If you want to work with departure's stations
-     * @param fetchTickets  If you want to work with departure's tickets
      * @return List of departures converted to DepartureDTO.class specified by the title of the station of departure
      */
-    List<DepartureDTO> findByStationTitle(String stationTitle, boolean fetchStations, boolean fetchTickets);
+    List<DepartureDTO> findByStationTitle(String stationTitle, boolean fetchStations);
 
     /**
      * Saves new departure with specified parameters.

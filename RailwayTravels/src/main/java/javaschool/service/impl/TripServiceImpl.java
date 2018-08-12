@@ -1,29 +1,22 @@
 package javaschool.service.impl;
 
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
-import javaschool.controller.dtoentity.CoachDTO;
 import javaschool.controller.dtoentity.DepartureDTO;
 import javaschool.controller.dtoentity.NewDepartureDTO;
 import javaschool.controller.dtoentity.OccupiedSeatDTO;
-import javaschool.controller.dtoentity.SeatDTO;
 import javaschool.controller.dtoentity.TrainInfo;
 import javaschool.controller.dtoentity.TripDTO;
 import javaschool.controller.dtoentity.TripInfo;
-import javaschool.dao.api.CoachDAO;
 import javaschool.dao.api.DepartureDAO;
-import javaschool.dao.api.SeatDAO;
+import javaschool.dao.api.OccupiedSeatDAO;
 import javaschool.dao.api.TripDAO;
-import javaschool.entity.Coach;
 import javaschool.entity.Departure;
-import javaschool.entity.Seat;
+import javaschool.entity.OccupiedSeat;
 import javaschool.entity.Trip;
 import javaschool.service.api.RabbitService;
 import javaschool.service.api.SearchTripsWithTransfers;
@@ -43,30 +36,28 @@ import org.springframework.transaction.annotation.Transactional;
 public class TripServiceImpl implements TripService {
     private TripDAO tripDAO;
     private DepartureDAO departureDAO;
-    private CoachDAO coachDAO;
-    private SeatDAO seatDAO;
     private DepartureToDepartureDTOConverter departureToDepartureDTOConverter;
     private TripToTripDTOConverter tripToTripDTOConverter;
     private DepartureToNewDepartureDTOConverter departureToNewDepartureDTOConverter;
+    private OccupiedSeatDAO occupiedSeatDAO;
     private RabbitService rabbitService;
     private TripService selfProxy;
     private SearchTripsWithTransfers searchTripsWithTransfers;
 
     @Autowired
-    public TripServiceImpl(TripDAO tripDAO, DepartureDAO departureDAO, SeatDAO seatDAO,
-                           CoachDAO coachDAO,
+    public TripServiceImpl(TripDAO tripDAO, DepartureDAO departureDAO,
                            DepartureToNewDepartureDTOConverter departureToNewDepartureDTOConverter,
                            TripToTripDTOConverter tripToTripDTOConverter, SearchTripsWithTransfers searchTripsWithTransfers,
-                           DepartureToDepartureDTOConverter departureDTOConverter, RabbitService rabbitService) {
+                           DepartureToDepartureDTOConverter departureDTOConverter, RabbitService rabbitService,
+                           OccupiedSeatDAO occupiedSeatDAO) {
         this.tripDAO = tripDAO;
         this.departureDAO = departureDAO;
-        this.seatDAO = seatDAO;
-        this.coachDAO = coachDAO;
         this.departureToNewDepartureDTOConverter = departureToNewDepartureDTOConverter;
         this.tripToTripDTOConverter = tripToTripDTOConverter;
         this.departureToDepartureDTOConverter = departureDTOConverter;
         this.rabbitService = rabbitService;
         this.searchTripsWithTransfers = searchTripsWithTransfers;
+        this.occupiedSeatDAO = occupiedSeatDAO;
     }
 
     @Autowired
@@ -113,7 +104,7 @@ public class TripServiceImpl implements TripService {
                 }
             }
             if (!pathNotFound) {
-                resultTrips.add(new TripDTO(trip.getId(), path, trip.getDepartures().get(0).getSitsCount() / Coach.DEFAULT_SEATS_NUM));
+                resultTrips.add(new TripDTO(trip.getId(), path, trip.getDepartures().get(0).getCoachCount()));
             }
         }
         return resultTrips;
@@ -161,7 +152,7 @@ public class TripServiceImpl implements TripService {
         for (Trip trip : trips) {
             List<Departure> departures = trip.getDepartures();
             if (departures.size() == 0) continue;
-            int coachCount = departures.get(0).getSitsCount() / Coach.DEFAULT_SEATS_NUM;
+            int coachCount = departures.get(0).getCoachCount();
             List<DepartureDTO> departureDTOS = new LinkedList<>();
             boolean found = false;
             for (Departure departure : departures) {
@@ -181,53 +172,30 @@ public class TripServiceImpl implements TripService {
     @Override
     @Transactional(readOnly = true)
     public TrainInfo getDepartureInfoByTripIdAndDepartureBounds(Integer tripId, Integer departureFromIndex, Integer departureToIndex) {
-        List<Seat> occupiedSeats = seatDAO.findByTripIdAndDepartureBounds(tripId, departureFromIndex, departureToIndex);
+        List<OccupiedSeat> occupiedSeats = occupiedSeatDAO.
+                findByTripIdAndNumberInTripBounds(tripId, departureFromIndex, departureToIndex);
         int coachNumber;
         if (occupiedSeats.size() == 0) {
             Trip trip = tripDAO.findById(tripId);
             if (trip != null) {
-                coachNumber = trip.getDepartures().get(0).getSitsCount() / Coach.DEFAULT_SEATS_NUM;
+                coachNumber = trip.getDepartures().get(0).getCoachCount();
             } else {
                 throw new IllegalArgumentException("Trip does not exist");
             }
         } else {
-            coachNumber = occupiedSeats.get(0).getCoach().getDeparture().getSitsCount() / Coach.DEFAULT_SEATS_NUM;
+            coachNumber = occupiedSeats.get(0).getSeat().getDeparture().getCoachCount();
         }
-        TreeSet<OccupiedSeatDTO> seatDTOTreeSet = new TreeSet<>((s1, s2) -> {
-            if (s1.getCoachNumber() > s2.getCoachNumber()) {
-                return 1;
-            } else if (s1.getCoachNumber() < s2.getCoachNumber()) {
-                return -1;
-            } else
-                return s1.getSeatNumber() - s2.getSeatNumber();
-        });
-        for (Seat seat : occupiedSeats) {
-            seatDTOTreeSet.add(new OccupiedSeatDTO(seat.getCoach().getCoachNumber(), seat.getSiteNum()));
+        LinkedList<OccupiedSeatDTO> occupiedSeatDTOS = new LinkedList<>();
+        for (OccupiedSeat seat : occupiedSeats) {
+            occupiedSeatDTOS.add(new OccupiedSeatDTO(seat.getSeat().getCoachNumber(), seat.getSeat().getSeatNumber()));
         }
-        return new TrainInfo(coachNumber, new ArrayList<>(seatDTOTreeSet));
-    }
-
-    @Override
-    public List<CoachDTO> findOccupiedCoachesWithSeatsByTripIdAndDepartureBounds(Integer tripId, Integer departureFromIndex, Integer departureToIndex) {
-        List<Coach> occupiedCoaches = coachDAO.findOccupiedSeatsByTripIdAndDepartureBounds(tripId, departureFromIndex, departureToIndex);
-        TreeSet<CoachDTO> coachDTOS = new TreeSet<>(Comparator.comparingInt(CoachDTO::getCoachNumber));
-        for (Coach coach : occupiedCoaches) {
-            CoachDTO coachDTO = new CoachDTO();
-            coachDTO.setCoachNumber(coach.getCoachNumber());
-            TreeSet<SeatDTO> seatDTOS = new TreeSet<>(Comparator.comparingInt(SeatDTO::getSeatNumber));
-            for (Seat seat : coach.getSeats()) {
-                seatDTOS.add(new SeatDTO(seat.getSiteNum()));
-            }
-            coachDTO.setSeatDTOS(new ArrayList<>(seatDTOS));
-            coachDTOS.add(coachDTO);
-        }
-        return new ArrayList<>(coachDTOS);
+        return new TrainInfo(coachNumber, occupiedSeatDTOS);
     }
 
     @Override
     public TripInfo getTripInfo(Integer tripId, Integer departureFromIndex, Integer departureToIndex) {
         List<Departure> departures = departureDAO.findByTripIdAndNumberInTripBetween(tripId, departureFromIndex, departureToIndex,
-                true, false, true);
+                true, true);
         if (departures.size() == 0) {
             throw new IllegalArgumentException("Trip does not exist");
         }
@@ -236,7 +204,7 @@ public class TripServiceImpl implements TripService {
         return new TripInfo(first.getStationFrom().getTitle(), last.getStationTo().getTitle(),
                 Instant.parse(first.getDateTimeFrom().toString()).getMillis(),
                 Instant.parse(last.getDateTimeTo().toString()).getMillis(),
-                first.getSitsCount() / Coach.DEFAULT_SEATS_NUM);
+                first.getCoachCount());
     }
 
     @Override
@@ -271,7 +239,15 @@ public class TripServiceImpl implements TripService {
     @Override
     public TripDTO saveWithNotification(List<NewDepartureDTO> departures) {
         TripDTO tripDTO = selfProxy.save(departures);
-        rabbitService.convertAndSend(tripDTO);
+        long today = LocalDate.now().toLocalDateTime(LocalTime.MIDNIGHT).toDateTime().getMillis();
+        long tomorrow = LocalDate.now().toLocalDateTime(LocalTime.MIDNIGHT).plusDays(1).toDateTime().getMillis();
+        for (DepartureDTO departure : tripDTO.getDepartures()) {
+            if ((departure.getDateTimeFrom() > today && departure.getDateTimeFrom() < tomorrow)
+                    || (departure.getDateTimeTo() > today && departure.getDateTimeTo() < tomorrow)) {
+                rabbitService.convertAndSend(tripDTO);
+                break;
+            }
+        }
         return tripDTO;
     }
 

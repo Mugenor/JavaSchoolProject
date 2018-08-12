@@ -2,19 +2,14 @@ package javaschool.entity;
 
 
 import java.util.Objects;
-import java.util.Set;
 import javaschool.service.exception.NoSiteOnDepartureException;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import org.joda.time.LocalDateTime;
@@ -24,17 +19,16 @@ import org.joda.time.LocalDateTime;
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"station_from", "station_to", "dateTimeFrom", "dateTimeTo"})})
 public class Departure {
     public final static Integer NUMBER_IN_TRIP_OFFSET = 1;
+    public final static Integer DEFAULT_SEATS_COUNT_IN_COACH = 36;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(nullable = false)
-    private Integer sitsCount;
-    @Column(nullable = false)
     private Integer freeSitsCount;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,
-            orphanRemoval = true, mappedBy = "departure")
-    @OrderBy("coachNumber")
-    private Set<Coach> coaches;
+    @Column(nullable = false)
+    private Integer coachCount;
+    @Column(nullable = false)
+    private Integer seatInCoach;
     @ManyToOne
     @JoinColumn(name = "station_from", nullable = false)
     private Station stationFrom;
@@ -93,14 +87,6 @@ public class Departure {
         this.dateTimeTo = dateTo;
     }
 
-    public Set<Coach> getCoaches() {
-        return coaches;
-    }
-
-    public void setCoaches(Set<Coach> coaches) {
-        this.coaches = coaches;
-    }
-
     public Station getStationFrom() {
         return stationFrom;
     }
@@ -125,18 +111,27 @@ public class Departure {
         this.id = id;
     }
 
-    public Integer getSitsCount() {
-        return sitsCount;
+    public Integer getCoachCount() {
+        return coachCount;
     }
 
-    public void setSitsCount(Integer sitsCount) {
-        this.sitsCount = sitsCount;
-        this.freeSitsCount = sitsCount;
+    public Departure setCoachCount(Integer coachCount) {
+        this.coachCount = coachCount;
+        return this;
+    }
+
+    public Integer getSeatInCoach() {
+        return seatInCoach;
+    }
+
+    public Departure setSeatInCoach(Integer seatInCoach) {
+        this.seatInCoach = seatInCoach;
+        return this;
     }
 
     public void decrementFreeSeatsCount() {
         int newFreeSeatsCount = freeSitsCount - 1;
-        if(newFreeSeatsCount < 0) {
+        if (newFreeSeatsCount < 0) {
             throw new NoSiteOnDepartureException();
         }
         freeSitsCount = newFreeSeatsCount;
@@ -147,8 +142,7 @@ public class Departure {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Departure departure = (Departure) o;
-        return Objects.equals(sitsCount, departure.sitsCount) &&
-                Objects.equals(freeSitsCount, departure.freeSitsCount) &&
+        return Objects.equals(freeSitsCount, departure.freeSitsCount) &&
                 Objects.equals(stationFrom, departure.stationFrom) &&
                 Objects.equals(stationTo, departure.stationTo) &&
                 Objects.equals(dateTimeFrom, departure.dateTimeFrom) &&
@@ -158,14 +152,13 @@ public class Departure {
 
     @Override
     public int hashCode() {
-        return Objects.hash(sitsCount, freeSitsCount, stationFrom, stationTo, dateTimeFrom, dateTimeTo, numberInTrip);
+        return Objects.hash(coachCount, seatInCoach, freeSitsCount, stationFrom, stationTo, dateTimeFrom, dateTimeTo, numberInTrip);
     }
 
     @Override
     public String toString() {
         return "Departure{" +
                 "id=" + id +
-                ", sitsCount=" + sitsCount +
                 ", freeSitsCount=" + freeSitsCount +
                 ", stationFrom=" + stationFrom +
                 ", stationTo=" + stationTo +

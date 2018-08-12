@@ -1,7 +1,6 @@
 package javaschool.dao.api;
 
 import java.util.List;
-import javaschool.controller.dtoentity.PassengerWithoutTickets;
 import javaschool.entity.Passenger;
 import org.joda.time.LocalDate;
 

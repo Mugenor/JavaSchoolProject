@@ -2,6 +2,7 @@ package javaschool.service.api;
 
 import java.util.List;
 import javaschool.controller.dtoentity.PassengerWithoutTickets;
+import javaschool.controller.dtoentity.TicketDTO;
 import javaschool.entity.Passenger;
 
 public interface PassengerService {
@@ -46,6 +47,7 @@ public interface PassengerService {
     List<PassengerWithoutTickets> findAllPassengersByDepartureId(Integer departureId);
     List<PassengerWithoutTickets> findAllPassengersByTripId(Integer tripId);
     List<PassengerWithoutTickets> findAllPassengersByTripIdAndDepartureIndexBounds(Integer tripId, Integer from, Integer to);
+    List<TicketDTO> getPassengerTickets(String username);
 
     Boolean isRegistered(Integer tripId, String username);
 }

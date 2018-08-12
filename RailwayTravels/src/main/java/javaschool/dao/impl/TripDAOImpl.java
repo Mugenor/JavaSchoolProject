@@ -4,7 +4,6 @@ import java.util.List;
 import javaschool.dao.api.TripDAO;
 import javaschool.entity.Departure;
 import javaschool.entity.Departure_;
-import javaschool.entity.Passenger;
 import javaschool.entity.Station;
 import javaschool.entity.Station_;
 import javaschool.entity.Trip;

@@ -9,7 +9,6 @@ import javaschool.dao.api.StationDAO;
 import javaschool.entity.Departure;
 import javaschool.entity.Station;
 import javaschool.service.api.DepartureService;
-import javaschool.service.api.RabbitService;
 import javaschool.service.converter.DepartureToDepartureDTOConverter;
 import javaschool.service.converter.DepartureToNewDepartureDTOConverter;
 import javaschool.service.converter.StringToLocalDateTimeConverter;
@@ -17,7 +16,6 @@ import javaschool.service.exception.NoSuchEntityException;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,14 +41,14 @@ public class DepartureServiceImpl implements DepartureService {
 
     @Override
     @Transactional(readOnly = true)
-    public DepartureDTO findById(Integer id, boolean fetchStations, boolean fetchTickets) {
-        return departureToDepartureDTOConverter.convertTo(findByIdRaw(id, fetchStations, fetchTickets));
+    public DepartureDTO findById(Integer id, boolean fetchStations) {
+        return departureToDepartureDTOConverter.convertTo(findByIdRaw(id, fetchStations));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Departure findByIdRaw(Integer id, boolean fetchStations, boolean fetchTickets) {
-        Departure departure = departureDAO.findById(id, fetchStations, fetchTickets);
+    public Departure findByIdRaw(Integer id, boolean fetchStations) {
+        Departure departure = departureDAO.findById(id, fetchStations);
         if (departure == null) {
             throw new NoSuchEntityException("Departure is not found!", Departure.class);
         }
@@ -75,16 +73,16 @@ public class DepartureServiceImpl implements DepartureService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<DepartureDTO> findAll(boolean fetchStations, boolean fetchTickets) {
-        return departureDAO.findAll(fetchStations, fetchTickets, true).parallelStream()
+    public List<DepartureDTO> findAll(boolean fetchStations) {
+        return departureDAO.findAll(fetchStations, true).parallelStream()
                 .map(departure -> departureToDepartureDTOConverter.convertTo(departure))
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<DepartureDTO> findAllAvailable(boolean fetchStations, boolean fetchTickets) {
-        return departureDAO.findAfterDateTime(LocalDateTime.now(), fetchStations, fetchTickets, true)
+    public List<DepartureDTO> findAllAvailable(boolean fetchStations) {
+        return departureDAO.findAfterDateTime(LocalDateTime.now(), fetchStations, true)
                 .stream()
                 .map(departure -> departureToDepartureDTOConverter.convertTo(departure))
                 .collect(Collectors.toList());
@@ -95,7 +93,7 @@ public class DepartureServiceImpl implements DepartureService {
     public List<DepartureDTO> findAllToday() {
         LocalDateTime today = LocalDate.now().toLocalDateTime(LocalTime.MIDNIGHT);
         LocalDateTime tomorrow = today.plusDays(1);
-        return departureDAO.findDateTimeFromBetweenOrDateTimeToBetween(today, tomorrow, today, tomorrow, true, false, true)
+        return departureDAO.findDateTimeFromBetweenOrDateTimeToBetween(today, tomorrow, today, tomorrow, true, true)
                 .stream()
                 .map(departure -> departureToDepartureDTOConverter.convertTo(departure))
                 .collect(Collectors.toList());
@@ -103,8 +101,8 @@ public class DepartureServiceImpl implements DepartureService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<DepartureDTO> findByStationTitle(String stationTitle, boolean fetchStations, boolean fetchTickets) {
-        return departureDAO.findByStationTitleFrom(stationTitle, fetchStations, fetchTickets, true).parallelStream()
+    public List<DepartureDTO> findByStationTitle(String stationTitle, boolean fetchStations) {
+        return departureDAO.findByStationTitleFrom(stationTitle, fetchStations, true).parallelStream()
                 .map(departure -> departureToDepartureDTOConverter.convertTo(departure))
                 .collect(Collectors.toList());
     }
