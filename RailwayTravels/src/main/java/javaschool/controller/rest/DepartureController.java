@@ -27,7 +27,7 @@ public class DepartureController {
 
     @GetMapping
     public List<DepartureDTO> getAllDepartures() {
-        return departureService.findAll(true, false);
+        return departureService.findAll(true);
     }
 
     @GetMapping("/find")
