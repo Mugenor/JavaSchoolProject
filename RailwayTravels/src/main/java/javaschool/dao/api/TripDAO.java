@@ -1,8 +1,6 @@
 package javaschool.dao.api;
 
 import java.util.List;
-import javaschool.entity.Departure;
-import javaschool.entity.Passenger;
 import javaschool.entity.Trip;
 import org.joda.time.LocalDateTime;
 

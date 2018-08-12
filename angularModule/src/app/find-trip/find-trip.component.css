@@ -1,3 +1,8 @@
 .mat-checkbox-inner-container {
   margin-left: -36px !important;
 }
+
+.in-center {
+  position: relative;
+  padding-left: 40%;
+}

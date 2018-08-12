@@ -17,7 +17,14 @@ import {TimetableComponent} from './timetable/timetable.component';
 import {ContainsPipe} from './pipe/contains.pipe';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {FindTripComponent} from './find-trip/find-trip.component';
-import {MatAutocompleteModule, MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatInputModule} from '@angular/material';
+import {
+  MatAutocompleteModule,
+  MatButtonModule,
+  MatCheckboxModule,
+  MatFormFieldModule,
+  MatInputModule, MatProgressSpinnerModule,
+  MatSortModule
+} from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import * as $ from 'jquery';
 import { DatetimepickerComponent } from './datetimepicker/datetimepicker.component';
@@ -57,6 +64,8 @@ window['jQuery'] = $;
     MatInputModule,
     MatAutocompleteModule,
     MatCheckboxModule,
+    MatSortModule,
+    MatProgressSpinnerModule,
     HttpClientModule,
     BsDropdownModule.forRoot(),
     RoutingModule

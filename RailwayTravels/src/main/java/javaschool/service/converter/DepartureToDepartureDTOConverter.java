@@ -1,13 +1,10 @@
 package javaschool.service.converter;
 
 import javaschool.controller.dtoentity.DepartureDTO;
-import javaschool.entity.Coach;
 import javaschool.entity.Departure;
 import javaschool.entity.Station;
 import javaschool.service.exception.ClassConvertingException;
-import org.joda.time.Instant;
 import org.joda.time.LocalDateTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,7 +15,7 @@ public class DepartureToDepartureDTOConverter implements ClassConverter<Departur
     public DepartureDTO convertTo(Departure departure) {
         try {
             return new DepartureDTO(departure.getId(),
-                    departure.getSitsCount(),
+                    departure.getSeatInCoach() * departure.getCoachCount(),
                     departure.getFreeSitsCount(),
                     departure.getStationFrom().getTitle(),
                     departure.getStationTo().getTitle(),
@@ -39,7 +36,8 @@ public class DepartureToDepartureDTOConverter implements ClassConverter<Departur
         departure.setStationTo(new Station(departureDTO.getStationTo()));
         departure.setStationFrom(new Station(departureDTO.getStationFrom()));
         departure.setFreeSitsCount(departureDTO.getFreeSitsCount());
-        departure.setSitsCount(departureDTO.getFreeSitsCount());
+        departure.setSeatInCoach(Departure.DEFAULT_SEATS_COUNT_IN_COACH);
+        departure.setCoachCount(departureDTO.getSitsCount() / Departure.DEFAULT_SEATS_COUNT_IN_COACH);
         departure.setNumberInTrip(departureDTO.getNumberInTrip());
         return departure;
     }

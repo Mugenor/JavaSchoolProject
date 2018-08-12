@@ -1,22 +1,21 @@
 package javaschool.service.impl;
 
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import javaschool.controller.dtoentity.PassengerWithoutTickets;
+import javaschool.controller.dtoentity.TicketDTO;
 import javaschool.dao.api.DepartureDAO;
 import javaschool.dao.api.OccupiedSeatDAO;
 import javaschool.dao.api.PassengerDAO;
-import javaschool.dao.api.SeatDAO;
 import javaschool.dao.api.TicketDAO;
 import javaschool.dao.api.TripDAO;
 import javaschool.entity.Departure;
 import javaschool.entity.OccupiedSeat;
 import javaschool.entity.Passenger;
-import javaschool.entity.Seat;
 import javaschool.entity.Ticket;
 import javaschool.entity.Trip;
+import javaschool.entity.id.SeatId;
 import javaschool.service.api.PassengerService;
 import javaschool.service.converter.PassengerToPassengerWithoutTicketsConverter;
 import javaschool.service.exception.NoSiteOnDepartureException;
@@ -35,7 +34,6 @@ public class PassengerServiceImpl implements PassengerService {
     private static final Logger log = Logger.getLogger(PassengerServiceImpl.class);
 
     private PassengerDAO passengerDAO;
-    private SeatDAO seatDAO;
     private DepartureDAO departureDAO;
     private TripDAO tripDAO;
     private OccupiedSeatDAO occupiedSeatDAO;
@@ -43,12 +41,11 @@ public class PassengerServiceImpl implements PassengerService {
     private PassengerToPassengerWithoutTicketsConverter passengerConverter;
 
     @Autowired
-    public PassengerServiceImpl(PassengerDAO passengerDAO, SeatDAO seatDAO,
+    public PassengerServiceImpl(PassengerDAO passengerDAO,
                                 DepartureDAO departureDAO, TripDAO tripDAO,
                                 PassengerToPassengerWithoutTicketsConverter passengerConverter,
                                 OccupiedSeatDAO occupiedSeatDAO, TicketDAO ticketDAO) {
         this.passengerDAO = passengerDAO;
-        this.seatDAO = seatDAO;
         this.departureDAO = departureDAO;
         this.passengerConverter = passengerConverter;
         this.tripDAO = tripDAO;
@@ -80,30 +77,28 @@ public class PassengerServiceImpl implements PassengerService {
     public void buyTicket(String username, Integer tripId, Integer leftDepartureIndex,
                           Integer rightDepartureIndex, Integer coachNumber, Integer seatNumber) {
         IndexOutOfBoundsException boundsExc = new IndexOutOfBoundsException("Invalid departure indexes!");
-        if(leftDepartureIndex <= 0 || leftDepartureIndex > rightDepartureIndex) {
+        if (leftDepartureIndex <= 0 || leftDepartureIndex > rightDepartureIndex) {
             throw boundsExc;
         }
         Trip trip = tripDAO.findById(tripId);
         notNullElseThrowException(trip, new NoSuchEntityException("There is no such trip!", Trip.class));
         List<Departure> departures = departureDAO.findByTripIdAndNumberInTripBetween(trip.getId(),
-                leftDepartureIndex, rightDepartureIndex, false, false, true);
-        if(departures.size() == 0) {
+                leftDepartureIndex, rightDepartureIndex, false, true);
+        if (departures.size() == 0) {
             throw boundsExc;
         }
         Passenger passenger = passengerDAO.findByUsername(username);
         notNullElseThrowException(passenger, new NoSuchEntityException("There is no such passenger", Passenger.class));
 
         Ticket newTicket = new Ticket().setTrip(trip).setPassenger(passenger);
-        Set<OccupiedSeat> occupiedSeats = new HashSet<>();
+        List<OccupiedSeat> occupiedSeats = new LinkedList<>();
         newTicket.setOccupiedSeats(occupiedSeats);
         newTicket.setFrom(departures.get(0)).setTo(departures.get(departures.size() - 1));
         ticketDAO.save(newTicket);
         for (Departure departure : departures) {
-            Seat seat = seatDAO.findSeatByDepartureAndCoachNumAndSeatNum(departure.getId(), coachNumber, seatNumber);
-            notNullElseThrowException(seat, new NoSuchEntityException("There is no such seat", Seat.class));
-
-            if (seat.getOccupiedSeat() != null) {
-                throw new TicketAlreadyBoughtException("This seat was bought by someone else!");
+            OccupiedSeat occupiedSeat = occupiedSeatDAO.findByDepartureAndSeatNumAndCoachNum(departure, seatNumber, coachNumber);
+            if (occupiedSeat != null) {
+                throw new TicketAlreadyBoughtException("This is already engaged!");
             }
 
             if (LocalDateTime.now().plusMinutes(10).isAfter(departure.getDateTimeFrom())) {
@@ -113,13 +108,14 @@ public class PassengerServiceImpl implements PassengerService {
             if (departure.getFreeSitsCount() <= 0) {
                 throw new NoSiteOnDepartureException("There is no free sits on this departure!");
             }
-            OccupiedSeat occupiedSeat = new OccupiedSeat().setSeat(seat).setTicket(newTicket);
-            seat.setOccupiedSeat(occupiedSeat);
+            occupiedSeat = new OccupiedSeat();
+            occupiedSeat.setTicket(newTicket);
+            occupiedSeat.setSeat(new SeatId(seatNumber, coachNumber, departure));
             occupiedSeats.add(occupiedSeat);
 
             departure.decrementFreeSeatsCount();
         }
-//        ticketDAO.save(newTicket);
+        ticketDAO.save(newTicket);
     }
 
     @Override
@@ -146,9 +142,27 @@ public class PassengerServiceImpl implements PassengerService {
     }
 
     @Override
+    public List<TicketDTO> getPassengerTickets(String username) {
+        Passenger passenger = passengerDAO.findByUsername(username);
+        if (passenger == null) {
+            throw new IllegalArgumentException("Invalid user");
+        }
+        List<Ticket> passengerTickets = ticketDAO.findByPassengerAndAfter(passenger, LocalDateTime.now().plusMinutes(10));
+        List<TicketDTO> tickets = new LinkedList<>();
+        for (Ticket ticket : passengerTickets) {
+            SeatId seat = ticket.getOccupiedSeats().get(0).getSeat();
+            tickets.add(new TicketDTO(ticket.getFrom().getStationFrom().getTitle(), ticket.getTo().getStationTo().getTitle(),
+                    ticket.getFrom().getDateTimeFrom().toDateTime().getMillis(),
+                    ticket.getTo().getDateTimeTo().toDateTime().getMillis(),
+                    seat.getCoachNumber(), seat.getSeatNumber()));
+        }
+        return tickets;
+    }
+
+    @Override
     public Boolean isRegistered(Integer tripId, String username) {
         Passenger passenger = passengerDAO.findByUsername(username);
-        if(passenger == null) {
+        if (passenger == null) {
             throw new IllegalArgumentException("Invalid user");
         }
         return ticketDAO.findByTripIdAndPassenger(tripId, passenger) != null;

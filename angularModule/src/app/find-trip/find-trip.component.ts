@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {StationService} from '../service/station.service';
 import {map, startWith} from 'rxjs/operators';
@@ -12,6 +12,7 @@ import {Trip} from '../entity/trip';
   styleUrls: ['./find-trip.component.css']
 })
 export class FindTripComponent implements OnInit {
+  private DIDNT_FIND_ANYTHING = 'We didn\'t find anything';
   tripForm: FormGroup;
   stationTitles: string[];
   filteredStationsFrom: string[];
@@ -24,6 +25,8 @@ export class FindTripComponent implements OnInit {
   showWithTransfers = false;
   trips = [];
   tripsWithTransfers: Trip[][];
+  searching = false;
+  message = 'Enter your request';
 
   constructor(private formBuilder: FormBuilder,
               private stationService: StationService,
@@ -175,12 +178,19 @@ export class FindTripComponent implements OnInit {
 
   find() {
     console.log('find');
+    this.searching = true;
     if (this.findWithTransfers.value) {
       this.tripService.findWithTransfers(this.stationFrom.value, this.stationTo.value,
         this.dateTimeFrom.value, this.dateTimeTo.value, this.maxTransferCount.value)
         .subscribe((data) => {
           this.trips = [];
           this.tripsWithTransfers = data.map(trips => trips.map(trip => TripDTOToTripConverterService.convert(trip)));
+          if (this.tripsWithTransfers.length === 0) {
+            this.message = this.DIDNT_FIND_ANYTHING;
+          } else {
+            this.message = undefined;
+          }
+          this.searching = false;
           this.showWithTransfers = true;
         });
     } else {
@@ -188,6 +198,12 @@ export class FindTripComponent implements OnInit {
         .subscribe((data) => {
           this.tripsWithTransfers = [];
           this.trips = data.map(trip => TripDTOToTripConverterService.convert(trip));
+          if (this.trips.length === 0) {
+            this.message = this.DIDNT_FIND_ANYTHING;
+          } else {
+            this.message = undefined;
+          }
+          this.searching = false;
           this.showWithTransfers = false;
         });
     }

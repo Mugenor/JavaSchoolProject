@@ -31,11 +31,12 @@ create table departure
 	dateTimeFrom bigint not null,
 	dateTimeTo bigint not null,
 	freeSitsCount int not null,
-	sitsCount int not null,
 	station_from int not null,
 	station_to int not null,
 	numberInTrip int not null,
 	trip_id int not null,
+	coachCount int not null,
+	seatInCoach int not null,
 	constraint UK733kvx0xmaqbsnfkf0do3458r
 		unique (station_from, station_to, dateTimeFrom, dateTimeTo),
 	constraint FKm9uo504d11c7dvhxm6jiejryo
@@ -53,29 +54,6 @@ create index FKj8oeidcmw26i2cs7w6vyl3370
 create index DEPARTURE_TRIP_INDEX
   on departure (trip_id);
 
-create table coach
-(
-	id int not null primary key auto_increment,
-	departure_id int not null,
-	coach_number int not null,
-	constraint C_DID_FOREIGN_KEY_CONSTRAINT
-	  foreign key (departure_id) references departure (id)
-);
-
-create table seat
-(
-	id int not null
-		primary key auto_increment,
-	siteNum int not null,
-	coach_id int not null,
-	constraint UKoueqw8wdsknigkwchpv0c8s53
-		unique (siteNum, coach_id),
-	constraint FK6jtu14ysy67xmci4u9agei7me
-		foreign key (coach_id) references coach (id)
-);
-
-create index FK6jtu14ysy67xmci4u9agei7me
-	on seat (coach_id);
 
 create table ticket
 (
@@ -98,10 +76,12 @@ create table ticket
 
 create table occupied_seat
 (
-  seat_id int not null primary key,
+  seatNumber int not null,
+  coachNumber int not null,
+  departure_id int not null,
   ticket_id int not null,
-  constraint SEAT_FK
-    foreign key (seat_id) references seat(id),
+  constraint DEPARTURE_FK
+    foreign key (departure_id) references departure(id),
   constraint TICKET_FK
     foreign key (ticket_id) references ticket(id)
 );

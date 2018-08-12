@@ -37,7 +37,7 @@ public class TripToTripDTOConverter implements ClassConverter<Trip, TripDTO> {
     }
 
     protected void convertTrip(Trip trip, TripDTO res) {
-        res.setCoachCount(trip.getDepartures().get(0).getCoaches().size());
+        res.setCoachCount(trip.getDepartures().get(0).getCoachCount());
         LinkedList<DepartureDTO> departures = new LinkedList<>();
         res.setId(trip.getId()).setDepartures(departures);
         for(Departure departure: trip.getDepartures()) {

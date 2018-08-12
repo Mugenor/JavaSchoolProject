@@ -1,12 +1,9 @@
 package javaschool.service.converter;
 
 import java.security.InvalidParameterException;
-import java.util.LinkedHashSet;
 import javaschool.controller.dtoentity.NewDepartureDTO;
 import javaschool.dao.api.StationDAO;
-import javaschool.entity.Coach;
 import javaschool.entity.Departure;
-import javaschool.entity.Seat;
 import javaschool.entity.Station;
 import javaschool.service.exception.NoSuchEntityException;
 import javaschool.service.exception.StationEqualsException;
@@ -25,7 +22,7 @@ public class DepartureToNewDepartureDTOConverter implements ClassConverter<Depar
     @Override
     public NewDepartureDTO convertTo(Departure departure) {
         NewDepartureDTO newDepartureDTO = new NewDepartureDTO();
-        newDepartureDTO.setCoachCount(departure.getFreeSitsCount() / Coach.DEFAULT_SEATS_NUM);
+        newDepartureDTO.setCoachCount(departure.getCoachCount());
         newDepartureDTO.setStationFrom(departure.getStationFrom().getTitle());
         newDepartureDTO.setStationTo(departure.getStationTo().getTitle());
         newDepartureDTO.setDateTimeFrom(departure.getDateTimeFrom());
@@ -57,29 +54,13 @@ public class DepartureToNewDepartureDTOConverter implements ClassConverter<Depar
 
         stationFrom.getDepartures().add(departure);
 
-        departure.setSitsCount(newDepartureDTO.getCoachCount() * Coach.DEFAULT_SEATS_NUM);
-        departure.setFreeSitsCount(newDepartureDTO.getCoachCount() * Coach.DEFAULT_SEATS_NUM);
+        departure.setFreeSitsCount(newDepartureDTO.getCoachCount() * Departure.DEFAULT_SEATS_COUNT_IN_COACH);
+        departure.setCoachCount(newDepartureDTO.getCoachCount());
+        departure.setSeatInCoach(Departure.DEFAULT_SEATS_COUNT_IN_COACH);
         departure.setStationFrom(stationFrom);
         departure.setStationTo(stationTo);
         departure.setDateTimeFrom(newDepartureDTO.getDateTimeFrom());
         departure.setDateTimeTo(newDepartureDTO.getDateTimeTo());
-
-        LinkedHashSet<Coach> coaches = new LinkedHashSet<>();
-        for (int i = 1; i <= newDepartureDTO.getCoachCount(); ++i) {
-            Coach coach = new Coach();
-            coach.setDeparture(departure);
-            coach.setCoachNumber(i);
-            LinkedHashSet<Seat> seats = new LinkedHashSet<>();
-            for (int j = 1; j <= Coach.DEFAULT_SEATS_NUM; ++j) {
-                Seat seat = new Seat();
-                seat.setCoach(coach);
-                seat.setSiteNum(j);
-                seats.add(seat);
-            }
-            coach.setSeats(seats);
-            coaches.add(coach);
-        }
-        departure.setCoaches(coaches);
 
         return departure;
     }

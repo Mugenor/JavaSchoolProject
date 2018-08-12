@@ -17,10 +17,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ClientController {
     private static final Logger log = Logger.getLogger(ClientController.class);
     private static final String CLIENT_VIEW = "/client";
-    private static final String SELECT_SEAT_VIEW = "/select-seat";
-    private static final String DEPARTURES_VIEW = "/departures";
-    private static final String FIND_DEPARTURE_VIEW = "/find-departure";
-    private static final String STATIONS_VIEW = "/stations";
     private static final String CLIENT_ERROR_VIEW = "/client";
 
 
@@ -38,35 +34,6 @@ public class ClientController {
     public ModelAndView getClientPage() {
         return new ModelAndView(CLIENT_VIEW);
     }
-
-//    @GetMapping("/select/{departureId}")
-//    public ModelAndView getSelectSeatView(@PathVariable int departureId) {
-//        ModelAndView modelAndView = new ModelAndView(SELECT_SEAT_VIEW);
-//        modelAndView.addObject("departure", departureService.findByIdRaw(departureId, true, true));
-//        return modelAndView;
-//    }
-//
-//    @GetMapping("/all-departures")
-//    public ModelAndView getAllDeparturesView(){
-//        ModelAndView modelAndView = new ModelAndView(DEPARTURES_VIEW);
-//        modelAndView.addObject("departures", departureService.findAllAvailable(true, false));
-//        return modelAndView;
-//    }
-//
-//    @GetMapping("/departures/{stationName}")
-//    public ModelAndView getAllDeparturesByStationName(@PathVariable String stationName){
-//        return new ModelAndView(DEPARTURES_VIEW).addObject("departures", departureService.findAvailableByStationTitle(stationName, true, false));
-//    }
-//
-//    @GetMapping("/find-departure")
-//    public String getFindDepartureView() {
-//        return FIND_DEPARTURE_VIEW;
-//    }
-//
-//    @GetMapping("/stations")
-//    public ModelAndView getStationsView() {
-//        return new ModelAndView(STATIONS_VIEW).addObject("stations", stationService.findAllStationNames());
-//    }
 
     @ExceptionHandler(NoSuchEntityException.class)
     public String handleNoDepartureException(RedirectAttributes model, Exception exc) {

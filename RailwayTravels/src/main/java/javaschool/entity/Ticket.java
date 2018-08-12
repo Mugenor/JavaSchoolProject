@@ -1,6 +1,6 @@
 package javaschool.entity;
 
-import java.util.Set;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,7 +27,7 @@ public class Ticket {
     @JoinColumn(name = "passenger_id")
     private Passenger passenger;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "ticket")
-    private Set<OccupiedSeat> occupiedSeats;
+    private List<OccupiedSeat> occupiedSeats;
     @ManyToOne
     @JoinColumn(name = "departure_from")
     private Departure from;
@@ -80,11 +80,11 @@ public class Ticket {
         return this;
     }
 
-    public Set<OccupiedSeat> getOccupiedSeats() {
+    public List<OccupiedSeat> getOccupiedSeats() {
         return occupiedSeats;
     }
 
-    public Ticket setOccupiedSeats(Set<OccupiedSeat> occupiedSeats) {
+    public Ticket setOccupiedSeats(List<OccupiedSeat> occupiedSeats) {
         this.occupiedSeats = occupiedSeats;
         return this;
     }

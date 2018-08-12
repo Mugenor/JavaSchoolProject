@@ -1,9 +1,7 @@
 package javaschool.entity.converter;
 
-import java.sql.Date;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
-import org.joda.time.Instant;
 import org.joda.time.LocalDate;
 
 @Converter(autoApply = true)

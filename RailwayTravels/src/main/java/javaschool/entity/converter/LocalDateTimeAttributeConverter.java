@@ -1,6 +1,5 @@
 package javaschool.entity.converter;
 
-import java.sql.Timestamp;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 import org.joda.time.LocalDateTime;
