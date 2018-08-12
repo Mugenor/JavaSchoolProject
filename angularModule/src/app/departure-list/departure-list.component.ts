@@ -11,13 +11,13 @@ export class DepartureListComponent implements OnInit {
   @Input('trips')
   trips: Trip[];
 
-  constructor(private router: Router) {
-  }
+  constructor(private router: Router) { }
 
   ngOnInit() {
   }
 
   routeToChooseTicket(trip: Trip) {
-    this.router.navigate(['client/choose-seat', trip.id, trip.chosen[0], trip.chosen[1] - 1]);
+    window.open('client/choose-seat/' + trip.id + '/' + trip.chosen[0] + '/' + (trip.chosen[1] - 1), '_blank').focus();
+    // this.router.navigate(['client/choose-seat', trip.id, trip.chosen[0], trip.chosen[1] - 1]);
   }
 }

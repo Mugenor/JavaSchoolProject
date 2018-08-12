@@ -1,20 +1,13 @@
-<div class="card">
-  <div class="card-header">
-    <ng-content></ng-content>
-  </div>
-  <div class="card-body">
-    <div class="list-group">
-      <div class="list-group-item" *ngFor="let trip of trips">
-        <div class="card">
-          <div class="card-header">
-            <button class="btn btn-primary" [disabled]="trip.chosen.length !== 2" (click)="routeToChooseTicket(trip)">
-              Buy ticket
-            </button>
-          </div>
-          <div class="card-body">
-            <app-trip [trip]="trip"></app-trip>
-          </div>
-        </div>
+<div class="list-group">
+  <div class="list-group-item" *ngFor="let trip of trips">
+    <div class="card">
+      <div class="card-header">
+        <button class="btn btn-primary" [disabled]="trip.chosen.length !== 2" (click)="routeToChooseTicket(trip)">
+          Buy ticket
+        </button>
+      </div>
+      <div class="card-body">
+        <app-trip [trip]="trip"></app-trip>
       </div>
     </div>
   </div>

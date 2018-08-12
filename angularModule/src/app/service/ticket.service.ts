@@ -32,4 +32,8 @@ export class TicketService {
   buyTicket(ticket: Ticket) {
     return this.httpClient.post('client/tickets/buy', ticket);
   }
+
+  getMyTickets() {
+    return this.httpClient.get<Ticket>('client/tickets');
+  }
 }

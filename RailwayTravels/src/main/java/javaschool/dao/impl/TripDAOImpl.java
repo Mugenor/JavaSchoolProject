@@ -89,12 +89,14 @@ public class TripDAOImpl extends GenericAbstractDAO<Trip, Integer> implements Tr
     }
 
     @Override
-    public List<Trip> findByStationFromTitle(String stationFromTitle) {
+    public List<Trip> findByStationFromTitleAndDateTimeFromAfter(String stationFromTitle, LocalDateTime dateTimeFrom) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Trip> query = builder.createQuery(Trip.class);
         Root<Trip> from = query.from(Trip.class);
-        Join<Departure, Station> stationJoin = from.join(Trip_.departures).join(Departure_.stationFrom);
+        ListJoin<Trip, Departure> departureJoin = from.join(Trip_.departures);
+        Join<Departure, Station> stationJoin = departureJoin.join(Departure_.stationFrom);
         Predicate stationFromTitlePredicate = builder.equal(stationJoin.get(Station_.title), stationFromTitle);
+        builder.greaterThanOrEqualTo(departureJoin.get(Departure_.dateTimeFrom), dateTimeFrom);
         Fetch<Trip, Departure> departureFetch = from.fetch(Trip_.departures);
         departureFetch.fetch(Departure_.stationFrom);
         departureFetch.fetch(Departure_.stationTo);

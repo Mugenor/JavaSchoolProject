@@ -39,7 +39,7 @@ public class TripController {
 
     @GetMapping("/today")
     public List<TripDTO> getTodayTrips() {
-        return tripService.findAllAvailable();
+        return tripService.findAllToday();
     }
 
     @GetMapping("/available")
@@ -73,7 +73,7 @@ public class TripController {
 
     @GetMapping("/timetable/{stationTitle}")
     public List<TripDTO> getTimetableOfStation(@PathVariable String stationTitle) {
-        return tripService.findByStationTitle(stationTitle);
+        return tripService.findAvailableByStationTitle(stationTitle);
     }
 
     @GetMapping("/find")
@@ -83,5 +83,16 @@ public class TripController {
                                    @RequestParam Long dateTimeTo) {
         return tripService.findFromToBetween(departureStation, arrivalStation,
                 new LocalDateTime(dateTimeFrom), new LocalDateTime(dateTimeTo));
+    }
+
+    @GetMapping("/find/{maxTransferCount}")
+    public List<List<TripDTO>> findTripsWithTransfers(@RequestParam String departureStation,
+                                                      @RequestParam String arrivalStation,
+                                                      @RequestParam Long dateTimeFrom,
+                                                      @RequestParam Long dateTimeTo,
+                                                      @PathVariable Integer maxTransferCount) {
+        return tripService.findFromToBetweenWithTransfers(departureStation, arrivalStation,
+                new LocalDateTime(dateTimeFrom), new LocalDateTime(dateTimeTo), maxTransferCount);
+
     }
 }

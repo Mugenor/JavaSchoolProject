@@ -11,7 +11,6 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 
 @Stateless
 public class TripDTOService {
-    private HashSet<TripDTO> tripDTOSet;
     private ResteasyClient client;
 
     public TripDTOService() {
@@ -20,7 +19,7 @@ public class TripDTOService {
 
 
     public Set<TripDTO> getTrips() {
-        return client.target("http://localhost:8080/rwt").path("trip").
+        return client.target("http://localhost:8080/rwt").path("trip/today").
                 request(MediaType.APPLICATION_JSON).
                 get().readEntity(new GenericType<Set<TripDTO>>(){});
     }

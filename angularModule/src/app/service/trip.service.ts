@@ -23,6 +23,18 @@ export class TripService {
     return this.httpClient.get<Trip[]>('trip/timetable/' + stationName);
   }
 
+  public findWithTransfers(stationFrom: string, stationTo: string, dateTimeFrom: Date, dateTimeTo: Date, maxTransferCount: number) {
+    const params = new HttpParams({
+      fromObject: {
+        departureStation: stationFrom,
+        arrivalStation: stationTo,
+        dateTimeFrom: dateTimeFrom.getTime().toString(),
+        dateTimeTo: dateTimeTo.getTime().toString()
+      }
+    });
+    return this.httpClient.get<Trip[][]>('trip/find/' + maxTransferCount, {params: params});
+  }
+
   public find(stationFrom: string, stationTo: string, dateTimeFrom: Date, dateTimeTo: Date) {
     const params = new HttpParams({
       fromObject: {

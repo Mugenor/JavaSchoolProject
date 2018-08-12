@@ -13,15 +13,16 @@ import {TripComponent} from './trip/trip.component';
 import {ChooseSeatComponent} from './choose-seat/choose-seat.component';
 import {ObjectPipe} from './pipe/object.pipe';
 import {StationsComponent} from './stations/stations.component';
-import {DepartureListComponent} from './departure-list/departure-list.component';
 import {TimetableComponent} from './timetable/timetable.component';
 import {ContainsPipe} from './pipe/contains.pipe';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {FindTripComponent} from './find-trip/find-trip.component';
-import {MatAutocompleteModule, MatButtonModule, MatFormFieldModule, MatInputModule} from '@angular/material';
+import {MatAutocompleteModule, MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatInputModule} from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import * as $ from 'jquery';
 import { DatetimepickerComponent } from './datetimepicker/datetimepicker.component';
+import {DepartureListWithMenuComponent} from './departure-list-with-menu/departure-list-with-menu.component';
+import { DepartureListComponent } from './departure-list/departure-list.component';
 
 window['$'] = $;
 window['jQuery'] = $;
@@ -40,10 +41,11 @@ window['jQuery'] = $;
     ObjectPipe,
     StationsComponent,
     DepartureListComponent,
+    DepartureListWithMenuComponent,
     TimetableComponent,
     ContainsPipe,
     FindTripComponent,
-    DatetimepickerComponent
+    DatetimepickerComponent,
   ],
   imports: [
     BrowserModule,
@@ -54,6 +56,7 @@ window['jQuery'] = $;
     MatFormFieldModule,
     MatInputModule,
     MatAutocompleteModule,
+    MatCheckboxModule,
     HttpClientModule,
     BsDropdownModule.forRoot(),
     RoutingModule

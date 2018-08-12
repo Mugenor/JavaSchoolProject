@@ -14,13 +14,6 @@ import org.springframework.stereotype.Service;
 public class DepartureToDepartureDTOConverter implements ClassConverter<Departure, DepartureDTO> {
     private static final String CONVERTING_EXC_MESSAGE = "Station is not found for this departure";
 
-    private StringToLocalDateTimeConverter converter;
-
-    @Autowired
-    public DepartureToDepartureDTOConverter(StringToLocalDateTimeConverter converter) {
-        this.converter = converter;
-    }
-
     @Override
     public DepartureDTO convertTo(Departure departure) {
         try {
@@ -29,8 +22,8 @@ public class DepartureToDepartureDTOConverter implements ClassConverter<Departur
                     departure.getFreeSitsCount(),
                     departure.getStationFrom().getTitle(),
                     departure.getStationTo().getTitle(),
-                    Instant.parse(departure.getDateTimeFrom().toString()).getMillis(),
-                    Instant.parse(departure.getDateTimeTo().toString()).getMillis(),
+                    departure.getDateTimeFrom().toDateTime().getMillis(),
+                    departure.getDateTimeTo().toDateTime().getMillis(),
                     departure.getNumberInTrip());
         } catch (NullPointerException e) {
             throw new ClassConvertingException(CONVERTING_EXC_MESSAGE, e);

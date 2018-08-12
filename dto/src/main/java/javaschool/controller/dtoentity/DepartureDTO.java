@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.Objects;
 import org.joda.time.LocalDateTime;
 
-public class DepartureDTO implements Serializable {
+public class DepartureDTO implements Serializable, Cloneable {
     private Integer id;
     private int sitsCount;
     private int freeSitsCount;
@@ -139,4 +139,8 @@ public class DepartureDTO implements Serializable {
                 '}';
     }
 
+    @Override
+    public DepartureDTO clone() throws CloneNotSupportedException {
+        return (DepartureDTO) super.clone();
+    }
 }

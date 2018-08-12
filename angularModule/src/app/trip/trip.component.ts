@@ -9,14 +9,18 @@ import {Trip} from '../entity/trip';
 export class TripComponent implements OnInit {
   @Input('trip')
   trip: Trip;
+  @Input('selectable')
+  selectable = true;
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
-    console.log(this.trip);
   }
 
   selectStation(trip: Trip, stationIndex: number) {
-    trip.toggleChosen(stationIndex);
+    if (this.selectable) {
+      trip.toggleChosen(stationIndex);
+    }
   }
 }

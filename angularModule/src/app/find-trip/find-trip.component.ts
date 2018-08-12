@@ -4,6 +4,7 @@ import {StationService} from '../service/station.service';
 import {map, startWith} from 'rxjs/operators';
 import {TripService} from '../service/trip.service';
 import {TripDTOToTripConverterService} from '../service/trip-dtoto-trip-converter.service';
+import {Trip} from '../entity/trip';
 
 @Component({
   selector: 'app-find-trip',
@@ -18,7 +19,11 @@ export class FindTripComponent implements OnInit {
   dateTimeConfig: any;
   dateTimeFromState: DateState;
   dateTimeToState: DateState;
+  maxTransferValue = 2;
+  minTransferValue = 0;
+  showWithTransfers = false;
   trips = [];
+  tripsWithTransfers: Trip[][];
 
   constructor(private formBuilder: FormBuilder,
               private stationService: StationService,
@@ -33,6 +38,10 @@ export class FindTripComponent implements OnInit {
       times: this.formBuilder.group({
         dateTimeFrom: [today, Validators.required],
         dateTimeTo: [today, Validators.required]
+      }),
+      transfers: this.formBuilder.group({
+        findWithTransfers: [false],
+        maxTransferCount: [0]
       })
     });
     const endDate = new Date();
@@ -71,6 +80,18 @@ export class FindTripComponent implements OnInit {
 
   get dateTimeTo() {
     return this.times.get('dateTimeTo');
+  }
+
+  get transfers() {
+    return this.tripForm.get('transfers');
+  }
+
+  get findWithTransfers() {
+    return this.transfers.get('findWithTransfers');
+  }
+
+  get maxTransferCount() {
+    return this.transfers.get('maxTransferCount');
   }
 
   ngOnInit() {
@@ -118,6 +139,14 @@ export class FindTripComponent implements OnInit {
         this.dateTimeFromState.initialDate = this.dateTimeFromState.minDate;
       }
     });
+    this.maxTransferCount.valueChanges.subscribe(value => {
+      if (value > this.maxTransferValue) {
+        this.maxTransferCount.setValue(this.maxTransferValue);
+      } else if (value < this.minTransferValue) {
+        this.maxTransferCount.setValue(this.minTransferValue);
+      }
+      this.maxTransferCount.setErrors(this.requiredIfFindWithTransfers(this.transfers as FormGroup));
+    });
   }
 
   checkStationExists(stationControl: FormControl, stationTitles: string[]) {
@@ -138,12 +167,30 @@ export class FindTripComponent implements OnInit {
     return stationFrom && stationTo && stationFrom.value === stationTo.value ? {'stationIdentical': true} : null;
   }
 
+  requiredIfFindWithTransfers(control: FormGroup): ValidationErrors | null {
+    const findWithTransfers = control.get('findWithTransfers');
+    const maxTransferCount = control.get('maxTransferCount');
+    return findWithTransfers.value && !maxTransferCount.value ? {'required': true} : null;
+  }
+
   find() {
     console.log('find');
-    this.tripService.find(this.stationFrom.value, this.stationTo.value, this.dateTimeFrom.value, this.dateTimeTo.value)
-      .subscribe((data) => {
-        this.trips = data.map(trip => TripDTOToTripConverterService.convert(trip));
-      });
+    if (this.findWithTransfers.value) {
+      this.tripService.findWithTransfers(this.stationFrom.value, this.stationTo.value,
+        this.dateTimeFrom.value, this.dateTimeTo.value, this.maxTransferCount.value)
+        .subscribe((data) => {
+          this.trips = [];
+          this.tripsWithTransfers = data.map(trips => trips.map(trip => TripDTOToTripConverterService.convert(trip)));
+          this.showWithTransfers = true;
+        });
+    } else {
+      this.tripService.find(this.stationFrom.value, this.stationTo.value, this.dateTimeFrom.value, this.dateTimeTo.value)
+        .subscribe((data) => {
+          this.tripsWithTransfers = [];
+          this.trips = data.map(trip => TripDTOToTripConverterService.convert(trip));
+          this.showWithTransfers = false;
+        });
+    }
   }
 }
 

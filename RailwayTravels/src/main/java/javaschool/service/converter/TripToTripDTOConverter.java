@@ -20,12 +20,7 @@ public class TripToTripDTOConverter implements ClassConverter<Trip, TripDTO> {
     @Override
     public TripDTO convertTo(Trip trip) {
         TripDTO tripDTO = new TripDTO();
-        tripDTO.setCoachCount(trip.getDepartures().get(0).getCoaches().size());
-        LinkedList<DepartureDTO> departures = new LinkedList<>();
-        tripDTO.setId(trip.getId()).setDepartures(departures);
-        for(Departure departure: trip.getDepartures()) {
-            departures.addLast(departureToDepartureDTOConverter.convertTo(departure));
-        }
+        convertTrip(trip, tripDTO);
         return tripDTO;
     }
 
@@ -39,5 +34,14 @@ public class TripToTripDTOConverter implements ClassConverter<Trip, TripDTO> {
             departures.addLast(departureToDepartureDTOConverter.convertFrom(departureDTO).setNumberInTrip(numberInTrip++));
         }
         return trip;
+    }
+
+    protected void convertTrip(Trip trip, TripDTO res) {
+        res.setCoachCount(trip.getDepartures().get(0).getCoaches().size());
+        LinkedList<DepartureDTO> departures = new LinkedList<>();
+        res.setId(trip.getId()).setDepartures(departures);
+        for(Departure departure: trip.getDepartures()) {
+            departures.addLast(departureToDepartureDTOConverter.convertTo(departure));
+        }
     }
 }

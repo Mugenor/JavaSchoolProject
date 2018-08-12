@@ -1,58 +1,84 @@
-<app-departure-list [trips]="trips">
-  <form class="form-inline" novalidate [formGroup]="tripForm" (ngSubmit)="find()">
-    <div formGroupName="stations">
-      <mat-form-field class="mr-5">
-        <input type="text" placeholder="Departure station" matInput formControlName="stationFrom"
-               [matAutocomplete]="stationFromAutocomplete"
-               (blur)="checkStationExists(stationFrom, filteredStationsFrom)">
-        <mat-autocomplete autoActiveFirstOption #stationFromAutocomplete>
-          <mat-option *ngFor="let station of filteredStationsFrom" [value]="station">
-            {{station}}
-          </mat-option>
-        </mat-autocomplete>
-        <mat-error *ngIf="stations.invalid">
-          Enter departure station!
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field class="mr-5">
-        <input type="text" placeholder="Arrival station" matInput formControlName="stationTo"
-               [matAutocomplete]="stationToAutocomplete" (blur)="checkStationExists(stationTo, filteredStationsTo)">
-        <mat-autocomplete autoActiveFirstOption #stationToAutocomplete>
-          <mat-option *ngFor="let station of filteredStationsTo" [value]="station">
-            {{station}}
-          </mat-option>
-        </mat-autocomplete>
-        <mat-error *ngIf="stationTo.errors?.required">
-          Enter arrival station!
-        </mat-error>
-      </mat-form-field>
-    </div>
-    <div formGroupName="times">
-      <mat-form-field class="mr-5">
-        <app-datetimepicker formControlName="dateTimeFrom"
-                            [minDate]="dateTimeFromState.minDate"
-                            [maxDate]="dateTimeFromState.maxDate"
-                            [initialDate]="dateTimeFromState.initialDate"
-                            [configuration]="dateTimeConfig">
-          <input #datetime type="text" placeholder="Time from" matInput>
-        </app-datetimepicker>
-        <mat-error *ngIf="dateTimeFrom.errors?.required">
-          Enter time from.
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field class="mr-5">
-        <app-datetimepicker formControlName="dateTimeTo"
-                            [minDate]="dateTimeToState.minDate"
-                            [maxDate]="dateTimeToState.maxDate"
-                            [initialDate]="dateTimeToState.initialDate"
-                            [configuration]="dateTimeConfig">
-          <input #datetime type="text" placeholder="Time to" matInput>
-        </app-datetimepicker>
-        <mat-error *ngIf="dateTimeFrom.errors?.required">
-          Enter time to.
-        </mat-error>
-      </mat-form-field>
+<div class="card">
+  <div class="card-header">
+    <form class="form-inline" novalidate [formGroup]="tripForm" (ngSubmit)="find()">
+      <div formGroupName="stations">
+        <mat-form-field class="mr-5">
+          <input type="text" placeholder="Departure station" matInput formControlName="stationFrom"
+                 [matAutocomplete]="stationFromAutocomplete"
+                 (blur)="checkStationExists(stationFrom, filteredStationsFrom)">
+          <mat-autocomplete autoActiveFirstOption #stationFromAutocomplete>
+            <mat-option *ngFor="let station of filteredStationsFrom" [value]="station">
+              {{station}}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="stations.invalid">
+            Enter departure station!
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="mr-5">
+          <input type="text" placeholder="Arrival station" matInput formControlName="stationTo"
+                 [matAutocomplete]="stationToAutocomplete" (blur)="checkStationExists(stationTo, filteredStationsTo)">
+          <mat-autocomplete autoActiveFirstOption #stationToAutocomplete>
+            <mat-option *ngFor="let station of filteredStationsTo" [value]="station">
+              {{station}}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="stationTo.errors?.required">
+            Enter arrival station!
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div formGroupName="times">
+        <mat-form-field class="mr-5">
+          <app-datetimepicker formControlName="dateTimeFrom"
+                              [minDate]="dateTimeFromState.minDate"
+                              [maxDate]="dateTimeFromState.maxDate"
+                              [initialDate]="dateTimeFromState.initialDate"
+                              [configuration]="dateTimeConfig">
+            <input #datetime type="text" placeholder="Time from" matInput>
+          </app-datetimepicker>
+          <mat-error *ngIf="dateTimeFrom.errors?.required">
+            Enter time from.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="mr-5">
+          <app-datetimepicker formControlName="dateTimeTo"
+                              [minDate]="dateTimeToState.minDate"
+                              [maxDate]="dateTimeToState.maxDate"
+                              [initialDate]="dateTimeToState.initialDate"
+                              [configuration]="dateTimeConfig">
+            <input #datetime type="text" placeholder="Time to" matInput>
+          </app-datetimepicker>
+          <mat-error *ngIf="dateTimeFrom.errors?.required">
+            Enter time to.
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="mr-5" formGroupName="transfers">
+        <mat-checkbox labelPosition="before" formControlName="findWithTransfers">
+          Find with transfers
+        </mat-checkbox>
+        <mat-form-field *ngIf="findWithTransfers.value">
+          <input type="number" [min]="minTransferValue" [max]="maxTransferValue" step="1" matInput placeholder="Max transfers count"
+                 formControlName="maxTransferCount">
+          <mat-error *ngIf="maxTransferCount.errors?.required">
+            Enter maximum transfers count.
+          </mat-error>
+        </mat-form-field>
+      </div>
       <button mat-raised-button color="primary" type="submit">Find</button>
+    </form>
+  </div>
+  <div class="card-body">
+    <div *ngIf="!showWithTransfers">
+      <app-departure-list [trips]="trips"></app-departure-list>
     </div>
-  </form>
-</app-departure-list>
+    <div *ngIf="showWithTransfers">
+      <div class="list-group">
+        <div *ngFor="let trips of tripsWithTransfers" class="list-group-item list-group-item-info">
+          <app-departure-list [trips]="trips"></app-departure-list>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -26,6 +26,7 @@ import javaschool.entity.Departure;
 import javaschool.entity.Seat;
 import javaschool.entity.Trip;
 import javaschool.service.api.RabbitService;
+import javaschool.service.api.SearchTripsWithTransfers;
 import javaschool.service.api.TripService;
 import javaschool.service.converter.DepartureToDepartureDTOConverter;
 import javaschool.service.converter.DepartureToNewDepartureDTOConverter;
@@ -49,12 +50,13 @@ public class TripServiceImpl implements TripService {
     private DepartureToNewDepartureDTOConverter departureToNewDepartureDTOConverter;
     private RabbitService rabbitService;
     private TripService selfProxy;
+    private SearchTripsWithTransfers searchTripsWithTransfers;
 
     @Autowired
     public TripServiceImpl(TripDAO tripDAO, DepartureDAO departureDAO, SeatDAO seatDAO,
                            CoachDAO coachDAO,
                            DepartureToNewDepartureDTOConverter departureToNewDepartureDTOConverter,
-                           TripToTripDTOConverter tripToTripDTOConverter,
+                           TripToTripDTOConverter tripToTripDTOConverter, SearchTripsWithTransfers searchTripsWithTransfers,
                            DepartureToDepartureDTOConverter departureDTOConverter, RabbitService rabbitService) {
         this.tripDAO = tripDAO;
         this.departureDAO = departureDAO;
@@ -64,6 +66,7 @@ public class TripServiceImpl implements TripService {
         this.tripToTripDTOConverter = tripToTripDTOConverter;
         this.departureToDepartureDTOConverter = departureDTOConverter;
         this.rabbitService = rabbitService;
+        this.searchTripsWithTransfers = searchTripsWithTransfers;
     }
 
     @Autowired
@@ -84,8 +87,6 @@ public class TripServiceImpl implements TripService {
     @Transactional(readOnly = true)
     public List<TripDTO> findFromToBetween(String stFrom, String stTo, LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo) {
         List<Trip> tripsWithArrivalStation = tripDAO.findByStationTitleToDateTimeToBetween(stTo, dateTimeFrom, dateTimeTo);
-        List<Trip> tripsWithDepartureStation = tripDAO.findByStationTitleFromDateTimeFromBetween(stFrom, dateTimeFrom, dateTimeTo);
-        tripsWithArrivalStation.retainAll(tripsWithDepartureStation);
         LinkedList<TripDTO> resultTrips = new LinkedList<>();
         for (Trip trip : tripsWithArrivalStation) {
             List<Departure> departures = trip.getDepartures();
@@ -119,9 +120,23 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
+    public List<List<TripDTO>> findFromToBetweenWithTransfers(String stFrom, String stTo,
+                                                              LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo,
+                                                              int maxTransfersCount) {
+        if (stFrom.equals(stTo)) {
+            throw new IllegalArgumentException("Stations must be different!");
+        } else if (dateTimeFrom.compareTo(dateTimeTo) >= 0) {
+            throw new IllegalArgumentException("Departure time must be lower then arrival time!");
+        } else if (maxTransfersCount < 0) {
+            throw new IllegalArgumentException("Maximum transfer count must not be negative!");
+        }
+        return searchTripsWithTransfers.findFromToBetweenWithTransfers(stFrom, stTo, dateTimeFrom, dateTimeTo, maxTransfersCount);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<TripDTO> findAllAvailable() {
-        return tripDAO.findAllAfter(LocalDate.now().toLocalDateTime(LocalTime.MIDNIGHT))
+        return tripDAO.findAllAfter(LocalDateTime.now())
                 .stream()
                 .map(trip -> tripToTripDTOConverter.convertTo(trip))
                 .collect(Collectors.toList());
@@ -140,18 +155,18 @@ public class TripServiceImpl implements TripService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<TripDTO> findByStationTitle(String stationTitle) {
-        List<Trip> trips = tripDAO.findByStationFromTitle(stationTitle);
+    public List<TripDTO> findAvailableByStationTitle(String stationTitle) {
+        List<Trip> trips = tripDAO.findByStationFromTitleAndDateTimeFromAfter(stationTitle, LocalDateTime.now());
         List<TripDTO> resultList = new LinkedList<>();
         for (Trip trip : trips) {
             List<Departure> departures = trip.getDepartures();
-            if(departures.size() == 0) continue;
+            if (departures.size() == 0) continue;
             int coachCount = departures.get(0).getSitsCount() / Coach.DEFAULT_SEATS_NUM;
             List<DepartureDTO> departureDTOS = new LinkedList<>();
             boolean found = false;
             for (Departure departure : departures) {
                 if (!found && departure.getStationFrom().getTitle().equals(stationTitle)) {
-                        found = true;
+                    found = true;
                 }
                 if (found) {
                     departureDTOS.add(departureToDepartureDTOConverter.convertTo(departure));

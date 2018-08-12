@@ -55,7 +55,7 @@ public class ClientController {
 //
 //    @GetMapping("/departures/{stationName}")
 //    public ModelAndView getAllDeparturesByStationName(@PathVariable String stationName){
-//        return new ModelAndView(DEPARTURES_VIEW).addObject("departures", departureService.findByStationTitle(stationName, true, false));
+//        return new ModelAndView(DEPARTURES_VIEW).addObject("departures", departureService.findAvailableByStationTitle(stationName, true, false));
 //    }
 //
 //    @GetMapping("/find-departure")
