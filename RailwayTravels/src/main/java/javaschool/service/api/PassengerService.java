@@ -59,6 +59,7 @@ public interface PassengerService {
      * @return List of passengers converted to PassengerWithoutTickets.class
      */
     List<PassengerWithoutTickets> findAllPassengersByTripIdAndDepartureIndexBounds(Integer tripId, Integer from, Integer to);
+    List<TicketDTO> getPassengerTickets(String username);
 
     /**
      * Finds all tickets of passenger with specified <b>username</b>

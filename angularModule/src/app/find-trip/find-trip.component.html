@@ -59,7 +59,8 @@
           Find with transfers
         </mat-checkbox>
         <mat-form-field *ngIf="findWithTransfers.value">
-          <input type="number" [min]="minTransferValue" [max]="maxTransferValue" step="1" matInput placeholder="Max transfers count"
+          <input type="number" [min]="minTransferValue" [max]="maxTransferValue" step="1" matInput
+                 placeholder="Max transfers count"
                  formControlName="maxTransferCount">
           <mat-error *ngIf="maxTransferCount.errors?.required">
             Enter maximum transfers count.
@@ -70,6 +71,12 @@
     </form>
   </div>
   <div class="card-body">
+    <div *ngIf="message && message !== ''" class="alert alert-primary">
+      {{message}}
+    </div>
+    <div class="in-center" *ngIf="searching">
+      <mat-spinner></mat-spinner>
+    </div>
     <div *ngIf="!showWithTransfers">
       <app-departure-list [trips]="trips"></app-departure-list>
     </div>

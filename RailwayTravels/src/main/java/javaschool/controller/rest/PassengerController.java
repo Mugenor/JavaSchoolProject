@@ -1,6 +1,5 @@
 package javaschool.controller.rest;
 
-import java.security.Principal;
 import java.util.List;
 import javaschool.controller.dtoentity.PassengerWithoutTickets;
 import javaschool.service.api.PassengerService;

@@ -3,10 +3,10 @@
     <input id="filterInput" type="text" matInput placeholder="Stations filter"
            size="40" #filter (keyup)="0"/>
   </mat-form-field>
-  <table id="stations" class="table table-striped table-bordered table-light">
+  <table matSort (matSortChange)="sortStations($event)" id="stations" class="table table-striped table-bordered table-light">
     <thead>
     <tr>
-      <th>Station</th>
+      <th mat-sort-header="station">Station</th>
       <th>Watch timetable</th>
     </tr>
     </thead>
