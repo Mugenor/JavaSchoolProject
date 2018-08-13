@@ -1,6 +1,7 @@
 package javaschool.controller.advice;
 
 import java.io.IOException;
+import java.security.Principal;
 import javaschool.service.exception.NoSiteOnDepartureException;
 import javaschool.service.exception.NoSuchEntityException;
 import javaschool.service.exception.PassengerRegisteredException;
@@ -10,6 +11,7 @@ import javaschool.service.exception.TooLateForBuyingTicketException;
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -29,6 +31,12 @@ public class ClientControllerAdvice {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<?> handleDataIntegrityViolationException(DataIntegrityViolationException exc) {
         log.error("Exception while trying to save something: ", exc);
+        return ResponseEntity.badRequest().body(exc.getMessage());
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException exc, Principal principal) {
+        log.error("Exception of user: " + principal.getName(), exc);
         return ResponseEntity.badRequest().body(exc.getMessage());
     }
 }

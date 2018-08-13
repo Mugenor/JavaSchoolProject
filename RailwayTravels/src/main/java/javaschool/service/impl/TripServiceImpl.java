@@ -14,6 +14,7 @@ import javaschool.controller.dtoentity.TripDTO;
 import javaschool.controller.dtoentity.TripInfo;
 import javaschool.dao.api.DepartureDAO;
 import javaschool.dao.api.OccupiedSeatDAO;
+import javaschool.dao.api.TicketDAO;
 import javaschool.dao.api.TripDAO;
 import javaschool.entity.Departure;
 import javaschool.entity.OccupiedSeat;
@@ -35,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class TripServiceImpl implements TripService {
     private TripDAO tripDAO;
+    private TicketDAO ticketDAO;
     private DepartureDAO departureDAO;
     private DepartureToDepartureDTOConverter departureToDepartureDTOConverter;
     private TripToTripDTOConverter tripToTripDTOConverter;
@@ -49,7 +51,7 @@ public class TripServiceImpl implements TripService {
                            DepartureToNewDepartureDTOConverter departureToNewDepartureDTOConverter,
                            TripToTripDTOConverter tripToTripDTOConverter, SearchTripsWithTransfers searchTripsWithTransfers,
                            DepartureToDepartureDTOConverter departureDTOConverter, RabbitService rabbitService,
-                           OccupiedSeatDAO occupiedSeatDAO) {
+                           OccupiedSeatDAO occupiedSeatDAO, TicketDAO ticketDAO) {
         this.tripDAO = tripDAO;
         this.departureDAO = departureDAO;
         this.departureToNewDepartureDTOConverter = departureToNewDepartureDTOConverter;
@@ -58,6 +60,7 @@ public class TripServiceImpl implements TripService {
         this.rabbitService = rabbitService;
         this.searchTripsWithTransfers = searchTripsWithTransfers;
         this.occupiedSeatDAO = occupiedSeatDAO;
+        this.ticketDAO = ticketDAO;
     }
 
     @Autowired
@@ -249,6 +252,22 @@ public class TripServiceImpl implements TripService {
             }
         }
         return tripDTO;
+    }
+
+    @Override
+    @Transactional
+    public void deleteTrip(Integer tripId) {
+        long ticketsCount = ticketDAO.getTicketsCountByTripId(tripId);
+        if (ticketsCount != 0) {
+            throw new IllegalArgumentException("Passengers already registered on this trip.");
+        } else {
+            Trip trip = tripDAO.findById(tripId);
+            if (trip == null) {
+                throw new IllegalArgumentException("Invalid trip");
+            } else {
+                tripDAO.delete(trip);
+            }
+        }
     }
 
     private void validateNewDepartureDTO(NewDepartureDTO newDepartureDTO, String lastStationTo, LocalDateTime lastDateTimeTo) {

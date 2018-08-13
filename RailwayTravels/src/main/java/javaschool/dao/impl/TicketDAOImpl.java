@@ -82,4 +82,15 @@ public class TicketDAOImpl extends GenericAbstractDAO<Ticket, Integer> implement
         );
         return entityManager.createQuery(deleteQuery).executeUpdate();
     }
+
+    @Override
+    public long getTicketsCountByTripId(Integer tripId) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> query = builder.createQuery(Long.class);
+        Root<Ticket> ticketRoot = query.from(Ticket.class);
+        query.select(builder.countDistinct(ticketRoot)).where(
+                builder.equal(ticketRoot.join(Ticket_.trip).get(Trip_.id), tripId)
+        );
+        return entityManager.createQuery(query).getSingleResult();
+    }
 }

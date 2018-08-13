@@ -41,6 +41,15 @@ adminApp.controller('allTripsController', function ($scope, $location, tripTable
         }
         chosen.sort();
     };
+
+    $scope.deleteTrip = function (trip) {
+        tripTableService.deleteTrip(trip).then(function (data) {
+            tripTableService.removeTripFromTrips(trip, $scope.trips);
+        }, function (resp) {
+            console.log(resp);
+        });
+    };
+
     $scope.watchPassengers = function (trip) {
         $location.path('/trip/' + trip.id + '/' + trip.chosen[0] + '/' + (trip.chosen[1] - 1))
     };

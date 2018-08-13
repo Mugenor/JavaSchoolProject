@@ -35,5 +35,9 @@ public interface UserService {
      */
     List<User> findAll();
 
+    /**
+     * Saving almostUser as normal user
+     * @param almostUser    almost user to save
+     */
     void save(AlmostUser almostUser);
 }

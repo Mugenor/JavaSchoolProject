@@ -10,4 +10,5 @@ public interface TicketDAO extends GenericDAO<Ticket, Integer> {
     List<Ticket> findByPassengerAndAfter(Passenger passenger, LocalDateTime dateTimeFrom);
     Ticket findByTicketIdAndPassenger(Integer ticketId, Passenger passenger);
     int deleteByTicketIdAndPassenger(Integer ticketId, Passenger passenger);
+    long getTicketsCountByTripId(Integer tripId);
 }

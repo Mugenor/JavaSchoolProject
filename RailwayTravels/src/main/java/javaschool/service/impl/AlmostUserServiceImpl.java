@@ -58,8 +58,8 @@ public class AlmostUserServiceImpl implements AlmostUserService {
 
     @Override
     @Transactional
-    public int deleteByHash(String hash) {
-        return almostUserDAO.deleteByHash(hash);
+    public boolean deleteByHash(String hash) {
+        return almostUserDAO.deleteByHash(hash) != 0 ;
     }
 
     @Scheduled(cron = "0 0 0 * * *")

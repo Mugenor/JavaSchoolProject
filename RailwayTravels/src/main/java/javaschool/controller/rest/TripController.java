@@ -12,6 +12,7 @@ import javax.validation.Valid;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -94,5 +95,10 @@ public class TripController {
         return tripService.findFromToBetweenWithTransfers(departureStation, arrivalStation,
                 new LocalDateTime(dateTimeFrom), new LocalDateTime(dateTimeTo), maxTransferCount);
 
+    }
+
+    @DeleteMapping("/{tripId}")
+    public void deleteTrip(@PathVariable Integer tripId) {
+        tripService.deleteTrip(tripId);
     }
 }
