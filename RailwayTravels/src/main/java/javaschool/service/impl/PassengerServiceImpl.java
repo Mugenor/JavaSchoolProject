@@ -53,6 +53,7 @@ public class PassengerServiceImpl implements PassengerService {
         this.ticketDAO = ticketDAO;
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<PassengerWithoutTickets> findAllPassengers() {
         return passengerDAO.findAll().parallelStream()
@@ -60,6 +61,7 @@ public class PassengerServiceImpl implements PassengerService {
                 .collect(Collectors.toList());
     }
 
+    @Override
     @Transactional
     public void save(Passenger passenger) {
         passengerDAO.save(passenger);
@@ -135,6 +137,7 @@ public class PassengerServiceImpl implements PassengerService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<PassengerWithoutTickets> findAllPassengersByTripIdAndDepartureIndexBounds(Integer tripId, Integer from, Integer to) {
         return passengerDAO.findAllPassengersByTripIdAndDepartureIndexBounds(tripId, from, to).stream()
                 .map(passenger -> passengerConverter.convertTo(passenger))
@@ -142,6 +145,7 @@ public class PassengerServiceImpl implements PassengerService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<TicketDTO> getPassengerTickets(String username) {
         Passenger passenger = passengerDAO.findByUsername(username);
         if (passenger == null) {
@@ -151,7 +155,8 @@ public class PassengerServiceImpl implements PassengerService {
         List<TicketDTO> tickets = new LinkedList<>();
         for (Ticket ticket : passengerTickets) {
             SeatId seat = ticket.getOccupiedSeats().get(0).getSeat();
-            tickets.add(new TicketDTO(ticket.getFrom().getStationFrom().getTitle(), ticket.getTo().getStationTo().getTitle(),
+            tickets.add(new TicketDTO(ticket.getId(),
+                    ticket.getFrom().getStationFrom().getTitle(), ticket.getTo().getStationTo().getTitle(),
                     ticket.getFrom().getDateTimeFrom().toDateTime().getMillis(),
                     ticket.getTo().getDateTimeTo().toDateTime().getMillis(),
                     seat.getCoachNumber(), seat.getSeatNumber()));
@@ -160,6 +165,22 @@ public class PassengerServiceImpl implements PassengerService {
     }
 
     @Override
+    @Transactional
+    public void returnTicket(String username, Integer ticketId) {
+        Passenger passenger = passengerDAO.findByUsername(username);
+        if (passenger == null) {
+            throw new IllegalArgumentException("Invalid user");
+        }
+        Ticket ticket = ticketDAO.findByTicketIdAndPassenger(ticketId, passenger);
+        if(ticket == null) {
+            throw new IllegalArgumentException("You don\'t have such ticket");
+        } else {
+            ticketDAO.delete(ticket);
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Boolean isRegistered(Integer tripId, String username) {
         Passenger passenger = passengerDAO.findByUsername(username);
         if (passenger == null) {

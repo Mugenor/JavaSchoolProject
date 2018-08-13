@@ -10,9 +10,13 @@ import javaschool.entity.User;
 import javaschool.service.api.UserService;
 import javaschool.service.converter.AlmostUserToUserConverter;
 import javaschool.service.exception.EntityAlreadyExistsException;
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+
+import static javaschool.service.impl.AlmostUserServiceImpl.EXPIRED_DELAY;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -33,14 +37,17 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void save(User user) {
+        LocalDateTime after = LocalDateTime.now().minus(EXPIRED_DELAY);
         Passenger passenger = user.getPassenger();
-        if(userDAO.findByUsername(user.getUsername()) != null || almostUserDAO.findByUsername(user.getUsername()) != null) {
+        if(userDAO.findByUsername(user.getUsername()) != null
+                || almostUserDAO.findByUsernameAndAfter(user.getUsername(), after) != null) {
             throw new EntityAlreadyExistsException("User with \"" + user.getUsername() + "\" username already exists!");
-        } else if(userDAO.findByEmail(user.getEmail()) != null || almostUserDAO.findByEmail(user.getEmail()) != null) {
+        } else if(userDAO.findByEmail(user.getEmail()) != null
+                || almostUserDAO.findByEmailAndAfter(user.getEmail(), after) != null) {
             throw new EntityAlreadyExistsException("User with \"" + user.getEmail() + "\" email already exists!");
         } else if(passenger != null && (passengerDAO.findByNameAndSurnameAndBirthday
                 (passenger.getName(), passenger.getSurname(), passenger.getBirthday()) != null ||
-                almostUserDAO.findByNameAndSurnameAndBirthday(passenger.getName(), passenger.getSurname(), passenger.getBirthday()) != null)) {
+                almostUserDAO.findByNameAndSurnameAndBirthdayAndAfter(passenger.getName(), passenger.getSurname(), passenger.getBirthday(), after) != null)) {
             throw new EntityAlreadyExistsException("Passenger " + passenger.getName() + " " + passenger.getSurname() +
                     " " + passenger.getBirthday().toString("dd.MM.yyyy") + " date of birth already exists!");
         }

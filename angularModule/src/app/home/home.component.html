@@ -1,3 +1,44 @@
-<p>
-  home works!
-</p>
+<div *ngIf="ticketList.length === 0" class="alert alert-primary" >
+  You don't have active tickets.
+</div>
+<table *ngIf="ticketList.length !== 0" #table mat-table [dataSource]="ticketDataSource">
+  <ng-container matColumnDef="departureStation">
+    <th mat-header-cell *matHeaderCellDef> Departure station</th>
+    <td mat-cell *matCellDef="let ticket"> {{ticket.stationFrom}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="arrivalStation">
+    <th mat-header-cell *matHeaderCellDef> Arrival station</th>
+    <td mat-cell *matCellDef="let ticket"> {{ticket.stationTo}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="dateTimeFrom">
+    <th mat-header-cell *matHeaderCellDef> Departure time</th>
+    <td mat-cell *matCellDef="let ticket"> {{getDateAsString(ticket.dateTimeFrom)}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="dateTimeTo">
+    <th mat-header-cell *matHeaderCellDef> Arrival time</th>
+    <td mat-cell *matCellDef="let ticket"> {{getDateAsString(ticket.dateTimeTo)}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="coachNumber">
+    <th mat-header-cell *matHeaderCellDef> Coach number</th>
+    <td mat-cell *matCellDef="let ticket"> {{ticket.coachNum}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="seatNumber">
+    <th mat-header-cell *matHeaderCellDef> Seat number</th>
+    <td mat-cell *matCellDef="let ticket"> {{ticket.seatNum}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="returnButton">
+    <th mat-header-cell *matHeaderCellDef> Return ticket </th>
+    <td mat-cell *matCellDef="let ticket">
+      <button mat-raised-button color="primary" type="submit" #button (click)="returnTicket(button, ticket)">Return</button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

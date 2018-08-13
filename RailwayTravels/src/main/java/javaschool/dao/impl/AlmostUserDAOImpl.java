@@ -16,6 +16,23 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class AlmostUserDAOImpl extends GenericAbstractDAO<AlmostUser, String> implements AlmostUserDAO {
+
+    @Override
+    public AlmostUser findByIdAndAfter(String id, LocalDateTime after) {
+        try {
+            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<AlmostUser> query = builder.createQuery(AlmostUser.class);
+            Root<AlmostUser> almostUserRoot = query.from(AlmostUser.class);
+            query.select(almostUserRoot).where(
+                    builder.equal(almostUserRoot.get(AlmostUser_.hash), id),
+                    builder.greaterThanOrEqualTo(almostUserRoot.get(AlmostUser_.registered), after)
+            );
+            return entityManager.createQuery(query).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
     @Override
     public List<AlmostUser> findByUsernameOrEmail(String username, String email) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -47,33 +64,35 @@ public class AlmostUserDAOImpl extends GenericAbstractDAO<AlmostUser, String> im
     }
 
     @Override
-    public AlmostUser findByUsername(String username) {
+    public AlmostUser findByUsernameAndAfter(String username, LocalDateTime after) {
         try {
             CriteriaBuilder builder = entityManager.getCriteriaBuilder();
             CriteriaQuery<AlmostUser> query = builder.createQuery(AlmostUser.class);
             Root<AlmostUser> almostUserRoot = query.from(AlmostUser.class);
             Predicate usernameEq = builder.equal(almostUserRoot.get(AlmostUser_.username), username);
-            return entityManager.createQuery(query.select(almostUserRoot).where(usernameEq)).getSingleResult();
+            Predicate afterPred = builder.greaterThanOrEqualTo(almostUserRoot.get(AlmostUser_.registered), after);
+            return entityManager.createQuery(query.select(almostUserRoot).where(usernameEq, afterPred)).getSingleResult();
         }catch (NoResultException e) {
             return null;
         }
     }
 
     @Override
-    public AlmostUser findByEmail(String email) {
+    public AlmostUser findByEmailAndAfter(String email, LocalDateTime after) {
         try {
             CriteriaBuilder builder = entityManager.getCriteriaBuilder();
             CriteriaQuery<AlmostUser> query = builder.createQuery(AlmostUser.class);
             Root<AlmostUser> almostUserRoot = query.from(AlmostUser.class);
             Predicate emailEq = builder.equal(almostUserRoot.get(AlmostUser_.email), email);
-            return entityManager.createQuery(query.select(almostUserRoot).where(emailEq)).getSingleResult();
+            Predicate afterPred = builder.greaterThanOrEqualTo(almostUserRoot.get(AlmostUser_.registered), after);
+            return entityManager.createQuery(query.select(almostUserRoot).where(emailEq, afterPred)).getSingleResult();
         } catch (NoResultException e) {
             return null;
         }
     }
 
     @Override
-    public AlmostUser findByNameAndSurnameAndBirthday(String name, String surname, LocalDate birthday) {
+    public AlmostUser findByNameAndSurnameAndBirthdayAndAfter(String name, String surname, LocalDate birthday, LocalDateTime after) {
         try {
             CriteriaBuilder builder = entityManager.getCriteriaBuilder();
             CriteriaQuery<AlmostUser> query = builder.createQuery(AlmostUser.class);
@@ -81,7 +100,8 @@ public class AlmostUserDAOImpl extends GenericAbstractDAO<AlmostUser, String> im
             Predicate nameAndSurnameAndBirthdayEq = builder.and(builder.equal(almostUserRoot.get(AlmostUser_.name), name),
                     builder.equal(almostUserRoot.get(AlmostUser_.surname), surname),
                     builder.equal(almostUserRoot.get(AlmostUser_.birthday), birthday));
-            return entityManager.createQuery(query.select(almostUserRoot).where(nameAndSurnameAndBirthdayEq)).getSingleResult();
+            Predicate afterPred = builder.greaterThanOrEqualTo(almostUserRoot.get(AlmostUser_.registered), after);
+            return entityManager.createQuery(query.select(almostUserRoot).where(nameAndSurnameAndBirthdayEq, afterPred)).getSingleResult();
         } catch (NoResultException e) {
             return null;
         }

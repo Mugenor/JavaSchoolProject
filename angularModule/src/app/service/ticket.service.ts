@@ -5,6 +5,7 @@ import {OccupiedSeat} from '../entity/occupied-seat';
 import {Coach} from '../entity/coach';
 import {TrainInfo} from '../entity/train-info';
 import {Ticket} from '../entity/ticket';
+import {TicketToDisplay} from '../entity/ticket-to-display';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +35,10 @@ export class TicketService {
   }
 
   getMyTickets() {
-    return this.httpClient.get<Ticket>('client/tickets');
+    return this.httpClient.get<TicketToDisplay[]>('client/tickets');
+  }
+
+  returnTicket(ticketId: number) {
+    return this.httpClient.delete('client/tickets/' + ticketId);
   }
 }

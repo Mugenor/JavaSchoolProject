@@ -9,6 +9,7 @@ import javaschool.entity.Ticket_;
 import javaschool.entity.Trip_;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.joda.time.LocalDateTime;
@@ -42,11 +43,43 @@ public class TicketDAOImpl extends GenericAbstractDAO<Ticket, Integer> implement
         query.select(ticketRoot).where(
                 builder.and(
                         builder.equal(ticketRoot.join(Ticket_.passenger), passenger),
-                        builder.lessThan(ticketRoot.join(Ticket_.from).get(Departure_.dateTimeFrom), dateTimeFrom)
+                        builder.greaterThan(ticketRoot.join(Ticket_.from).get(Departure_.dateTimeFrom), dateTimeFrom)
                 )
         );
         ticketRoot.fetch(Ticket_.from);
         ticketRoot.fetch(Ticket_.to);
         return entityManager.createQuery(query).getResultList();
+    }
+
+    @Override
+    public Ticket findByTicketIdAndPassenger(Integer ticketId, Passenger passenger) {
+        try {
+            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Ticket> query = builder.createQuery(Ticket.class);
+            Root<Ticket> ticketRoot = query.from(Ticket.class);
+            query.where(
+                    builder.and(
+                            builder.equal(ticketRoot.get(Ticket_.passenger), passenger),
+                            builder.equal(ticketRoot.get(Ticket_.id), ticketId)
+                    )
+            );
+            return entityManager.createQuery(query).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public int deleteByTicketIdAndPassenger(Integer ticketId, Passenger passenger) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaDelete<Ticket> deleteQuery = builder.createCriteriaDelete(Ticket.class);
+        Root<Ticket> ticketRoot = deleteQuery.from(Ticket.class);
+        deleteQuery.where(
+                builder.and(
+                        builder.equal(ticketRoot.get(Ticket_.passenger), passenger),
+                        builder.equal(ticketRoot.get(Ticket_.id), ticketId)
+                )
+        );
+        return entityManager.createQuery(deleteQuery).executeUpdate();
     }
 }

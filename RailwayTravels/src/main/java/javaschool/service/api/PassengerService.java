@@ -48,6 +48,6 @@ public interface PassengerService {
     List<PassengerWithoutTickets> findAllPassengersByTripId(Integer tripId);
     List<PassengerWithoutTickets> findAllPassengersByTripIdAndDepartureIndexBounds(Integer tripId, Integer from, Integer to);
     List<TicketDTO> getPassengerTickets(String username);
-
+    void returnTicket(String username, Integer ticketId);
     Boolean isRegistered(Integer tripId, String username);
 }

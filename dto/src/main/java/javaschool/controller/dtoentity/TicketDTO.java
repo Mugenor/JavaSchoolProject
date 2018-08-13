@@ -1,6 +1,7 @@
 package javaschool.controller.dtoentity;
 
 public class TicketDTO {
+    private int id;
     private String stationFrom;
     private String stationTo;
     private long dateTimeFrom;
@@ -8,16 +9,26 @@ public class TicketDTO {
     private int coachNum;
     private int seatNum;
 
-    public TicketDTO(String stationFrom, String stationTo, long dateTimeFrom, long dateTimeTo, int coachNum, int seatNum) {
+    public TicketDTO(int id, String stationFrom, String stationTo, long dateTimeFrom, long dateTimeTo, int coachNum, int seatNum) {
         this.stationFrom = stationFrom;
         this.stationTo = stationTo;
         this.dateTimeFrom = dateTimeFrom;
         this.dateTimeTo = dateTimeTo;
         this.coachNum = coachNum;
         this.seatNum = seatNum;
+        this.id = id;
     }
 
     public TicketDTO() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public TicketDTO setId(int id) {
+        this.id = id;
+        return this;
     }
 
     public String getStationFrom() {

@@ -7,9 +7,10 @@ import org.joda.time.LocalDateTime;
 
 public interface AlmostUserDAO extends GenericDAO<AlmostUser,String> {
     List<AlmostUser> findByUsernameOrEmail(String username, String email);
-    AlmostUser findByUsername(String username);
-    AlmostUser findByEmail(String email);
-    AlmostUser findByNameAndSurnameAndBirthday(String name, String surname, LocalDate birthday);
+    AlmostUser findByIdAndAfter(String id, LocalDateTime after);
+    AlmostUser findByUsernameAndAfter(String username, LocalDateTime after);
+    AlmostUser findByEmailAndAfter(String email, LocalDateTime after);
+    AlmostUser findByNameAndSurnameAndBirthdayAndAfter(String name, String surname, LocalDate birthday, LocalDateTime after);
     int deleteByHash(String hash);
     int deleteRegisteredBefore(LocalDateTime dateTime);
 }

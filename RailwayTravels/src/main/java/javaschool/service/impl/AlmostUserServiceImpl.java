@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AlmostUserServiceImpl implements AlmostUserService {
-    private static final Duration EXPIRED_DELAY = Duration.standardMinutes(10);
+    public static final Duration EXPIRED_DELAY = Duration.standardMinutes(10);
 
     private AlmostUserDAO almostUserDAO;
     private UserDAO userDAO;
@@ -32,13 +32,16 @@ public class AlmostUserServiceImpl implements AlmostUserService {
     @Override
     @Transactional
     public void save(AlmostUser almostUser) {
-        if(userDAO.findByUsername(almostUser.getUsername()) != null || almostUserDAO.findByUsername(almostUser.getUsername()) != null) {
+        LocalDateTime expiredTime = LocalDateTime.now().minus(EXPIRED_DELAY);
+        if(userDAO.findByUsername(almostUser.getUsername()) != null ||
+                almostUserDAO.findByUsernameAndAfter(almostUser.getUsername(),expiredTime) != null) {
             throw new EntityAlreadyExistsException("User with \"" + almostUser.getUsername() + "\" username already exists!");
-        } else if(userDAO.findByEmail(almostUser.getEmail()) != null || almostUserDAO.findByEmail(almostUser.getEmail()) != null) {
+        } else if(userDAO.findByEmail(almostUser.getEmail()) != null
+                || almostUserDAO.findByEmailAndAfter(almostUser.getEmail(), expiredTime) != null) {
             throw new EntityAlreadyExistsException("User with \"" + almostUser.getEmail() + "\" email already exists!");
         } else if(passengerDAO.findByNameAndSurnameAndBirthday
                 (almostUser.getName(), almostUser.getSurname(), almostUser.getBirthday()) != null ||
-                almostUserDAO.findByNameAndSurnameAndBirthday(almostUser.getName(), almostUser.getSurname(), almostUser.getBirthday()) != null) {
+                almostUserDAO.findByNameAndSurnameAndBirthdayAndAfter(almostUser.getName(), almostUser.getSurname(), almostUser.getBirthday(), expiredTime) != null) {
             throw new EntityAlreadyExistsException("Passenger " + almostUser.getName() + " " + almostUser.getSurname() +
                     " " + almostUser.getBirthday().toString("dd.MM.yyyy") + " date of birth already exists!");
         }
@@ -49,7 +52,8 @@ public class AlmostUserServiceImpl implements AlmostUserService {
     @Override
     @Transactional(readOnly = true)
     public AlmostUser findByHash(String hash) {
-        return almostUserDAO.findById(hash);
+        return almostUserDAO.findByIdAndAfter(hash,
+                LocalDateTime.now().minus(EXPIRED_DELAY));
     }
 
     @Override
@@ -58,7 +62,7 @@ public class AlmostUserServiceImpl implements AlmostUserService {
         return almostUserDAO.deleteByHash(hash);
     }
 
-    @Scheduled(fixedRate = 60_000)
+    @Scheduled(cron = "0 0 0 * * *")
     @Transactional
     public void removeOldEntries() {
         almostUserDAO.deleteRegisteredBefore(LocalDateTime.now().minus(EXPIRED_DELAY));
