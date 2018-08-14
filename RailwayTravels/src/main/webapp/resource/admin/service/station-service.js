@@ -5,7 +5,7 @@ adminApp.service('stationService', function ($http, $q) {
         $http.get('station').then(function success(response) {
             deferred.resolve(response.data.map(station => station.name));
         }, function error(response) {
-            deferred.reject(response.status);
+            deferred.reject(response);
         });
         return deferred.promise;
     };
@@ -16,7 +16,7 @@ adminApp.service('stationService', function ($http, $q) {
             function success(response) {
                 deferred.resolve()
             }, function error(response) {
-                deferred.reject(response.status);
+                deferred.reject(response);
             }
         );
         return deferred.promise;

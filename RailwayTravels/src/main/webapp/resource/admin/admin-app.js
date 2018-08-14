@@ -25,6 +25,4 @@ let adminApp = angular.module('adminApp', ['ngRoute', 'ui.validate'])
             .otherwise({
                 redirectTo: '/'
             });
-    }).run(function ($http) {
-        // $http.defaults.headers.common[csrfHeader] = csrfToken;
     });

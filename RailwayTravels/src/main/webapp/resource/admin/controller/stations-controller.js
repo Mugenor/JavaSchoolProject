@@ -1,10 +1,14 @@
 adminApp.controller('stationsController', function ($scope, stationService, stationTableService) {
     let stationsPromise = stationService.getAllStationNames();
     $scope.stations = [];
+    $scope.modalControl = {};
     $scope.addButtonDisabled = false;
+    function showError(error) {
+        $scope.modalControl.show(error.data);
+    }
     stationsPromise.then(function (value) {
         stationTableService.addStationsToTable(value, $scope.stations);
-    });
+    }, showError);
 
     $scope.newStation = {name: ''};
 
@@ -15,7 +19,7 @@ adminApp.controller('stationsController', function ($scope, stationService, stat
             stationService.sendNewStation(stationName).then(function () {
                 stationTableService.addStationToTable(stationName, $scope.stations);
                 $scope.addButtonDisabled = false;
-            });
+            }, showError);
         }
     }
 });

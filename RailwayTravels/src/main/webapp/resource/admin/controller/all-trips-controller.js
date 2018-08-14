@@ -10,24 +10,28 @@ adminApp.controller('allTripsController', function ($scope, $location, tripTable
     const SEATS_IN_COACH = 36;
     let tripsPromise = tripTableService.load();
     let stationsPromise = stationService.getAllStationNames();
+    $scope.modalControl = {};
     $scope.departuresInNewTrip = [];
     $scope.newTrip = {
         departures: $scope.departuresInNewTrip
     };
+    function showError(resp) {
+        $scope.modalControl.show(resp.data);
+    }
 
     tripsPromise.then(function (value) {
         value.forEach(function (it) {
             it.chosen = [];
         });
         $scope.trips = value;
-    });
+    }, showError);
 
     stationsPromise.then(function (stationNames) {
         $scope.stationNames = stationNames;
         $('.autocomplete').autocomplete({
             source: stationNames,
         });
-    });
+    }, showError);
 
     $scope.selectStation = function (trip, index) {
         let chosen = trip.chosen;
@@ -45,9 +49,7 @@ adminApp.controller('allTripsController', function ($scope, $location, tripTable
     $scope.deleteTrip = function (trip) {
         tripTableService.deleteTrip(trip).then(function (data) {
             tripTableService.removeTripFromTrips(trip, $scope.trips);
-        }, function (resp) {
-            console.log(resp);
-        });
+        }, showError);
     };
 
     $scope.watchPassengers = function (trip) {
@@ -191,14 +193,11 @@ adminApp.controller('allTripsController', function ($scope, $location, tripTable
             console.log($scope.departuresInNewTrip);
             tripTableService.saveTrip(departures).then(function (trip) {
                 tripTableService.addDepartureToNewDepartureList(tripTableService.convertTrip(trip), $scope.trips);
-            }, function (err) {
-                alert('error');
-            });
+            }, showError);
         }
     };
 
     $scope.notTheSame = function (v1, v2) {
-        console.log(v1, v2);
         if (!v1.$pristine && !v1.$pristine) {
             return v1.$viewValue !== v2.$viewValue;
         } else {

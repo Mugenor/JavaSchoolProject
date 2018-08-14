@@ -14,7 +14,7 @@ adminApp.service('departurePassengersService', function ($http, $q) {
         $http.get('passenger/' + departureId + '/' + from + '/' + to).then(function success(response) {
             deferred.resolve(response.data.map(convertPassenger));
         }, function error(response) {
-            deferred.reject(response.status);
+            deferred.reject(response);
         });
         return deferred.promise;
     }

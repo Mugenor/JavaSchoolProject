@@ -35,6 +35,7 @@
 <script src="resource/admin/directive/contained-in-validator.js"></script>
 <script src="resource/admin/directive/not-contained-in-validator.js"></script>
 <script src="resource/admin/directive/trip.js"></script>
+<script src="resource/admin/directive/modal.js"></script>
 <script src="resource/admin/controller/all-trips-controller.js"></script>
 <script src="resource/admin/controller/trip-controller.js"></script>
 <script src="resource/admin/controller/stations-controller.js"></script>

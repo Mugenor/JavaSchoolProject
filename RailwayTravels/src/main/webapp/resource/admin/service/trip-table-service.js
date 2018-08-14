@@ -16,7 +16,7 @@ adminApp.service('tripTableService', function ($http, $q) {
         $http.get('trip').then(function success(response) {
             deferred.resolve(response.data.map(convertTrip));
         }, function error(response) {
-            deferred.reject(response.status);
+            deferred.reject(response);
         });
         return deferred.promise;
     };
@@ -36,7 +36,7 @@ adminApp.service('tripTableService', function ($http, $q) {
         $http.post('trip/add', trip).then(function success(response) {
             deferred.resolve(response.data);
         }, function error(response) {
-            deferred.reject(response.status);
+            deferred.reject(response);
         });
         return deferred.promise;
     };
