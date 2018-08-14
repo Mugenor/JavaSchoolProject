@@ -5,6 +5,8 @@ import {map, startWith} from 'rxjs/operators';
 import {TripService} from '../service/trip.service';
 import {TripDTOToTripConverterService} from '../service/trip-dtoto-trip-converter.service';
 import {Trip} from '../entity/trip';
+import {ErrorDialogComponent} from '../dialog/error-dialog/error-dialog.component';
+import {MatDialog} from '@angular/material';
 
 @Component({
   selector: 'app-find-trip',
@@ -30,7 +32,8 @@ export class FindTripComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
               private stationService: StationService,
-              private tripService: TripService) {
+              private tripService: TripService,
+              private dialog: MatDialog) {
     const today = new Date();
     today.setMinutes(today.getMinutes());
     this.tripForm = this.formBuilder.group({
@@ -109,12 +112,20 @@ export class FindTripComponent implements OnInit {
           .subscribe((titles) => {
             this.filteredStationsFrom = titles.filter(title => title !== this.stationTo.value);
             this.filteredStationsTo = titles.filter(title => title !== this.stationFrom.value);
+          }, error => {
+            this.dialog.open(ErrorDialogComponent, {
+              data: {message: error.error}
+            });
           });
         this.stationTo.valueChanges.pipe(startWith(''), map(includeMap))
           .subscribe((titles) => {
             this.filteredStationsFrom = titles.filter(title => title !== this.stationTo.value);
             this.filteredStationsTo = titles.filter(title => title !== this.stationFrom.value);
           });
+      }, error => {
+        this.dialog.open(ErrorDialogComponent, {
+          data: {message: error.error}
+        });
       });
     this.dateTimeFrom.valueChanges.subscribe(value => {
       if (value.getTime() < this.dateTimeFromState.minDate.getTime()) {
@@ -192,6 +203,10 @@ export class FindTripComponent implements OnInit {
           }
           this.searching = false;
           this.showWithTransfers = true;
+        }, error => {
+          this.dialog.open(ErrorDialogComponent, {
+            data: {message: error.error}
+          });
         });
     } else {
       this.tripService.find(this.stationFrom.value, this.stationTo.value, this.dateTimeFrom.value, this.dateTimeTo.value)
@@ -205,6 +220,10 @@ export class FindTripComponent implements OnInit {
           }
           this.searching = false;
           this.showWithTransfers = false;
+        }, error => {
+          this.dialog.open(ErrorDialogComponent, {
+            data: {message: error.error}
+          });
         });
     }
   }

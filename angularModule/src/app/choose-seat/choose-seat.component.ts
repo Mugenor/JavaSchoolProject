@@ -7,6 +7,8 @@ import {Seat} from '../entity/seat';
 import {TripService} from '../service/trip.service';
 import {TripInfo} from '../entity/trip-info';
 import {Ticket} from '../entity/ticket';
+import {MatDialog} from '@angular/material';
+import {ErrorDialogComponent} from '../dialog/error-dialog/error-dialog.component';
 
 @Component({
   selector: 'app-choose-seat',
@@ -27,7 +29,8 @@ export class ChooseSeatComponent implements OnInit {
 
   constructor(private activatedRoute: ActivatedRoute,
               private tripService: TripService,
-              private ticketService: TicketService) {
+              private ticketService: TicketService,
+              private dialog: MatDialog) {
     this.coaches = [];
   }
 
@@ -53,10 +56,13 @@ export class ChooseSeatComponent implements OnInit {
       this.ticketService.buyTicket(new Ticket(this.tripId, this.departureFromIndex, this.departureToIndex,
         this.chosenSeat.coachNumber, this.chosenSeat.seatNumber))
         .subscribe((data) => {
-          console.log('ez');
           this.coaches[this.chosenSeat.coachNumber - 1].seats[this.chosenSeat.seatNumber - 1].engagedByYou = true;
           this.canBuyTicket = false;
           this.canNotBuyMessage = ChooseSeatComponent.TICKET_BOUGHT_MESSAGE;
+        }, error => {
+          this.dialog.open(ErrorDialogComponent, {
+            data: {message: error.error}
+          });
         });
     }
   }
@@ -70,10 +76,18 @@ export class ChooseSeatComponent implements OnInit {
         .subscribe((data) => {
           this.canBuyTicket = !data.valueOf();
           this.canNotBuyMessage = ChooseSeatComponent.REGISTERED_MESSAGE;
+        }, error => {
+          this.dialog.open(ErrorDialogComponent, {
+            data: {message: error.error}
+          });
         });
       this.tripService.getTripInfo(this.tripId, this.departureFromIndex, this.departureToIndex)
         .subscribe((data) => {
           this.tripInfo = new TripInfo(data.stationFrom, data.stationTo, data.dateTimeFrom, data.dateTimeTo, data.coachCount);
+        }, error => {
+          this.dialog.open(ErrorDialogComponent, {
+            data: {message: error.error}
+          });
         });
       this.ticketService.getOccupiedSeatWith(this.tripId, this.departureFromIndex, this.departureToIndex)
         .subscribe((data) => {
@@ -102,7 +116,10 @@ export class ChooseSeatComponent implements OnInit {
             }
             this.coaches.push(new Coach(i + 1, seats));
           }
-          console.log(this.coaches);
+        }, error => {
+          this.dialog.open(ErrorDialogComponent, {
+            data: {message: error.error}
+          });
         });
     });
   }

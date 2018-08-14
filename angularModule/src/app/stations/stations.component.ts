@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {StationService} from '../service/station.service';
-import {Sort} from '@angular/material';
+import {MatDialog, Sort} from '@angular/material';
+import {ErrorDialogComponent} from '../dialog/error-dialog/error-dialog.component';
 
 @Component({
   selector: 'app-stations',
@@ -10,7 +11,8 @@ import {Sort} from '@angular/material';
 export class StationsComponent implements OnInit {
   stations: string[];
 
-  constructor(private stationService: StationService) {
+  constructor(private stationService: StationService,
+              private dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -20,6 +22,10 @@ export class StationsComponent implements OnInit {
         for (let i = 0; i < data.length; ++i) {
           this.stations.push(data[i].name);
         }
+      }, error => {
+        this.dialog.open(ErrorDialogComponent, {
+          data: {message: error.error}
+        });
       });
   }
 

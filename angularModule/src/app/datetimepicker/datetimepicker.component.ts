@@ -17,7 +17,6 @@ declare let $: any;
 export class DatetimepickerComponent implements OnInit, ControlValueAccessor {
   private datetimepickerInput: any;
   private datetimepicker: any;
-  // private inputText: string;
   @ContentChild('datetime')
   dateTimeInput: ElementRef;
   @Input()

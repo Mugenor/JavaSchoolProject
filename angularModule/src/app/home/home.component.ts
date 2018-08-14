@@ -1,9 +1,10 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {TicketService} from '../service/ticket.service';
 import {TicketToDisplay} from '../entity/ticket-to-display';
-import {MatButton, MatTable, MatTableDataSource} from '@angular/material';
+import {MatButton, MatDialog, MatTable, MatTableDataSource} from '@angular/material';
 import {Subject} from 'rxjs';
 import {DateToStringService} from '../service/date-to-string.service';
+import {ErrorDialogComponent} from '../dialog/error-dialog/error-dialog.component';
 
 
 @Component({
@@ -18,7 +19,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['departureStation', 'arrivalStation', 'dateTimeFrom',
     'dateTimeTo', 'coachNumber', 'seatNumber', 'returnButton'];
 
-  constructor(private ticketService: TicketService) {
+  constructor(private ticketService: TicketService,
+              private dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -30,6 +32,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
       .subscribe(data => {
         this.ticketList = data;
         this.ticketSubject.next(data);
+      }, error => {
+        this.dialog.open(ErrorDialogComponent, {
+          data: {message: error.error}
+        });
       });
   }
 
@@ -44,6 +50,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
       .subscribe((data) => {
         this.ticketList = this.ticketList.filter(curTicket => curTicket.id !== ticket.id);
         this.ticketSubject.next(this.ticketList);
+      }, error => {
+        this.dialog.open(ErrorDialogComponent, {
+          data: {message: error.error}
+        });
+        button.disabled = false;
       });
   }
 

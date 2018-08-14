@@ -20,20 +20,20 @@ import {FindTripComponent} from './find-trip/find-trip.component';
 import {
   MatAutocompleteModule,
   MatButtonModule,
-  MatCheckboxModule,
+  MatCheckboxModule, MatDialogModule,
   MatFormFieldModule,
-  MatInputModule,
+  MatInputModule, MatProgressSpinnerModule,
   MatTableModule
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import * as $ from 'jquery';
-import { DatetimepickerComponent } from './datetimepicker/datetimepicker.component';
+import {DatetimepickerComponent} from './datetimepicker/datetimepicker.component';
 import {DepartureListWithMenuComponent} from './departure-list-with-menu/departure-list-with-menu.component';
-import { DepartureListComponent } from './departure-list/departure-list.component';
+import {DepartureListComponent} from './departure-list/departure-list.component';
+import {ErrorDialogComponent} from './dialog/error-dialog/error-dialog.component';
 
 window['$'] = $;
 window['jQuery'] = $;
-
 
 
 @NgModule({
@@ -53,6 +53,7 @@ window['jQuery'] = $;
     ContainsPipe,
     FindTripComponent,
     DatetimepickerComponent,
+    ErrorDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -65,9 +66,14 @@ window['jQuery'] = $;
     MatAutocompleteModule,
     MatCheckboxModule,
     MatTableModule,
+    MatProgressSpinnerModule,
+    MatDialogModule,
     HttpClientModule,
     BsDropdownModule.forRoot(),
     RoutingModule
+  ],
+  entryComponents: [
+    ErrorDialogComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

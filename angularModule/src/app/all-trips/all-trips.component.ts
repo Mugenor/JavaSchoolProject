@@ -5,6 +5,8 @@ import {TripDTOToTripConverterService} from '../service/trip-dtoto-trip-converte
 import {TicketService} from '../service/ticket.service';
 import {Router} from '@angular/router';
 import {RouteTransferService} from '../service/route-transfer.service';
+import {MatDialog} from '@angular/material';
+import {ErrorDialogComponent} from '../dialog/error-dialog/error-dialog.component';
 
 @Component({
   selector: 'app-all-departures',
@@ -15,13 +17,18 @@ export class AllTripsComponent implements OnInit {
   trips: Trip[];
 
   constructor(private tripService: TripService,
-              private router: Router) {
+              private router: Router,
+              private dialog: MatDialog) {
   }
 
   ngOnInit() {
     this.tripService.getAvailableTrips().subscribe((data) => {
       this.trips = data.map(trip => TripDTOToTripConverterService.convert(trip));
       console.log(this.trips);
+    }, error => {
+      this.dialog.open(ErrorDialogComponent, {
+        data: {message: error.error}
+      });
     });
   }
 }

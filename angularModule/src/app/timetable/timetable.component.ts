@@ -3,6 +3,8 @@ import {ActivatedRoute} from '@angular/router';
 import {TripService} from '../service/trip.service';
 import {Trip} from '../entity/trip';
 import {TripDTOToTripConverterService} from '../service/trip-dtoto-trip-converter.service';
+import {ErrorDialogComponent} from '../dialog/error-dialog/error-dialog.component';
+import {MatDialog} from '@angular/material';
 
 @Component({
   selector: 'app-timetable',
@@ -14,7 +16,8 @@ export class TimetableComponent implements OnInit {
   trips: Trip[];
 
   constructor(private activatedRoute: ActivatedRoute,
-              private tripService: TripService) {
+              private tripService: TripService,
+              private dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -23,6 +26,10 @@ export class TimetableComponent implements OnInit {
       this.tripService.getTimetableByStationName(this.stationTitle)
         .subscribe((data) => {
           this.trips = data.map(trip => TripDTOToTripConverterService.convert(trip));
+        }, error => {
+          this.dialog.open(ErrorDialogComponent, {
+            data: {message: error.error}
+          });
         });
     });
   }

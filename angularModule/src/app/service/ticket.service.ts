@@ -6,6 +6,7 @@ import {Coach} from '../entity/coach';
 import {TrainInfo} from '../entity/train-info';
 import {Ticket} from '../entity/ticket';
 import {TicketToDisplay} from '../entity/ticket-to-display';
+import {tick} from '@angular/core/testing';
 
 @Injectable({
   providedIn: 'root'
