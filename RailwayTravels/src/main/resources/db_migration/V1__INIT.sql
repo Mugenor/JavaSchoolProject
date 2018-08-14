@@ -62,6 +62,7 @@ create table ticket
   passenger_id int not null,
   departure_from int not null,
   departure_to int not null,
+  uuid varchar(255) not null unique,
   constraint TRIP_PASSENGER_UNIQUE
     unique (trip_id, passenger_id),
   constraint TRIP_FK

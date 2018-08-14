@@ -2,6 +2,7 @@ package javaschool.service.impl;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import javaschool.controller.dtoentity.PassengerWithoutTickets;
 import javaschool.controller.dtoentity.TicketDTO;
@@ -76,7 +77,7 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void buyTicket(String username, Integer tripId, Integer leftDepartureIndex,
+    public Ticket buyTicket(String username, Integer tripId, Integer leftDepartureIndex,
                           Integer rightDepartureIndex, Integer coachNumber, Integer seatNumber) {
         IndexOutOfBoundsException boundsExc = new IndexOutOfBoundsException("Invalid departure indexes!");
         if (leftDepartureIndex <= 0 || leftDepartureIndex > rightDepartureIndex) {
@@ -96,6 +97,7 @@ public class PassengerServiceImpl implements PassengerService {
         List<OccupiedSeat> occupiedSeats = new LinkedList<>();
         newTicket.setOccupiedSeats(occupiedSeats);
         newTicket.setFrom(departures.get(0)).setTo(departures.get(departures.size() - 1));
+        newTicket.setUuid(UUID.randomUUID());
         ticketDAO.save(newTicket);
         for (Departure departure : departures) {
             OccupiedSeat occupiedSeat = occupiedSeatDAO.findByDepartureAndSeatNumAndCoachNum(departure, seatNumber, coachNumber);
@@ -117,7 +119,7 @@ public class PassengerServiceImpl implements PassengerService {
 
             departure.decrementFreeSeatsCount();
         }
-        ticketDAO.save(newTicket);
+        return newTicket;
     }
 
     @Override

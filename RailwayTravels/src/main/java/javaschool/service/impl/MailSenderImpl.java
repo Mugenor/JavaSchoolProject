@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
+import java.util.Map;
 import javaschool.service.api.MailSender;
+import javax.activation.DataSource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import org.apache.log4j.Logger;
@@ -36,10 +38,25 @@ public class MailSenderImpl implements MailSender {
         mailSender.send(message);
     }
 
+    @Override
+    @Async
+    public void sendMail(String to, String pathToTemplate, String subject,
+                         Map<String, ? extends DataSource> attachments, String... args) throws IOException, MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper messageHelper = new MimeMessageHelper(message, true);
+        messageHelper.setText(getResolvedFileContent(pathToTemplate, args), true);
+        messageHelper.setTo(to);
+        messageHelper.setSubject(subject);
+        for (Map.Entry<String, ? extends DataSource> entry : attachments.entrySet()){
+            messageHelper.addAttachment(entry.getKey(), entry.getValue());
+        }
+        mailSender.send(message);
+    }
+
     private String getResolvedFileContent(String pathToTemplate, String... args) throws IOException {
         String path = new ClassPathResource(pathToTemplate).getFile().getAbsolutePath();
         String template = new String(Files.readAllBytes(Paths.get(path)));
-        if(args != null) {
+        if (args != null) {
             return MessageFormat.format(template, args);
         }
         return template;

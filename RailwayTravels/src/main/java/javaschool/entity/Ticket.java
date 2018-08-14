@@ -1,7 +1,9 @@
 package javaschool.entity;
 
 import java.util.List;
+import java.util.UUID;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -34,6 +36,17 @@ public class Ticket {
     @ManyToOne
     @JoinColumn(name = "departure_to")
     private Departure to;
+    @Column(nullable = false, unique = true)
+    private UUID uuid;
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public Ticket setUuid(UUID uuid) {
+        this.uuid = uuid;
+        return this;
+    }
 
     public Departure getFrom() {
         return from;

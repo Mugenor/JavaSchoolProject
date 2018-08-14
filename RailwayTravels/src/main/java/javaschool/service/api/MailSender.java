@@ -1,6 +1,9 @@
 package javaschool.service.api;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import javax.activation.DataSource;
 import javax.mail.MessagingException;
 
 public interface MailSender {
@@ -15,4 +18,6 @@ public interface MailSender {
      * @throws MessagingException
      */
     void sendMail(String to, String pathToTemplate, String subject, String... args) throws IOException, MessagingException;
+    void sendMail(String to, String pathToTemplate, String subject,
+                  Map<String, ? extends DataSource> attachments, String... args) throws IOException, MessagingException;
 }

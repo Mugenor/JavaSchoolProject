@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class StringToLocalDateConverter implements Converter<String, LocalDate>, ClassConverter<String, LocalDate> {
-    private static final DateTimeFormatter format = DateTimeFormat.forPattern("dd.mm.yyyy");
+    private static final DateTimeFormatter format = DateTimeFormat.forPattern("dd.MM.yyyy");
     @Override
     public LocalDate convert(String s) {
         return LocalDate.parse(s, format);

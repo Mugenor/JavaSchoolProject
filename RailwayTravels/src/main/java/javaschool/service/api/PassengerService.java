@@ -4,6 +4,7 @@ import java.util.List;
 import javaschool.controller.dtoentity.PassengerWithoutTickets;
 import javaschool.controller.dtoentity.TicketDTO;
 import javaschool.entity.Passenger;
+import javaschool.entity.Ticket;
 
 public interface PassengerService {
     /**
@@ -35,9 +36,10 @@ public interface PassengerService {
      * @param tripId      Trip's id
      * @param coachNumber Number of coach with specified seat
      * @param seatNumber  Number of seat in specified coach
+     * @return Saved ticket
      */
-    void buyTicket(String username, Integer tripId, Integer leftDepartureIndex,
-                   Integer rightDepartureIndex, Integer coachNumber, Integer seatNumber);
+    Ticket buyTicket(String username, Integer tripId, Integer leftDepartureIndex,
+                     Integer rightDepartureIndex, Integer coachNumber, Integer seatNumber);
 
     /**
      * Finds all passengers registered on specified departure
