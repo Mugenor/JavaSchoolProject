@@ -30,24 +30,6 @@
                 <h:outputText value="#{trip.arrivalTime}"/>
             </p:column>
         </p:treeTable>
-        <!--<p:dataTable value="${table.allTrips}" var="trip">-->
-            <!--<p:column headerText="Departure station">-->
-                <!--<h:outputLabel value="${trip.stationFrom}"/>-->
-            <!--</p:column>-->
-            <!--<p:column headerText="Arrival station">-->
-                <!--<h:outputLabel value="${trip.stationTo}"/>-->
-            <!--</p:column>-->
-            <!--<p:column headerText="Departure time">-->
-                <!--<h:outputLabel value="${table.getDateTime(trip.dateTimeFrom)}">-->
-                    <!--<f:convertDateTime type="both"/>-->
-                <!--</h:outputLabel>-->
-            <!--</p:column>-->
-            <!--<p:column headerText="Arrival time">-->
-                <!--<h:outputLabel value="${table.getDateTime(trip.dateTimeTo)}">-->
-                    <!--<f:convertDateTime type="both"/>-->
-                <!--</h:outputLabel>-->
-            <!--</p:column>-->
-        <!--</p:dataTable>-->
     </h:panelGroup>
     <h:form>
         <f:websocket channel="departureChannel">

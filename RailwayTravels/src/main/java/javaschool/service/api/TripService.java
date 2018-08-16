@@ -82,14 +82,6 @@ public interface TripService {
     TripDTO save(List<NewDepartureDTO> departures);
 
     /**
-     * Saves a trip by specified departures and notify through MQServer
-     *
-     * @param departures departures in trip
-     * @return Created trip converted to TripDTO.class
-     */
-    TripDTO saveWithNotification(List<NewDepartureDTO> departures);
-
-    /**
      * Creates tripInfo for specified part of trip
      *
      * @param tripId             trip's id
@@ -102,6 +94,7 @@ public interface TripService {
     /**
      * Deletes trip if no passengers is registered on this trip
      * @param tripId trip's id
+     * @return deleted trip converted to TripDTO.class
      */
-    void deleteTrip(Integer tripId);
+    TripDTO deleteTrip(Integer tripId);
 }

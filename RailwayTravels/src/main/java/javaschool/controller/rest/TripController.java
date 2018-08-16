@@ -6,7 +6,9 @@ import javaschool.controller.dtoentity.NewDepartureDTO;
 import javaschool.controller.dtoentity.TrainInfo;
 import javaschool.controller.dtoentity.TripDTO;
 import javaschool.controller.dtoentity.TripInfo;
+import javaschool.controller.dtoentity.TripUpdate;
 import javaschool.service.api.PassengerService;
+import javaschool.service.api.RabbitService;
 import javaschool.service.api.TripService;
 import javax.validation.Valid;
 import org.joda.time.LocalDateTime;
@@ -26,11 +28,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class TripController {
     private TripService tripService;
     private PassengerService passengerService;
+    private RabbitService rabbitService;
 
     @Autowired
-    public TripController(TripService tripService, PassengerService passengerService) {
+    public TripController(TripService tripService, PassengerService passengerService,
+                          RabbitService  rabbitService) {
         this.tripService = tripService;
         this.passengerService = passengerService;
+        this.rabbitService = rabbitService;
     }
 
     @GetMapping
@@ -50,7 +55,9 @@ public class TripController {
 
     @PostMapping(path = "/add", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TripDTO addNewTrip(@Valid @RequestBody List<NewDepartureDTO> trip) {
-        return tripService.saveWithNotification(trip);
+        TripDTO savedTrip = tripService.save(trip);
+        rabbitService.convertAndSend(new TripUpdate(TripUpdate.CREATE, savedTrip));
+        return savedTrip;
     }
 
     @GetMapping(path = "/occupied-seats/{tripId}/{departureFromIndex}/{departureToIndex}")
@@ -99,6 +106,7 @@ public class TripController {
 
     @DeleteMapping("/{tripId}")
     public void deleteTrip(@PathVariable Integer tripId) {
-        tripService.deleteTrip(tripId);
+        TripDTO deletedTrip = tripService.deleteTrip(tripId);
+        rabbitService.convertAndSend(new TripUpdate(TripUpdate.DELETE, deletedTrip));
     }
 }

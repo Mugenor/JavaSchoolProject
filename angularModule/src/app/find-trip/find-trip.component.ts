@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild, ViewChildren} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {StationService} from '../service/station.service';
 import {map, startWith} from 'rxjs/operators';
@@ -13,8 +13,12 @@ import {MatDialog} from '@angular/material';
   templateUrl: './find-trip.component.html',
   styleUrls: ['./find-trip.component.css']
 })
-export class FindTripComponent implements OnInit {
+export class FindTripComponent implements AfterViewInit, OnInit {
   private DIDNT_FIND_ANYTHING = 'We didn\'t find anything';
+  @ViewChild('dateTimeFromInput')
+  _dateTimeFromInput: ElementRef;
+  @ViewChild('dateTimeToInput')
+  _dateTimeToInput: ElementRef;
   tripForm: FormGroup;
   stationTitles: string[];
   filteredStationsFrom: string[];
@@ -36,14 +40,15 @@ export class FindTripComponent implements OnInit {
               private dialog: MatDialog) {
     const today = new Date();
     today.setMinutes(today.getMinutes());
+    const startDate = new Date(Date.UTC(1900, 1));
     this.tripForm = this.formBuilder.group({
       stations: this.formBuilder.group({
         stationFrom: ['', Validators.required],
         stationTo: ['', Validators.required]
       }, {validator: this.stationsDifferent}),
       times: this.formBuilder.group({
-        dateTimeFrom: [today, Validators.required],
-        dateTimeTo: [today, Validators.required]
+        dateTimeFrom: [startDate, this.dateTimeRequired],
+        dateTimeTo: [startDate, this.dateTimeRequired]
       }),
       transfers: this.formBuilder.group({
         findWithTransfers: [false],
@@ -62,6 +67,12 @@ export class FindTripComponent implements OnInit {
     this.dateTimeFromState.initializeDateState(today, endDate, today);
     this.dateTimeToState = new DateState();
     this.dateTimeToState.initializeDateState(today, endDate, today);
+  }
+
+  ngAfterViewInit() {
+    console.log(this._dateTimeFromInput);
+    console.log(this._dateTimeToInput);
+    debugger;
   }
 
   get stationFrom() {
@@ -99,6 +110,7 @@ export class FindTripComponent implements OnInit {
   get maxTransferCount() {
     return this.transfers.get('maxTransferCount');
   }
+
 
   ngOnInit() {
     const includeMap = (value) => {
@@ -184,47 +196,59 @@ export class FindTripComponent implements OnInit {
   requiredIfFindWithTransfers(control: FormGroup): ValidationErrors | null {
     const findWithTransfers = control.get('findWithTransfers');
     const maxTransferCount = control.get('maxTransferCount');
-    return findWithTransfers.value && !maxTransferCount.value ? {'required': true} : null;
+    return (!findWithTransfers || !maxTransferCount) || (findWithTransfers.value && !maxTransferCount.value) ? {'required': true} : null;
+  }
+
+  dateTimeRequired(control: FormControl): ValidationErrors | null {
+    const today = new Date();
+    const val = control.value.getTime() < today.getTime();
+    const res = val ? {'required': true} : null;
+    return res;
   }
 
   find() {
-    console.log('find');
-    this.searching = true;
-    if (this.findWithTransfers.value) {
-      this.tripService.findWithTransfers(this.stationFrom.value, this.stationTo.value,
-        this.dateTimeFrom.value, this.dateTimeTo.value, this.maxTransferCount.value)
-        .subscribe((data) => {
-          this.trips = [];
-          this.tripsWithTransfers = data.map(trips => trips.map(trip => TripDTOToTripConverterService.convert(trip)));
-          if (this.tripsWithTransfers.length === 0) {
-            this.message = this.DIDNT_FIND_ANYTHING;
-          } else {
-            this.message = undefined;
-          }
-          this.searching = false;
-          this.showWithTransfers = true;
-        }, error => {
-          this.dialog.open(ErrorDialogComponent, {
-            data: {message: error.error}
+    if (this.tripForm.valid) {
+      if (!this.dateTimeFrom.value) {
+        this.dateTimeFrom.setErrors({required: true});
+      }
+      this.message = '';
+      this.searching = true;
+      if (this.findWithTransfers.value) {
+        this.tripService.findWithTransfers(this.stationFrom.value, this.stationTo.value,
+          this.dateTimeFrom.value, this.dateTimeTo.value, this.maxTransferCount.value)
+          .subscribe((data) => {
+            this.trips = [];
+            this.tripsWithTransfers = data.map(trips => trips.map(trip => TripDTOToTripConverterService.convert(trip)));
+            if (this.tripsWithTransfers.length === 0) {
+              this.message = this.DIDNT_FIND_ANYTHING;
+            } else {
+              this.message = undefined;
+            }
+            this.searching = false;
+            this.showWithTransfers = true;
+          }, error => {
+            this.dialog.open(ErrorDialogComponent, {
+              data: {message: error.error}
+            });
           });
-        });
-    } else {
-      this.tripService.find(this.stationFrom.value, this.stationTo.value, this.dateTimeFrom.value, this.dateTimeTo.value)
-        .subscribe((data) => {
-          this.tripsWithTransfers = [];
-          this.trips = data.map(trip => TripDTOToTripConverterService.convert(trip));
-          if (this.trips.length === 0) {
-            this.message = this.DIDNT_FIND_ANYTHING;
-          } else {
-            this.message = undefined;
-          }
-          this.searching = false;
-          this.showWithTransfers = false;
-        }, error => {
-          this.dialog.open(ErrorDialogComponent, {
-            data: {message: error.error}
+      } else {
+        this.tripService.find(this.stationFrom.value, this.stationTo.value, this.dateTimeFrom.value, this.dateTimeTo.value)
+          .subscribe((data) => {
+            this.tripsWithTransfers = [];
+            this.trips = data.map(trip => TripDTOToTripConverterService.convert(trip));
+            if (this.trips.length === 0) {
+              this.message = this.DIDNT_FIND_ANYTHING;
+            } else {
+              this.message = undefined;
+            }
+            this.searching = false;
+            this.showWithTransfers = false;
+          }, error => {
+            this.dialog.open(ErrorDialogComponent, {
+              data: {message: error.error}
+            });
           });
-        });
+      }
     }
   }
 }

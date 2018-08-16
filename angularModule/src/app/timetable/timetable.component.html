@@ -1,1 +1,4 @@
-<app-departure-list-with-menu [trips]="trips"><h2>Timetable for {{stationTitle}} station.</h2></app-departure-list-with-menu>
+<div class="alert alert-primary" *ngIf="!trips || trips.length == 0">
+  No trips available for this station.
+</div>
+<app-departure-list-with-menu *ngIf="trips && trips.length !== 0" [trips]="trips"><h2>Timetable for {{stationTitle}} station.</h2></app-departure-list-with-menu>

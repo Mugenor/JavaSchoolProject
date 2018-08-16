@@ -1,6 +1,7 @@
 package client;
 
 import java.util.Locale;
+import java.util.Objects;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -68,6 +69,23 @@ public class TableModel {
     public TableModel setArrivalTime(String arrivalTime) {
         this.arrivalTime = arrivalTime;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TableModel that = (TableModel) o;
+        return Objects.equals(departureStation, that.departureStation) &&
+                Objects.equals(arrivalStation, that.arrivalStation) &&
+                Objects.equals(departureTime, that.departureTime) &&
+                Objects.equals(arrivalTime, that.arrivalTime);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(departureStation, arrivalStation, departureTime, arrivalTime);
     }
 
     @Override

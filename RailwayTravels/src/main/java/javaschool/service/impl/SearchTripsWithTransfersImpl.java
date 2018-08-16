@@ -72,7 +72,7 @@ public class SearchTripsWithTransfersImpl implements SearchTripsWithTransfers {
                         pathFound = true;
                         break;
                     }
-                    if(foundStartStation && currentTransfersCount <= maxTransfersCount) {
+                    if(foundStartStation && currentTransfersCount < maxTransfersCount) {
                             step(resultTrips, tripPath, tripsVisited, departureDTO.getStationTo(), endStation,
                                     departureDTO.getDateTimeFrom(), dateTimeTo,
                                     currentTransfersCount + 1, maxTransfersCount);

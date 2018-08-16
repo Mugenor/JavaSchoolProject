@@ -1,6 +1,6 @@
 <div class="card">
   <div class="card-header">
-    <form class="form-inline" novalidate [formGroup]="tripForm" (ngSubmit)="find()">
+    <form class="form-inline" novalidate [formGroup]="tripForm" (ngSubmit)="find()" autocomplete="off">
       <div formGroupName="stations">
         <mat-form-field class="mr-5">
           <input type="text" placeholder="Departure station" matInput formControlName="stationFrom"
@@ -30,28 +30,35 @@
       </div>
       <div formGroupName="times">
         <mat-form-field class="mr-5">
-          <app-datetimepicker formControlName="dateTimeFrom"
+          <input type="text" placeholder="Time from" matInput #dateTimeFromInput
+                 [class.ng-valid]="dateTimeFrom.valid" [class.ng-invalid]="dateTimeFrom.invalid"
+                 [class.ng-touched]="dateTimeFrom.touched" [class.ng-untouched]="dateTimeFrom.untouched"
+                 [class.ng-dirty]="dateTimeFrom.dirty" [class.ng-pristine]="dateTimeFrom.pristine">
+          <mat-error *ngIf="true">
+            Enter time from.
+          </mat-error>
+          <app-datetimepicker [datetimeInput]="_dateTimeFromInput" formControlName="dateTimeFrom"
                               [minDate]="dateTimeFromState.minDate"
                               [maxDate]="dateTimeFromState.maxDate"
                               [initialDate]="dateTimeFromState.initialDate"
                               [configuration]="dateTimeConfig">
-            <input #datetime type="text" placeholder="Time from" matInput>
           </app-datetimepicker>
-          <mat-error *ngIf="dateTimeFrom.errors?.required">
-            Enter time from.
-          </mat-error>
         </mat-form-field>
         <mat-form-field class="mr-5">
-          <app-datetimepicker formControlName="dateTimeTo"
+          <input #dateTimeToInput type="text" placeholder="Time to" matInput
+                 [class.ng-valid]="dateTimeTo.valid" [class.ng-invalid]="dateTimeTo.invalid"
+                 [class.ng-touched]="dateTimeTo.touched" [class.ng-untouched]="dateTimeTo.untouched"
+                 [class.ng-dirty]="dateTimeTo.dirty" [class.ng-pristine]="dateTimeTo.pristine">
+          <mat-error *ngIf="true">
+            Enter time from.
+          </mat-error>
+
+          <app-datetimepicker [datetimeInput]="_dateTimeToInput" formControlName="dateTimeTo"
                               [minDate]="dateTimeToState.minDate"
                               [maxDate]="dateTimeToState.maxDate"
                               [initialDate]="dateTimeToState.initialDate"
                               [configuration]="dateTimeConfig">
-            <input #datetime type="text" placeholder="Time to" matInput>
           </app-datetimepicker>
-          <mat-error *ngIf="dateTimeFrom.errors?.required">
-            Enter time to.
-          </mat-error>
         </mat-form-field>
       </div>
       <div class="mr-5" formGroupName="transfers">

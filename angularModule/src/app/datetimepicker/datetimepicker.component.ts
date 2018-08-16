@@ -1,4 +1,15 @@
-import {Component, ContentChild, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ContentChild,
+  ElementRef,
+  EventEmitter,
+  forwardRef,
+  Input,
+  OnInit, Optional,
+  Output,
+  ViewChild
+} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 
 declare let $: any;
@@ -14,11 +25,11 @@ declare let $: any;
   }]
 })
 
-export class DatetimepickerComponent implements OnInit, ControlValueAccessor {
+export class DatetimepickerComponent implements AfterViewInit, OnInit, ControlValueAccessor {
   private datetimepickerInput: any;
   private datetimepicker: any;
-  @ContentChild('datetime')
-  dateTimeInput: ElementRef;
+  @Input('datetimeInput')
+  dateTimeInput: any;
   @Input()
   configuration = {};
   @Input('datetime')
@@ -38,6 +49,9 @@ export class DatetimepickerComponent implements OnInit, ControlValueAccessor {
   }
 
   ngOnInit() {
+  }
+
+  ngAfterViewInit() {
     $(() => {
       this.datetimepickerInput = $(this.dateTimeInput.nativeElement).datetimepicker(this.configuration);
       this.datetimepicker = this.datetimepickerInput.data('datetimepicker');

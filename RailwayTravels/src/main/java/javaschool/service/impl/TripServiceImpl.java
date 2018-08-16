@@ -240,23 +240,8 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public TripDTO saveWithNotification(List<NewDepartureDTO> departures) {
-        TripDTO tripDTO = selfProxy.save(departures);
-        long today = LocalDate.now().toLocalDateTime(LocalTime.MIDNIGHT).toDateTime().getMillis();
-        long tomorrow = LocalDate.now().toLocalDateTime(LocalTime.MIDNIGHT).plusDays(1).toDateTime().getMillis();
-        for (DepartureDTO departure : tripDTO.getDepartures()) {
-            if ((departure.getDateTimeFrom() > today && departure.getDateTimeFrom() < tomorrow)
-                    || (departure.getDateTimeTo() > today && departure.getDateTimeTo() < tomorrow)) {
-                rabbitService.convertAndSend(tripDTO);
-                break;
-            }
-        }
-        return tripDTO;
-    }
-
-    @Override
     @Transactional
-    public void deleteTrip(Integer tripId) {
+    public TripDTO deleteTrip(Integer tripId) {
         long ticketsCount = ticketDAO.getTicketsCountByTripId(tripId);
         if (ticketsCount != 0) {
             throw new IllegalArgumentException("Passengers already registered on this trip.");
@@ -267,6 +252,7 @@ public class TripServiceImpl implements TripService {
             } else {
                 tripDAO.delete(trip);
             }
+            return tripToTripDTOConverter.convertTo(trip);
         }
     }
 

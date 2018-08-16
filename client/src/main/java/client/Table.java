@@ -12,16 +12,17 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Date;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 import javaschool.controller.dtoentity.DepartureDTO;
 import javaschool.controller.dtoentity.TripDTO;
+import javaschool.controller.dtoentity.TripUpdate;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.push.Push;
 import javax.faces.push.PushContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.joda.time.LocalDateTime;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
@@ -42,8 +43,8 @@ public class Table {
         try {
             tripDTOSet = tripDTOService.getTrips();
             rootNode = new DefaultTreeNode("Today trips");
-            for(TripDTO tripDTO: tripDTOSet) {
-               rootNode.getChildren().add(createTripNode(tripDTO));
+            for (TripDTO tripDTO : tripDTOSet) {
+                rootNode.getChildren().add(createTripNode(tripDTO));
             }
 
             ConnectionFactory connectionFactory = new ConnectionFactory();
@@ -58,15 +59,23 @@ public class Table {
                 public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
                     try {
                         ObjectInputStream objectInputStream = new ObjectInputStream(new ByteArrayInputStream(body));
-                        TripDTO tripDTO = (TripDTO) objectInputStream.readObject();
-                        System.out.println("Received a message: " + tripDTO);
-                        if(!tripDTOSet.contains(tripDTO)){
-                            rootNode.getChildren().add(createTripNode(tripDTO));
-                        } else {
-                            TreeNode node = createTripNode(tripDTO);
-                            rootNode.getChildren().set(rootNode.getChildren().indexOf(node), node);
+                        TripUpdate tripUpdate = (TripUpdate) objectInputStream.readObject();
+                        switch (tripUpdate.getAction()) {
+                            case TripUpdate.CREATE:
+                                rootNode.getChildren().add(createTripNode(tripUpdate.getTrip()));
+                                tripDTOSet.add(tripUpdate.getTrip());
+                                break;
+                            case TripUpdate.UPDATE:
+                                TreeNode updateNode = createTripNode(tripUpdate.getTrip());
+                                rootNode.getChildren().set(rootNode.getChildren().indexOf(updateNode), updateNode);
+                                tripDTOSet.add(tripUpdate.getTrip());
+                                break;
+                            case TripUpdate.DELETE:
+                                TreeNode deleteNode = createTripNode(tripUpdate.getTrip());
+                                deleteFromChildren((TableModel) deleteNode.getData(), rootNode.getChildren());
+                                tripDTOSet.remove(tripUpdate.getTrip());
+                                break;
                         }
-                        tripDTOSet.add(tripDTO);
                         pushContext.send("tripUpdate");
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
@@ -95,7 +104,7 @@ public class Table {
                 departureDTOS.get(0).getDateTimeFrom(),
                 departureDTOS.get(departureDTOS.size() - 1).getDateTimeTo()
         ));
-        for(DepartureDTO departureDTO: departureDTOS) {
+        for (DepartureDTO departureDTO : departureDTOS) {
             new DefaultTreeNode(new TableModel(
                     "",
                     departureDTO.getStationFrom(),
@@ -105,5 +114,16 @@ public class Table {
             ), tripNode);
         }
         return tripNode;
+    }
+
+    private void deleteFromChildren(TableModel model, List<TreeNode> children) {
+        ListIterator<TreeNode> childrenIt = children.listIterator();
+        while (childrenIt.hasNext()) {
+            TreeNode node = childrenIt.next();
+            if (node.getData().equals(model)) {
+                childrenIt.remove();
+                break;
+            }
+        }
     }
 }
