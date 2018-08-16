@@ -50,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/client/**", "/trip/registered/*").hasAnyAuthority(ROLE_PASSENGER)
-                .antMatchers("/admin/**", "/departure/add", "/passenger/*").hasAnyAuthority(ROLE_ADMIN)
+                .antMatchers("/admin/**", "/passenger/*").hasAnyAuthority(ROLE_ADMIN)
                 .antMatchers(HttpMethod.POST, "/station").hasAnyAuthority(ROLE_ADMIN)
                 .antMatchers("/logout").authenticated()
                 .anyRequest().permitAll().and()

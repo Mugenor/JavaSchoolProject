@@ -34,46 +34,6 @@ public interface DepartureService {
      * @return List of departures converted to DepartureDTO.class
      */
     List<DepartureDTO> findAll(boolean fetchStations);
-
-    /**
-     * Finds all departures which station of departure is stFrom,
-     * arrival station is stTo and departure from dateTimeFrom to dateTimeTo.
-     *
-     * @param stFrom       Title of departure station
-     * @param stTo         Title of arrival station
-     * @param dateTimeFrom Left border of interval of departure DateTime
-     * @param dateTimeTo   Right border of interval of departure DateTime
-     * @return List of departures converted to DepartureDTO.class which station of departure is stFrom,
-     * * arrival station is stTo and departure from dateTimeFrom to dateTimeTo.
-     */
-    List<DepartureDTO> findFromToBetween(String stFrom, String stTo, LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo);
-
-    /**
-     * Finds all departures which station of departure is stFrom,
-     * arrival station is stTo and departure from dateTimeFrom to dateTimeTo.
-     *
-     * @param stFrom       Title of departure station
-     * @param stTo         Title of arrival station
-     * @param dateTimeFrom Left border of interval of departure DateTime. Format is 'dd.MM.yyyy HH:mm'
-     * @param dateTimeTo   Right border of interval of departure DateTime. Format is 'dd.MM.yyyy HH:mm'
-     * @return List of departures converted to DepartureDTO.class which station of departure is stFrom,
-     * * arrival station is stTo and departure from dateTimeFrom to dateTimeTo.
-     */
-    List<DepartureDTO> findFromToBetween(String stFrom, String stTo, String dateTimeFrom, String dateTimeTo);
-
-    List<DepartureDTO> findAllToday();
-
-    List<DepartureDTO> findAllAvailable(boolean fetchStations);
-
-    /**
-     * Finds all departures specified by the title of the station of departure
-     *
-     * @param stationTitle  Station title of departure
-     * @param fetchStations If you want to work with departure's stations
-     * @return List of departures converted to DepartureDTO.class specified by the title of the station of departure
-     */
-    List<DepartureDTO> findByStationTitle(String stationTitle, boolean fetchStations);
-
     /**
      * Saves new departure with specified parameters.
      *
@@ -93,4 +53,9 @@ public interface DepartureService {
      * @return Saved departure
      */
     Departure save(NewDepartureDTO newDepartureDTO);
+
+    void changeDepartureStation(Integer tripId, Integer departureId, String newTitle);
+    void changeArrivalStation(Integer tripId, Integer departureIndex, String newTitle);
+    void changeDepartureTime(Integer tripId, Integer departureIndex, LocalDateTime newTime);
+    void changeArrivalTime(Integer tripId, Integer departureIndex, LocalDateTime newTime);
 }
