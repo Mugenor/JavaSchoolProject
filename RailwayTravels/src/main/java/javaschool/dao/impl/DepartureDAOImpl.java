@@ -21,75 +21,12 @@ import org.springframework.stereotype.Repository;
 public class DepartureDAOImpl extends GenericAbstractDAO<Departure, Integer> implements DepartureDAO {
 
     @Override
-    public List<Departure> findByStationTitleFrom(String stationTitle, boolean fetchStations,
-                                                  boolean orderByDateTimeFrom) {
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Departure> query = builder.createQuery(Departure.class);
-        Root<Departure> from = query.from(Departure.class);
-        Join<Departure, Station> stationFromJoin = from.join(Departure_.stationFrom);
-        Predicate stationTitleEq = builder.equal(stationFromJoin.get(Station_.title), stationTitle);
-
-        findDeparture(builder, query, from, fetchStations, orderByDateTimeFrom);
-
-        query.select(from).where(stationTitleEq);
-
-        return entityManager.createQuery(query).getResultList();
-    }
-
-    @Override
-    public List<Departure> findFromToBetween(Station stFrom, Station stTo, LocalDateTime dateFrom, LocalDateTime dateTo,
-                                             boolean orderByDateTimeFrom) {
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Departure> query = builder.createQuery(Departure.class);
-        Root<Departure> from = query.from(Departure.class);
-        Predicate equalStationFrom = builder.equal(from.get(Departure_.stationFrom), stFrom);
-        Predicate equalStationTo = builder.equal(from.get(Departure_.stationTo), stTo);
-        Predicate greaterThanLeftDate = builder.greaterThan(from.get(Departure_.dateTimeFrom), dateFrom);
-        Predicate lessThanRightDate = builder.lessThan(from.get(Departure_.dateTimeFrom), dateTo);
-        Predicate resultPredicate = builder.and(equalStationFrom, equalStationTo, greaterThanLeftDate, lessThanRightDate);
-        query.where(resultPredicate);
-
-        return entityManager.createQuery(query).getResultList();
-    }
-
-    @Override
-    public Departure findByStFromAndStToAndDateFromAndDateTo(Station stFrom, Station stTo, LocalDateTime dateFrom, LocalDateTime dateTo) {
-        try {
-            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Departure> query = builder.createQuery(Departure.class);
-            Root<Departure> from = query.from(Departure.class);
-            Predicate equalStationFrom = builder.equal(from.get(Departure_.stationFrom), stFrom);
-            Predicate equalStationTo = builder.equal(from.get(Departure_.stationTo), stTo);
-            Predicate equalLeftDate = builder.equal(from.get(Departure_.dateTimeFrom), dateFrom);
-            Predicate equalRightDate = builder.equal(from.get(Departure_.dateTimeTo), dateTo);
-            Predicate resultPredicate = builder.and(equalStationFrom, equalStationTo, equalLeftDate, equalRightDate);
-            query.where(resultPredicate);
-
-            return entityManager.createQuery(query).getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
-    }
-
-    @Override
     public List<Departure> findAll(boolean fetchStations, boolean orderByDateTimeFrom) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Departure> query = builder.createQuery(Departure.class);
         Root<Departure> from = query.from(Departure.class);
 
         findDeparture(builder, query, from, fetchStations, orderByDateTimeFrom);
-
-        return entityManager.createQuery(query).getResultList();
-    }
-
-    @Override
-    public List<Departure> findAfterDateTime(LocalDateTime dateTime, boolean fetchStations, boolean orderByDateTimeFrom) {
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Departure> query = builder.createQuery(Departure.class);
-        Root<Departure> from = query.from(Departure.class);
-
-        findDeparture(builder, query, from, fetchStations, orderByDateTimeFrom);
-        query.where(builder.greaterThanOrEqualTo(from.get(Departure_.dateTimeFrom), dateTime));
 
         return entityManager.createQuery(query).getResultList();
     }
@@ -111,25 +48,6 @@ public class DepartureDAOImpl extends GenericAbstractDAO<Departure, Integer> imp
         }
     }
 
-    @Override
-    public List<Departure> findDateTimeFromBetweenOrDateTimeToBetween(LocalDateTime dateTimeFromLeft, LocalDateTime dateTimeFromRight,
-                                                                      LocalDateTime dateTimeToLeft, LocalDateTime dateTimeToRight,
-                                                                      boolean fetchStations, boolean orderByDateTimeFrom) {
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Departure> query = builder.createQuery(Departure.class);
-        Root<Departure> from = query.from(Departure.class);
-        query.select(from)
-                .where(builder
-                        .or(builder.and(
-                                builder.greaterThanOrEqualTo(from.get(Departure_.dateTimeFrom), dateTimeFromLeft),
-                                builder.lessThanOrEqualTo(from.get(Departure_.dateTimeFrom), dateTimeFromRight)
-                        ), builder.and(
-                                builder.greaterThanOrEqualTo(from.get(Departure_.dateTimeTo), dateTimeToLeft),
-                                builder.lessThanOrEqualTo(from.get(Departure_.dateTimeTo), dateTimeToRight)
-                        )));
-        findDeparture(builder, query, from, fetchStations, orderByDateTimeFrom);
-        return entityManager.createQuery(query).getResultList();
-    }
 
     @Override
     public List<Departure> findByTripIdAndNumberInTripBetween(Integer tripId, Integer leftBound, Integer rightBound,

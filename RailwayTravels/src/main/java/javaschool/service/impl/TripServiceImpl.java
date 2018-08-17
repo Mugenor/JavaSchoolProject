@@ -114,6 +114,17 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public TripDTO findById(Integer tripId) {
+        Trip trip = tripDAO.findById(tripId);
+        if (trip == null) {
+            throw new IllegalArgumentException("Invalid trip");
+        }
+        return tripToTripDTOConverter.convertTo(trip);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<List<TripDTO>> findFromToBetweenWithTransfers(String stFrom, String stTo,
                                                               LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo,
                                                               int maxTransfersCount) {
@@ -196,6 +207,7 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TripInfo getTripInfo(Integer tripId, Integer departureFromIndex, Integer departureToIndex) {
         List<Departure> departures = departureDAO.findByTripIdAndNumberInTripBetween(tripId, departureFromIndex, departureToIndex,
                 true, true);

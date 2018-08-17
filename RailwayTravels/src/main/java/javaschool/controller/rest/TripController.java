@@ -53,6 +53,11 @@ public class TripController {
         return tripService.findAllAvailable();
     }
 
+    @GetMapping("/{tripId}")
+    public TripDTO getTripById(@PathVariable Integer tripId) {
+        return tripService.findById(tripId);
+    }
+
     @PostMapping(path = "/add", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public TripDTO addNewTrip(@Valid @RequestBody List<NewDepartureDTO> trip) {
         TripDTO savedTrip = tripService.save(trip);

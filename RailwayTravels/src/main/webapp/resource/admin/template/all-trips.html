@@ -12,13 +12,13 @@
                                    ui-validate="{same: 'notTheSame(departureForm.stationFrom, departureForm.stationTo)'}"
                                    required="required"
                                    ng-disabled="departuresInNewTrip.length !== 0"/>
-                            <div ng-show='departureForm.stationFrom.$error.same || departureForm.stationTo.$error.same'
+                            <div ng-show="departureForm.stationFrom.$error.same || departureForm.stationTo.$error.same"
                                  class="invalid-feedback">
                                 Choose different stations!
                             </div>
                             <div ng-show="departureForm.stationFrom.$dirty && departureForm.stationFrom.$error.required"
                                  class="invalid-feedback">
-                                Set trip station!
+                                Set departure station!
                             </div>
                         </div>
                         <div class="mt-1">
@@ -39,7 +39,6 @@
                                    name="dateTimeFrom"
                                    id="dateTimeFrom" placeholder="Departure time" ng-class="dateTimeFromClass.class"
                                    ui-validate="{afterNow: 'afterNow()', beforeArrival: 'beforeArrival()'}"
-                                   ng-change="console.log('bla', departureForm.dateTimeFrom)"
                                    required="required"/>
                             <div ng-show="departureForm.dateTimeFrom.$dirty && (departureForm.dateTimeFrom.$error.required || departureForm.dateTimeFrom.$error.afterNow)"
                                  class="invalid-feedback">
@@ -107,6 +106,7 @@
                                     class="btn btn-primary">
                                 Watch passengers
                             </button>
+                            <a class="btn btn-warning" href="#!edit/{{trip.id}}"> Edit </a>
                             <button ng-click="deleteTrip(trip)" class="btn btn-danger">
                                 Delete trip
                             </button>
@@ -120,4 +120,4 @@
         </div>
     </div>
 </div>
-<modal control="modalControl"></modal>
+<message-modal control="modalControl"></message-modal>

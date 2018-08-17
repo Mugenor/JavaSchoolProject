@@ -54,8 +54,5 @@ public interface DepartureService {
      */
     Departure save(NewDepartureDTO newDepartureDTO);
 
-    void changeDepartureStation(Integer tripId, Integer departureId, String newTitle);
-    void changeArrivalStation(Integer tripId, Integer departureIndex, String newTitle);
-    void changeDepartureTime(Integer tripId, Integer departureIndex, LocalDateTime newTime);
-    void changeArrivalTime(Integer tripId, Integer departureIndex, LocalDateTime newTime);
+    void updateDeparture(Integer tripId, Integer departureIndex, NewDepartureDTO departureDTO);
 }

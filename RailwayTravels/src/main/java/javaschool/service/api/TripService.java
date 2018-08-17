@@ -26,6 +26,8 @@ public interface TripService {
      */
     List<TripDTO> findFromToBetween(String stFrom, String stTo, LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo);
 
+    TripDTO findById(Integer tripId);
+
     /**
      * Finds paths of trips from stFrom station to stTo station in specified time bounds and with specified
      * maximum transfer count

@@ -18,6 +18,11 @@ let adminApp = angular.module('adminApp', ['ngRoute', 'ui.validate'])
                     templateUrl: 'resource/admin/template/stations.html',
                     controller: 'stationsController'
                 })
+            .when('/edit/:tripId',
+                {
+                    templateUrl: 'resource/admin/template/edit-trip.html',
+                    controller: 'editTripController'
+                })
             .when('/',
                 {
                     templateUrl: 'resource/admin/template/welcome.html'

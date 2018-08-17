@@ -16,6 +16,7 @@
           href="resource/vendor/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"/>
     <link rel="stylesheet" href="resource/css/linked-points.css"/>
     <link rel="stylesheet" href="resource/css/address-card.css"/>
+    <link rel="stylesheet" href="resource/css/autocomplete-first.css"/>
 
     <title>Admin page</title>
 </head>
@@ -32,12 +33,15 @@
 <script src="resource/admin/service/trip-passengers-service.js"></script>
 <script src="resource/admin/service/station-service.js"></script>
 <script src="resource/admin/service/station-table-service.js"></script>
+<script src="resource/admin/service/edit-trip-service.js"></script>
 <script src="resource/admin/directive/contained-in-validator.js"></script>
 <script src="resource/admin/directive/not-contained-in-validator.js"></script>
 <script src="resource/admin/directive/trip.js"></script>
-<script src="resource/admin/directive/modal.js"></script>
+<script src="resource/admin/directive/message-modal.js"></script>
+<script src="resource/admin/directive/edit-departure-modal.js"></script>
 <script src="resource/admin/controller/all-trips-controller.js"></script>
 <script src="resource/admin/controller/trip-controller.js"></script>
 <script src="resource/admin/controller/stations-controller.js"></script>
+<script src="resource/admin/controller/edit-trip.js"></script>
 </body>
 </html>

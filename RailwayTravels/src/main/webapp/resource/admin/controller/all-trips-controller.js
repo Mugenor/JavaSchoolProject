@@ -198,7 +198,7 @@ adminApp.controller('allTripsController', function ($scope, $location, tripTable
     };
 
     $scope.notTheSame = function (v1, v2) {
-        if (!v1.$pristine && !v1.$pristine) {
+        if (!v1.$pristine && !v2.$pristine) {
             return v1.$viewValue !== v2.$viewValue;
         } else {
             return true;

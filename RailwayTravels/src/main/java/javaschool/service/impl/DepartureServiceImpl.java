@@ -9,7 +9,6 @@ import javaschool.dao.api.StationDAO;
 import javaschool.dao.api.TripDAO;
 import javaschool.entity.Departure;
 import javaschool.entity.Station;
-import javaschool.entity.Trip;
 import javaschool.service.api.DepartureService;
 import javaschool.service.converter.DepartureToDepartureDTOConverter;
 import javaschool.service.converter.DepartureToNewDepartureDTOConverter;
@@ -85,111 +84,75 @@ public class DepartureServiceImpl implements DepartureService {
 
     @Override
     @Transactional
-    public void changeDepartureStation(Integer tripId, Integer departureIndex, String newTitle) {
-        Trip trip = tripDAO.findById(tripId);
-        Station departureStation = stationDAO.findByTitle(newTitle);
-        if (trip == null) {
-            throw new IllegalArgumentException("Invalid trip");
+    public void updateDeparture(Integer tripId, Integer departureIndex, NewDepartureDTO departureDTO) {
+        List<Departure> departures = departureDAO.findByTripIdAndNumberInTripBetween(tripId, departureIndex - 1, departureIndex + 1,
+                true, true);
+        if (departures == null || departures.size() == 0) {
+            throw new IllegalArgumentException("Invalid query");
         }
+        Departure departure = null, departureBefore = null, departureAfter = null;
+        for (Departure curDep : departures) {
+            if (departureIndex.equals(curDep.getNumberInTrip())) {
+                departure = curDep;
+            } else if (departureIndex > curDep.getNumberInTrip()) {
+                departureBefore = curDep;
+            } else {
+                departureAfter = curDep;
+            }
+        }
+        if (departureDTO.getStationFrom().equals(departureDTO.getStationTo())) {
+            throw new IllegalArgumentException("Departure station and arrival station must be different");
+        }
+        if (departureDTO.getDateTimeFrom().compareTo(departureDTO.getDateTimeTo()) >= 0) {
+            throw new IllegalArgumentException("Departure time must be before arrival time");
+        }
+        updateStationFrom(departureDTO, departure, departureBefore);
+        updateStationTo(departureDTO, departure, departureAfter);
+        updateDateTimeFrom(departureDTO, departure, departureBefore);
+        updateDateTimeTo(departureDTO, departure, departureAfter);
+    }
+
+    private void updateStationFrom(NewDepartureDTO updateDeparture, Departure curDeparture, Departure departureBefore) {
+        Station departureStation = stationDAO.findByTitle(updateDeparture.getStationFrom());
         if (departureStation == null) {
-            throw new IllegalArgumentException("There is no such station");
+            throw new IllegalArgumentException("Invalid station name");
         }
-        for (Departure departure : trip.getDepartures()) {
-            if (departure.getNumberInTrip().equals(departureIndex)) {
-                if (departure.getStationTo().equals(departureStation)) {
-                    throw new IllegalArgumentException("Departure and arrival stations must be different");
-                }
-                departure.setStationFrom(departureStation);
+        if (departureBefore != null) {
+            if (departureBefore.getStationFrom().getId().equals(departureStation.getId())) {
+                throw new IllegalArgumentException("Departure station and arrival station must be different");
             }
-            if (departure.getNumberInTrip().equals(departureIndex - 1)) {
-                if (departure.getStationFrom().equals(departureStation)) {
-                    throw new IllegalArgumentException("Departure and arrival stations must be different");
-                }
-                departure.setStationTo(departureStation);
-            }
+            departureBefore.setStationTo(departureStation);
         }
+        curDeparture.setStationFrom(departureStation);
     }
 
-    @Override
-    @Transactional
-    public void changeArrivalStation(Integer tripId, Integer departureIndex, String newTitle) {
-        Trip trip = tripDAO.findById(tripId);
-        Station arrivalStation = stationDAO.findByTitle(newTitle);
-        if (trip == null) {
-            throw new IllegalArgumentException("Invalid trip");
-        }
+    private void updateStationTo(NewDepartureDTO updateDeparture, Departure curDeparture, Departure departureAfter) {
+        Station arrivalStation = stationDAO.findByTitle(updateDeparture.getStationTo());
         if (arrivalStation == null) {
-            throw new IllegalArgumentException("There is no such station");
+            throw new IllegalArgumentException("Invalid station name");
         }
-        for (Departure departure : trip.getDepartures()) {
-            if (departure.getNumberInTrip().equals(departureIndex)) {
-                if (departure.getStationFrom().equals(arrivalStation)) {
-                    throw new IllegalArgumentException("Departure and arrival stations must be different");
-                }
-                departure.setStationTo(arrivalStation);
+        if (departureAfter != null) {
+            if (departureAfter.getStationTo().getId().equals(arrivalStation.getId())) {
+                throw new IllegalArgumentException("Departure station and arrival station must be different");
             }
-            if (departure.getNumberInTrip().equals(departureIndex + 1)) {
-                if (departure.getStationTo().equals(arrivalStation)) {
-                    throw new IllegalArgumentException("Departure and arrival stations must be different");
-                }
-                departure.setStationFrom(arrivalStation);
-            }
+            departureAfter.setStationFrom(arrivalStation);
         }
+        curDeparture.setStationTo(arrivalStation);
     }
 
-    @Override
-    @Transactional
-    public void changeDepartureTime(Integer tripId, Integer departureIndex, LocalDateTime newTime) {
-        Trip trip = tripDAO.findById(tripId);
-        if (trip == null) {
-            throw new IllegalArgumentException("Invalid trip");
+    private void updateDateTimeFrom(NewDepartureDTO updateDeparture, Departure curDeparture, Departure departureBefore) {
+        if (departureBefore != null && updateDeparture.getDateTimeFrom().compareTo(departureBefore.getDateTimeTo()) <= 0) {
+            throw new IllegalArgumentException("Departure time must be before arrival time");
         }
-        Departure departureBefore = null, neededDeparture = null;
-        for (Departure departure : trip.getDepartures()) {
-            if (departure.getNumberInTrip().equals(departureIndex)) {
-                neededDeparture = departure;
-            }
-            if (departure.getNumberInTrip().equals(departureIndex - 1)) {
-                departureBefore = departure;
-            }
-            if (neededDeparture != null && departureBefore != null) {
-                break;
-            }
-        }
-        if (neededDeparture == null) {
-            throw new IllegalArgumentException("Invalid departure index");
-        }
-        if (departureBefore != null && departureBefore.getDateTimeTo().compareTo(newTime) >= 0) {
-            throw new IllegalArgumentException("Departure time must be after previous arrival time");
-        }
-        neededDeparture.setDateTimeFrom(newTime);
+        curDeparture.setDateTimeFrom(updateDeparture.getDateTimeFrom());
     }
 
-    @Override
-    @Transactional
-    public void changeArrivalTime(Integer tripId, Integer departureIndex, LocalDateTime newTime) {
-        Trip trip = tripDAO.findById(tripId);
-        if (trip == null) {
-            throw new IllegalArgumentException("Invalid trip");
+    private void updateDateTimeTo(NewDepartureDTO updateDeparture, Departure curDeparture, Departure departureAfter) {
+        if (departureAfter != null && updateDeparture.getDateTimeTo().compareTo(departureAfter.getDateTimeFrom()) >= 0) {
+            throw new IllegalArgumentException("Departure time must be before arrival time");
         }
-        Departure neededDeparture = null, departureAfter = null;
-        for (Departure departure : trip.getDepartures()) {
-            if (departure.getNumberInTrip().equals(departureIndex)) {
-                neededDeparture = departure;
-            }
-            if (departure.getNumberInTrip().equals(departureIndex + 1)) {
-                departureAfter = departure;
-            }
-            if (departureAfter != null && neededDeparture != null) {
-                break;
-            }
-        }
-        if (neededDeparture == null) {
-            throw new IllegalArgumentException("Invalid departure index");
-        }
-        if (departureAfter != null && departureAfter.getDateTimeFrom().compareTo(newTime) <= 0) {
-            throw new IllegalArgumentException("Departure time must be after previous arrival time");
-        }
-        neededDeparture.setDateTimeTo(newTime);
+        curDeparture.setDateTimeTo(updateDeparture.getDateTimeTo());
     }
+
+
 }

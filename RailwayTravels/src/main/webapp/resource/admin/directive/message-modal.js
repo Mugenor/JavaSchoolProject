@@ -1,7 +1,7 @@
-adminApp.directive('modal', function () {
+adminApp.directive('messageModal', function () {
     return {
         restrict: 'E',
-        templateUrl: 'resource/admin/template/modal.html',
+        templateUrl: 'resource/admin/template/message-modal.html',
         scope: {
             control: '='
         },
@@ -12,7 +12,6 @@ adminApp.directive('modal', function () {
             scope.message = '';
             scope.internalControl = scope.control || {};
             scope.internalControl.show = function (message) {
-                console.log('WooHoo', message);
                 scope.message = message;
                 modal.modal('show');
             };

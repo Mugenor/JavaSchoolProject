@@ -1,0 +1,108 @@
+<div class="modal fade" id="editDepartureModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit departure</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form name="updateDepartureForm" autocomplete="off" novalidate>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="col-form-label">Departure station:</label>
+                        <input type="text" class="autocomplete form-control"
+                               ng-model="departure.stationFrom"
+                               ng-model-options="{ updateOn: 'blur'}"
+                               name="stationFrom"
+                               required="required"
+                               ui-validate="{same: 'notTheSame(updateDepartureForm.stationFrom, updateDepartureForm.stationTo)',
+                                     sameWithPrevious: 'sameWithPrevious(outerDepartureBefore, updateDepartureForm.stationFrom)'}"
+                               ng-blur="checkStation(updateDepartureForm.stationFrom)"/>
+                        <div ng-show="updateDepartureForm.stationFrom.$error.same || updateDepartureForm.stationTo.$error.same"
+                             class="invalid-feedback">
+                            Choose different stations!
+                        </div>
+                        <div ng-show="updateDepartureForm.stationFrom.$error.sameWithPrevious"
+                             class="invalid-feedback">
+                            Departure station is the same as departure station of previous departure!
+                        </div>
+                        <div ng-show="updateDepartureForm.stationFrom.$dirty && updateDepartureForm.stationFrom.$error.required"
+                             class="invalid-feedback">
+                            Set departure station!
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Arrival station:</label>
+                        <input class="autocomplete form-control"
+                               ng-model="departure.stationTo"
+                               ng-model-options="{updateOn: 'blur'}"
+                               ui-validate="{same: 'notTheSame(updateDepartureForm.stationFrom, updateDepartureForm.stationTo)',
+                                         sameWithNext: 'sameWithNext(outerDepartureAfter, updateDepartureForm.stationTo)'}"
+                               name="stationTo"
+                               required="required"
+                               ng-blur="checkStation(updateDepartureForm.stationTo)"/>
+                        <div ng-show="updateDepartureForm.stationTo.$dirty && updateDepartureForm.stationTo.$error.required"
+                             class="invalid-feedback">
+                            Set arrival station!
+                        </div>
+                        <div ng-show="updateDepartureForm.stationTo.$error.sameWithNext"
+                             class="invalid-feedback">
+                            Arrival station is the same as arrival station of next departure!
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Departure time</label>
+                        <input class="form-control"
+                               id="dateTimeFrom"
+                               ng-model="departure.dateTimeFrom"
+                               ng-model-options="{updateOn: 'blur change.dp'}"
+                               name="dateTimeFrom"
+                               ui-validate="{afterDate: 'afterDate(dateTimeFromInput)',
+                                beforeDate: 'beforeDate(dateTimeFromInput)'}"
+                               required="required"/>
+                        <div ng-show="updateDepartureForm.dateTimeFrom.$error.afterDate"
+                             class="invalid-feedback">
+                            Departure time must be after arrival time of previous departure
+                        </div>
+                        <div ng-show="updateDepartureForm.dateTimeFrom.$error.beforeDate"
+                             class="invalid-feedback">
+                            Departure time must be before arrival time
+                        </div>
+                        <div ng-show="updateDepartureForm.dateTimeFrom.$error.required"
+                             class="invalid-feedback">
+                            Set departure time
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Arrival time</label>
+                        <input class="form-control"
+                               id="dateTimeTo"
+                               ng-model="departure.dateTimeTo"
+                               ng-model-options="{updateOn: 'blur change.dp'}"
+                               name="dateTimeTo"
+                               ui-validate="{afterDate: 'afterDate(dateTimeToInput)',
+                                    beforeDate: 'beforeDate(dateTimeToInput)'}"
+                               required="required"/>
+                        <div ng-show="updateDepartureForm.dateTimeTo.$error.afterDate"
+                             class="invalid-feedback">
+                            Arrival time must be after departure time
+                        </div>
+                        <div ng-show="updateDepartureForm.dateTimeFrom.$error.beforeDate"
+                             class="invalid-feedback">
+                            Arrival time must be before arrival time of next departure
+                        </div>
+                        <div ng-show="updateDepartureForm.dateTimeFrom.$error.required"
+                             class="invalid-feedback">
+                            Set arrival time
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" ng-click="applyChanges()">Update departure</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
