@@ -1,12 +1,12 @@
 import {AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild, ViewChildren} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, ValidationErrors, Validators} from '@angular/forms';
 import {StationService} from '../service/station.service';
 import {map, startWith} from 'rxjs/operators';
 import {TripService} from '../service/trip.service';
 import {TripDTOToTripConverterService} from '../service/trip-dtoto-trip-converter.service';
 import {Trip} from '../entity/trip';
 import {ErrorDialogComponent} from '../dialog/error-dialog/error-dialog.component';
-import {MatDialog} from '@angular/material';
+import {ErrorStateMatcher, MatDialog} from '@angular/material';
 
 @Component({
   selector: 'app-find-trip',
@@ -15,6 +15,7 @@ import {MatDialog} from '@angular/material';
 })
 export class FindTripComponent implements AfterViewInit, OnInit {
   private DIDNT_FIND_ANYTHING = 'We didn\'t find anything';
+  dateTimeErrorStateMatcher = new DateTimeErrorStateMatcher();
   @ViewChild('dateTimeFromInput')
   _dateTimeFromInput: ElementRef;
   @ViewChild('dateTimeToInput')
@@ -263,5 +264,11 @@ class DateState {
     this.maxDate = maxDate;
     this.initialDate = initialDate;
   }
+}
 
+export class DateTimeErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    console.log('error state matcher: ', control, form);
+    return true;
+  }
 }

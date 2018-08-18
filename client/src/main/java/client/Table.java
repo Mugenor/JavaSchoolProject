@@ -23,6 +23,9 @@ import javax.faces.push.Push;
 import javax.faces.push.PushContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+import org.joda.time.LocalTime;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
@@ -62,21 +65,15 @@ public class Table {
                         TripUpdate tripUpdate = (TripUpdate) objectInputStream.readObject();
                         switch (tripUpdate.getAction()) {
                             case TripUpdate.CREATE:
-                                rootNode.getChildren().add(createTripNode(tripUpdate.getTrip()));
-                                tripDTOSet.add(tripUpdate.getTrip());
+                                doCreateTrip(tripUpdate.getTrip());
                                 break;
                             case TripUpdate.UPDATE:
-                                TreeNode updateNode = createTripNode(tripUpdate.getTrip());
-                                rootNode.getChildren().set(rootNode.getChildren().indexOf(updateNode), updateNode);
-                                tripDTOSet.add(tripUpdate.getTrip());
+                                doUpdateTrip(tripUpdate.getTrip());
                                 break;
                             case TripUpdate.DELETE:
-                                TreeNode deleteNode = createTripNode(tripUpdate.getTrip());
-                                deleteFromChildren((TableModel) deleteNode.getData(), rootNode.getChildren());
-                                tripDTOSet.remove(tripUpdate.getTrip());
+                                doDeleteTrip(tripUpdate.getTrip());
                                 break;
                         }
-                        pushContext.send("tripUpdate");
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -86,6 +83,49 @@ public class Table {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void doUpdateTrip(TripDTO trip) {
+        if (tripDTOSet.contains(trip)) {
+            if (containsTodayDepartures(trip.getDepartures())) {
+                TreeNode updateNode = createTripNode(trip);
+                rootNode.getChildren().
+                        set(indexOfChild((TableModel) updateNode.getData(), rootNode.getChildren()), updateNode);
+                tripDTOSet.add(trip);
+                pushContext.send("tripUpdate");
+            } else {
+                doDeleteTrip(trip);
+            }
+        }
+    }
+
+    private void doDeleteTrip(TripDTO trip) {
+        if (tripDTOSet.remove(trip)) {
+            TreeNode deleteNode = createTripNode(trip);
+            deleteFromChildren((TableModel) deleteNode.getData(), rootNode.getChildren());
+            pushContext.send("tripUpdate");
+        }
+    }
+
+    private void doCreateTrip(TripDTO trip) {
+        if (containsTodayDepartures(trip.getDepartures())) {
+            rootNode.getChildren().add(createTripNode(trip));
+            tripDTOSet.add(trip);
+            pushContext.send("tripUpdate");
+        }
+    }
+
+    private boolean containsTodayDepartures(List<DepartureDTO> departures) {
+        LocalDateTime todayAsDate = LocalDate.now().toLocalDateTime(LocalTime.MIDNIGHT);
+        long today = todayAsDate.toDateTime().getMillis();
+        long tomorrow = todayAsDate.plusDays(1).toDateTime().getMillis();
+        for (DepartureDTO departure : departures) {
+            if ((departure.getDateTimeFrom() >= today && departure.getDateTimeFrom() < tomorrow)
+                    || (departure.getDateTimeTo() >= today && departure.getDateTimeTo() < tomorrow)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public TreeNode getAllTrips() {
@@ -99,6 +139,7 @@ public class Table {
     private TreeNode createTripNode(TripDTO tripDTO) {
         List<DepartureDTO> departureDTOS = tripDTO.getDepartures();
         TreeNode tripNode = new DefaultTreeNode(new TableModel(
+                tripDTO.getId(),
                 departureDTOS.get(0).getStationFrom(),
                 departureDTOS.get(departureDTOS.size() - 1).getStationTo(),
                 departureDTOS.get(0).getDateTimeFrom(),
@@ -106,6 +147,7 @@ public class Table {
         ));
         for (DepartureDTO departureDTO : departureDTOS) {
             new DefaultTreeNode(new TableModel(
+                    tripDTO.getId(),
                     "",
                     departureDTO.getStationFrom(),
                     departureDTO.getStationTo(),
@@ -125,5 +167,16 @@ public class Table {
                 break;
             }
         }
+    }
+
+    private int indexOfChild(TableModel model, List<TreeNode> children) {
+        int index = 0;
+        for(TreeNode node: children) {
+            if (node.getData().equals(model)) {
+                return index;
+            }
+            ++index;
+        }
+        return -1;
     }
 }

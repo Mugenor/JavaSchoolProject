@@ -30,10 +30,7 @@
       </div>
       <div formGroupName="times">
         <mat-form-field class="mr-5">
-          <input type="text" placeholder="Time from" matInput #dateTimeFromInput
-                 [class.ng-valid]="dateTimeFrom.valid" [class.ng-invalid]="dateTimeFrom.invalid"
-                 [class.ng-touched]="dateTimeFrom.touched" [class.ng-untouched]="dateTimeFrom.untouched"
-                 [class.ng-dirty]="dateTimeFrom.dirty" [class.ng-pristine]="dateTimeFrom.pristine">
+          <input type="text" placeholder="Time from" matInput #dateTimeFromInput  [errorStateMatcher]="dateTimeErrorStateMatcher">
           <mat-error *ngIf="true">
             Enter time from.
           </mat-error>
@@ -45,14 +42,10 @@
           </app-datetimepicker>
         </mat-form-field>
         <mat-form-field class="mr-5">
-          <input #dateTimeToInput type="text" placeholder="Time to" matInput
-                 [class.ng-valid]="dateTimeTo.valid" [class.ng-invalid]="dateTimeTo.invalid"
-                 [class.ng-touched]="dateTimeTo.touched" [class.ng-untouched]="dateTimeTo.untouched"
-                 [class.ng-dirty]="dateTimeTo.dirty" [class.ng-pristine]="dateTimeTo.pristine">
+          <input #dateTimeToInput type="text" placeholder="Time to" matInput  [errorStateMatcher]="dateTimeErrorStateMatcher">
           <mat-error *ngIf="true">
             Enter time from.
           </mat-error>
-
           <app-datetimepicker [datetimeInput]="_dateTimeToInput" formControlName="dateTimeTo"
                               [minDate]="dateTimeToState.minDate"
                               [maxDate]="dateTimeToState.maxDate"

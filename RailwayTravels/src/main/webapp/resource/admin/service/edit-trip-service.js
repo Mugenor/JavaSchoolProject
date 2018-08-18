@@ -20,7 +20,7 @@ adminApp.service('editTripService', function ($http, $q) {
                 dateTimeTo: updatedDeparture.dateTimeTo
             }
         };
-        $http.post('trip/update', departure)
+        $http.post('departure/update', departure)
             .then(function (response) {
                 deferred.resolve(response.data);
             }, function (error) {

@@ -8,22 +8,33 @@ import org.joda.time.format.DateTimeFormatter;
 
 public class TableModel {
     private static final DateTimeFormatter format = DateTimeFormat.forPattern("dd.MM.yyyy HH:mm");
+    private int id;
     private String nodeName;
     private String departureStation;
     private String arrivalStation;
     private String departureTime;
     private String arrivalTime;
 
-    public TableModel(String nodeName, String departureStation, String arrivalStation, long departureTime, long arrivalTime) {
+    public TableModel(int id, String nodeName, String departureStation, String arrivalStation, long departureTime, long arrivalTime) {
         this.nodeName = nodeName;
+        this.id = id;
         this.departureStation = departureStation;
         this.arrivalStation = arrivalStation;
         this.departureTime = new LocalDateTime(departureTime).toString(format);
         this.arrivalTime = new LocalDateTime(arrivalTime).toString(format);
     }
 
-    public TableModel(String departureStation, String arrivalStation, long departureTime, long arrivalTime) {
-        this(departureStation + " - " + arrivalStation, departureStation, arrivalStation, departureTime, arrivalTime);
+    public TableModel(int id, String departureStation, String arrivalStation, long departureTime, long arrivalTime) {
+        this(id, departureStation + " - " + arrivalStation, departureStation, arrivalStation, departureTime, arrivalTime);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public TableModel setId(int id) {
+        this.id = id;
+        return this;
     }
 
     public String getNodeName() {
@@ -76,16 +87,13 @@ public class TableModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TableModel that = (TableModel) o;
-        return Objects.equals(departureStation, that.departureStation) &&
-                Objects.equals(arrivalStation, that.arrivalStation) &&
-                Objects.equals(departureTime, that.departureTime) &&
-                Objects.equals(arrivalTime, that.arrivalTime);
+        return id == that.id;
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(departureStation, arrivalStation, departureTime, arrivalTime);
+        return Objects.hash(id);
     }
 
     @Override
