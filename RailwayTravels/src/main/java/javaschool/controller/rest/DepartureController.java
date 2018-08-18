@@ -8,6 +8,7 @@ import javaschool.service.api.RabbitService;
 import javaschool.service.api.TripService;
 import javaschool.service.converter.DepartureToDepartureDTOConverter;
 import javaschool.service.impl.RabbitServiceImpl;
+import javax.validation.Valid;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -34,7 +35,7 @@ public class DepartureController {
     }
 
     @PostMapping("/update")
-    public void changeDepartureStation(@RequestBody UpdateDepartureInfo updateDepartureInfo) {
+    public void changeDepartureStation(@Valid @RequestBody UpdateDepartureInfo updateDepartureInfo) {
         departureService.updateDeparture(updateDepartureInfo.getTripId(),
                 updateDepartureInfo.getDepartureIndex(),
                 updateDepartureInfo.getDeparture());

@@ -76,7 +76,8 @@ export class FindTripComponent implements OnInit {
       this.dateTimeToPicker.picker = this.$dateTimeToInput.datetimepicker(this.dateTimeConfig).data('datetimepicker');
       $(this._dateTimeFromInput.nativeElement).on('change.dp', (event) => {
         if (this.$dateTimeFromInput.val().trim().length !== 0) {
-          this.dateTimeToPicker.picker.startDate = this.dateTimeFromPicker.picker.getUTCDate();
+          this.dateTimeToState.minDate =
+            this.dateTimeToPicker.picker.startDate = this.dateTimeFromPicker.picker.getUTCDate();
           if (this.dateTimeToPicker.picker.initialDate < this.dateTimeToPicker.picker.startDate) {
             this.dateTimeToPicker.picker.initialDate = this.dateTimeToPicker.picker.startDate;
           }
@@ -88,7 +89,8 @@ export class FindTripComponent implements OnInit {
       });
       $(this._dateTimeToInput.nativeElement).on('change.dp', (event) => {
         if (this.$dateTimeToInput.val().trim().length !== 0) {
-          this.dateTimeFromPicker.picker.endDate = this.dateTimeToPicker.picker.getUTCDate();
+          this.dateTimeFromState.maxDate =
+            this.dateTimeFromPicker.picker.endDate = this.dateTimeToPicker.picker.getUTCDate();
           if (this.dateTimeFromPicker.picker.initialDate > this.dateTimeFromPicker.picker.endDate) {
             this.dateTimeFromPicker.picker.initialDate = this.dateTimeFromPicker.picker.endDate;
           }
@@ -215,13 +217,16 @@ export class FindTripComponent implements OnInit {
   betweenDates(datesState: DateState, picker) {
     return (control: AbstractControl): ValidationErrors | null => {
       if (picker.picker) {
+        debugger;
         const date: Date = picker.picker.getDate();
-        if (!control.value || control.value.trim().length === 0) {
-          return {required: true};
-        } else if (datesState.minDate.getTime() > date.getTime()) {
-          return {beforeMin: true};
-        } else if (datesState.maxDate.getTime() < date.getTime()) {
-          return {afterMax: true};
+        if (date.getTime() > 0) {
+          if (!control.value || control.value.trim().length === 0) {
+            return {required: true};
+          } else if (datesState.minDate.getTime() > date.getTime()) {
+            return {beforeMin: true};
+          } else if (datesState.maxDate.getTime() < date.getTime()) {
+            return {afterMax: true};
+          }
         }
       }
       return null;
