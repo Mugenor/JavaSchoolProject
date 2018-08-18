@@ -30,28 +30,28 @@
       </div>
       <div formGroupName="times">
         <mat-form-field class="mr-5">
-          <input type="text" placeholder="Time from" matInput #dateTimeFromInput  [errorStateMatcher]="dateTimeErrorStateMatcher">
-          <mat-error *ngIf="true">
+          <input type="text" placeholder="Time from" matInput #dateTimeFromInput formControlName="dateTimeFrom">
+          <mat-error *ngIf="dateTimeFrom.errors?.required">
             Enter time from.
           </mat-error>
-          <app-datetimepicker [datetimeInput]="_dateTimeFromInput" formControlName="dateTimeFrom"
-                              [minDate]="dateTimeFromState.minDate"
-                              [maxDate]="dateTimeFromState.maxDate"
-                              [initialDate]="dateTimeFromState.initialDate"
-                              [configuration]="dateTimeConfig">
-          </app-datetimepicker>
+          <mat-error *ngIf="dateTimeFrom.errors?.beforeMin">
+            Date is too low
+          </mat-error>
+          <mat-error *ngIf="dateTimeFrom.errors?.afterMax">
+            Date is too big
+          </mat-error>
         </mat-form-field>
         <mat-form-field class="mr-5">
-          <input #dateTimeToInput type="text" placeholder="Time to" matInput  [errorStateMatcher]="dateTimeErrorStateMatcher">
-          <mat-error *ngIf="true">
-            Enter time from.
+          <input #dateTimeToInput type="text" placeholder="Time to" matInput formControlName="dateTimeTo">
+          <mat-error *ngIf="dateTimeTo.errors?.required">
+            Enter time to.
           </mat-error>
-          <app-datetimepicker [datetimeInput]="_dateTimeToInput" formControlName="dateTimeTo"
-                              [minDate]="dateTimeToState.minDate"
-                              [maxDate]="dateTimeToState.maxDate"
-                              [initialDate]="dateTimeToState.initialDate"
-                              [configuration]="dateTimeConfig">
-          </app-datetimepicker>
+          <mat-error *ngIf="dateTimeTo.errors?.beforeMin">
+            Date is too low
+          </mat-error>
+          <mat-error *ngIf="dateTimeTo.errors?.afterMax">
+            Date is too big
+          </mat-error>
         </mat-form-field>
       </div>
       <div class="mr-5" formGroupName="transfers">

@@ -1,5 +1,14 @@
 import {AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild, ViewChildren} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, ValidationErrors, Validators} from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormGroupDirective,
+  NgForm,
+  ValidationErrors,
+  Validators
+} from '@angular/forms';
 import {StationService} from '../service/station.service';
 import {map, startWith} from 'rxjs/operators';
 import {TripService} from '../service/trip.service';
@@ -8,12 +17,14 @@ import {Trip} from '../entity/trip';
 import {ErrorDialogComponent} from '../dialog/error-dialog/error-dialog.component';
 import {ErrorStateMatcher, MatDialog} from '@angular/material';
 
+declare let $: any;
+
 @Component({
   selector: 'app-find-trip',
   templateUrl: './find-trip.component.html',
   styleUrls: ['./find-trip.component.css']
 })
-export class FindTripComponent implements AfterViewInit, OnInit {
+export class FindTripComponent implements OnInit {
   private DIDNT_FIND_ANYTHING = 'We didn\'t find anything';
   dateTimeErrorStateMatcher = new DateTimeErrorStateMatcher();
   @ViewChild('dateTimeFromInput')
@@ -34,6 +45,10 @@ export class FindTripComponent implements AfterViewInit, OnInit {
   tripsWithTransfers: Trip[][];
   searching = false;
   message = 'Enter your request';
+  private dateTimeFromPicker = {picker: null};
+  private dateTimeToPicker = {picker: null};
+  private $dateTimeFromInput: any;
+  private $dateTimeToInput: any;
 
   constructor(private formBuilder: FormBuilder,
               private stationService: StationService,
@@ -42,20 +57,6 @@ export class FindTripComponent implements AfterViewInit, OnInit {
     const today = new Date();
     today.setMinutes(today.getMinutes());
     const startDate = new Date(Date.UTC(1900, 1));
-    this.tripForm = this.formBuilder.group({
-      stations: this.formBuilder.group({
-        stationFrom: ['', Validators.required],
-        stationTo: ['', Validators.required]
-      }, {validator: this.stationsDifferent}),
-      times: this.formBuilder.group({
-        dateTimeFrom: [startDate, this.dateTimeRequired],
-        dateTimeTo: [startDate, this.dateTimeRequired]
-      }),
-      transfers: this.formBuilder.group({
-        findWithTransfers: [false],
-        maxTransferCount: [0]
-      })
-    });
     const endDate = new Date();
     endDate.setFullYear(endDate.getFullYear() + 5);
     this.dateTimeConfig = {
@@ -68,12 +69,49 @@ export class FindTripComponent implements AfterViewInit, OnInit {
     this.dateTimeFromState.initializeDateState(today, endDate, today);
     this.dateTimeToState = new DateState();
     this.dateTimeToState.initializeDateState(today, endDate, today);
-  }
-
-  ngAfterViewInit() {
-    console.log(this._dateTimeFromInput);
-    console.log(this._dateTimeToInput);
-    debugger;
+    $(() => {
+      this.$dateTimeFromInput = $(this._dateTimeFromInput.nativeElement);
+      this.$dateTimeToInput = $(this._dateTimeToInput.nativeElement);
+      this.dateTimeFromPicker.picker = this.$dateTimeFromInput.datetimepicker(this.dateTimeConfig).data('datetimepicker');
+      this.dateTimeToPicker.picker = this.$dateTimeToInput.datetimepicker(this.dateTimeConfig).data('datetimepicker');
+      $(this._dateTimeFromInput.nativeElement).on('change.dp', (event) => {
+        if (this.$dateTimeFromInput.val().trim().length !== 0) {
+          this.dateTimeToPicker.picker.startDate = this.dateTimeFromPicker.picker.getUTCDate();
+          if (this.dateTimeToPicker.picker.initialDate < this.dateTimeToPicker.picker.startDate) {
+            this.dateTimeToPicker.picker.initialDate = this.dateTimeToPicker.picker.startDate;
+          }
+          this.dateTimeToState.minDate = this.dateTimeFromPicker.picker.getUTCDate();
+          this.dateTimeFrom.setValue(this.dateTimeFromPicker.picker.getFormattedDate());
+          this.$dateTimeFromInput.focus();
+        }
+        this.dateTimeFrom.updateValueAndValidity();
+      });
+      $(this._dateTimeToInput.nativeElement).on('change.dp', (event) => {
+        if (this.$dateTimeToInput.val().trim().length !== 0) {
+          this.dateTimeFromPicker.picker.endDate = this.dateTimeToPicker.picker.getUTCDate();
+          if (this.dateTimeFromPicker.picker.initialDate > this.dateTimeFromPicker.picker.endDate) {
+            this.dateTimeFromPicker.picker.initialDate = this.dateTimeFromPicker.picker.endDate;
+          }
+          this.dateTimeTo.setValue(this.dateTimeToPicker.picker.getFormattedDate());
+          this.$dateTimeToInput.focus();
+        }
+        this.dateTimeTo.updateValueAndValidity();
+      });
+    });
+    this.tripForm = this.formBuilder.group({
+      stations: this.formBuilder.group({
+        stationFrom: ['', Validators.required],
+        stationTo: ['', Validators.required]
+      }, {validator: this.stationsDifferent}),
+      times: this.formBuilder.group({
+        dateTimeFrom: ['', [this.betweenDates(this.dateTimeFromState, this.dateTimeFromPicker)]],
+        dateTimeTo: ['', [this.betweenDates(this.dateTimeToState, this.dateTimeToPicker)]]
+      }),
+      transfers: this.formBuilder.group({
+        findWithTransfers: [false],
+        maxTransferCount: [0]
+      })
+    });
   }
 
   get stationFrom() {
@@ -140,32 +178,6 @@ export class FindTripComponent implements AfterViewInit, OnInit {
           data: {message: error.error}
         });
       });
-    this.dateTimeFrom.valueChanges.subscribe(value => {
-      if (value.getTime() < this.dateTimeFromState.minDate.getTime()) {
-        this.dateTimeFrom.setValue(this.dateTimeFromState.minDate);
-        this.dateTimeFromState.initialDate = this.dateTimeFromState.minDate;
-      } else if (value.getTime() > this.dateTimeFromState.maxDate.getTime()) {
-        this.dateTimeFrom.setValue(this.dateTimeFromState.maxDate);
-        this.dateTimeFromState.initialDate = this.dateTimeFromState.minDate;
-      }
-      this.dateTimeToState.minDate = this.dateTimeFrom.value;
-      if (this.dateTimeToState.initialDate.getTime() < this.dateTimeToState.minDate.getTime()) {
-        this.dateTimeToState.initialDate = this.dateTimeToState.minDate;
-      }
-    });
-    this.dateTimeTo.valueChanges.subscribe(value => {
-      if (value.getTime() < this.dateTimeToState.minDate.getTime()) {
-        this.dateTimeTo.setValue(this.dateTimeToState.minDate);
-        this.dateTimeToState.initialDate = this.dateTimeToState.minDate;
-      } else if (value.getTime() > this.dateTimeToState.maxDate.getTime()) {
-        this.dateTimeTo.setValue(this.dateTimeToState.maxDate);
-        this.dateTimeToState.initialDate = this.dateTimeToState.minDate;
-      }
-      this.dateTimeFromState.maxDate = this.dateTimeTo.value;
-      if (this.dateTimeFromState.initialDate.getTime() > this.dateTimeFromState.maxDate.getTime()) {
-        this.dateTimeFromState.initialDate = this.dateTimeFromState.minDate;
-      }
-    });
     this.maxTransferCount.valueChanges.subscribe(value => {
       if (value > this.maxTransferValue) {
         this.maxTransferCount.setValue(this.maxTransferValue);
@@ -200,14 +212,25 @@ export class FindTripComponent implements AfterViewInit, OnInit {
     return (!findWithTransfers || !maxTransferCount) || (findWithTransfers.value && !maxTransferCount.value) ? {'required': true} : null;
   }
 
-  dateTimeRequired(control: FormControl): ValidationErrors | null {
-    const today = new Date();
-    const val = control.value.getTime() < today.getTime();
-    const res = val ? {'required': true} : null;
-    return res;
+  betweenDates(datesState: DateState, picker) {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (picker.picker) {
+        const date: Date = picker.picker.getDate();
+        if (!control.value || control.value.trim().length === 0) {
+          return {required: true};
+        } else if (datesState.minDate.getTime() > date.getTime()) {
+          return {beforeMin: true};
+        } else if (datesState.maxDate.getTime() < date.getTime()) {
+          return {afterMax: true};
+        }
+      }
+      return null;
+    };
   }
 
   find() {
+    this.dateTimeFrom.updateValueAndValidity();
+    this.dateTimeTo.updateValueAndValidity();
     if (this.tripForm.valid) {
       if (!this.dateTimeFrom.value) {
         this.dateTimeFrom.setErrors({required: true});
@@ -216,7 +239,7 @@ export class FindTripComponent implements AfterViewInit, OnInit {
       this.searching = true;
       if (this.findWithTransfers.value) {
         this.tripService.findWithTransfers(this.stationFrom.value, this.stationTo.value,
-          this.dateTimeFrom.value, this.dateTimeTo.value, this.maxTransferCount.value)
+          this.dateTimeFromPicker.picker.getDate(), this.dateTimeToPicker.picker.getDate(), this.maxTransferCount.value)
           .subscribe((data) => {
             this.trips = [];
             this.tripsWithTransfers = data.map(trips => trips.map(trip => TripDTOToTripConverterService.convert(trip)));
@@ -233,7 +256,8 @@ export class FindTripComponent implements AfterViewInit, OnInit {
             });
           });
       } else {
-        this.tripService.find(this.stationFrom.value, this.stationTo.value, this.dateTimeFrom.value, this.dateTimeTo.value)
+        this.tripService.find(this.stationFrom.value, this.stationTo.value,
+          this.dateTimeFromPicker.picker.getDate(), this.dateTimeToPicker.picker.getDate())
           .subscribe((data) => {
             this.tripsWithTransfers = [];
             this.trips = data.map(trip => TripDTOToTripConverterService.convert(trip));
