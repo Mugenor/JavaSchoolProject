@@ -67,40 +67,45 @@ public class Departure {
         return freeSitsCount;
     }
 
-    public void setFreeSitsCount(Integer freeSitsCount) {
+    public Departure setFreeSitsCount(Integer freeSitsCount) {
         this.freeSitsCount = freeSitsCount;
+        return this;
     }
 
     public LocalDateTime getDateTimeFrom() {
         return dateTimeFrom;
     }
 
-    public void setDateTimeFrom(LocalDateTime dateFrom) {
+    public Departure setDateTimeFrom(LocalDateTime dateFrom) {
         this.dateTimeFrom = dateFrom;
+        return this;
     }
 
     public LocalDateTime getDateTimeTo() {
         return dateTimeTo;
     }
 
-    public void setDateTimeTo(LocalDateTime dateTo) {
+    public Departure setDateTimeTo(LocalDateTime dateTo) {
         this.dateTimeTo = dateTo;
+        return this;
     }
 
     public Station getStationFrom() {
         return stationFrom;
     }
 
-    public void setStationFrom(Station from) {
+    public Departure setStationFrom(Station from) {
         this.stationFrom = from;
+        return this;
     }
 
     public Station getStationTo() {
         return stationTo;
     }
 
-    public void setStationTo(Station to) {
+    public Departure setStationTo(Station to) {
         this.stationTo = to;
+        return this;
     }
 
     public Integer getId() {

@@ -79,7 +79,7 @@ public class PassengerServiceImpl implements PassengerService {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Ticket buyTicket(String username, Integer tripId, Integer leftDepartureIndex,
                           Integer rightDepartureIndex, Integer coachNumber, Integer seatNumber) {
-        IndexOutOfBoundsException boundsExc = new IndexOutOfBoundsException("Invalid departure indexes!");
+        IllegalArgumentException boundsExc = new IllegalArgumentException("Invalid departure indexes!");
         if (leftDepartureIndex <= 0 || leftDepartureIndex > rightDepartureIndex) {
             throw boundsExc;
         }
@@ -89,6 +89,9 @@ public class PassengerServiceImpl implements PassengerService {
                 leftDepartureIndex, rightDepartureIndex, false, true);
         if (departures.size() == 0) {
             throw boundsExc;
+        }
+        if (isRegistered(tripId, username)) {
+            throw new IllegalArgumentException(username + " already registered on this trip");
         }
         Passenger passenger = passengerDAO.findByUsername(username);
         notNullElseThrowException(passenger, new NoSuchEntityException("There is no such passenger", Passenger.class));

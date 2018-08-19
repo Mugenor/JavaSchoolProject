@@ -38,8 +38,9 @@ public class Station {
         return id;
     }
 
-    public void setId(Integer id) {
+    public Station setId(Integer id) {
         this.id = id;
+        return this;
     }
 
     public String getTitle() {
