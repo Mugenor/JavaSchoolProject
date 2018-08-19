@@ -8,8 +8,10 @@ import javaschool.service.impl.UserServiceImpl;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -23,71 +25,68 @@ public class UserServiceTest {
     private static final String TEST_NAME = "Name";
     private static final String TEST_SURNAME = "Surname";
     private static final LocalDate TEST_BIRTHDAY = LocalDate.parse("2000-01-01");
-    private UserService userService;
-    @Test
-    public void test() {
-        LocalDate date = new LocalDate();
-        System.out.println(date.toLocalDateTime(LocalTime.MIDNIGHT));
+    @InjectMocks
+    private UserServiceImpl userService;
+    @Mock
+    private UserDAO userDAO;
+    @Mock
+    private PassengerDAO passengerDAO;
+
+    @Before
+    public void init() {
+        User user = getInitializedUser();
+        when(userDAO.findByUsername(TEST_USERNAME)).thenReturn(user);
+        when(passengerDAO.findByNameAndSurnameAndBirthday(TEST_NAME, TEST_SURNAME, TEST_BIRTHDAY))
+                .thenReturn(user.getPassenger());
     }
-//    @Mock
-//    private UserDAO userDAO;
-//    @Mock
-//    private PassengerDAO passengerDAO;
-//
-//    @Before
-//    public void init() {
-//        userService = new UserServiceImpl(userDAO, passengerDAO);
-//        User user = getInitializedUser();
-//        when(userDAO.findByUsername(TEST_USERNAME)).thenReturn(user);
-//        when(passengerDAO.findByNameAndSurnameAndBirthday(TEST_NAME, TEST_SURNAME, TEST_BIRTHDAY))
-//                .thenReturn(user.getPassenger());
-//    }
-//
-//    @Test
-//    public void whenThereIsNoUserLikeWeWantToSave() {
-//        User user = new User();
-//        user.setUsername("anotherUsername");
-//        Passenger passenger = getAnotherPassenger();
-//        user.setPassenger(passenger);
-//        userService.save(user);
-//        verify(userDAO).findByUsername(user.getUsername());
-//        verify(passengerDAO).findByNameAndSurnameAndBirthday
-//                (passenger.getName(), passenger.getSurname(), passenger.getBirthday());
-//        verify(userDAO).save(user);
-//    }
-//
-//    @Test(expected = EntityAlreadyExistsException.class)
-//    public void whenThereIsAlreadyUserWithSpecifiedUsername() {
-//        User user = new User();
-//        user.setUsername(TEST_USERNAME);
-//        user.setPassenger(getAnotherPassenger());
-//        userService.save(user);
-//    }
-//
-//    @Test(expected = EntityAlreadyExistsException.class)
-//    public void whenThereIsAlreadyPassengerWithSpecifiedNameAndSurnameAndBirthday() {
-//        User user = new User();
-//        user.setUsername("anotherUsername");
-//        user.setPassenger(getInitializedPassenger());
-//        userService.save(user);
-//    }
-//
-//    private Passenger getAnotherPassenger() {
-//        return new Passenger(TEST_NAME + "a", TEST_SURNAME + "a", TEST_BIRTHDAY);
-//    }
-//
-//    private User getInitializedUser() {
-//        User user = new User();
-//        user.setId(1);
-//        user.setUsername(TEST_USERNAME);
-//        user.setPassenger(getInitializedPassenger());
-//        return user;
-//    }
-//
-//    private Passenger getInitializedPassenger() {
-//        Passenger passenger = new Passenger(TEST_NAME, TEST_SURNAME, TEST_BIRTHDAY);
-//        passenger.setId(1);
-//        return passenger;
-//    }
+
+    @Test
+    @Ignore
+    public void whenThereIsNoUserLikeWeWantToSave() {
+        User user = new User();
+        user.setUsername("anotherUsername");
+        Passenger passenger = getAnotherPassenger();
+        user.setPassenger(passenger);
+        userService.save(user);
+        verify(userDAO).findByUsername(user.getUsername());
+        verify(passengerDAO).findByNameAndSurnameAndBirthday
+                (passenger.getName(), passenger.getSurname(), passenger.getBirthday());
+        verify(userDAO).save(user);
+    }
+
+    @Test(expected = EntityAlreadyExistsException.class)
+    public void whenThereIsAlreadyUserWithSpecifiedUsername() {
+        User user = new User();
+        user.setUsername(TEST_USERNAME);
+        user.setPassenger(getAnotherPassenger());
+        userService.save(user);
+    }
+
+    @Test(expected = EntityAlreadyExistsException.class)
+    @Ignore
+    public void whenThereIsAlreadyPassengerWithSpecifiedNameAndSurnameAndBirthday() {
+        User user = new User();
+        user.setUsername("anotherUsername");
+        user.setPassenger(getInitializedPassenger());
+        userService.save(user);
+    }
+
+    private Passenger getAnotherPassenger() {
+        return new Passenger(TEST_NAME + "a", TEST_SURNAME + "a", TEST_BIRTHDAY);
+    }
+
+    private User getInitializedUser() {
+        User user = new User();
+        user.setId(1);
+        user.setUsername(TEST_USERNAME);
+        user.setPassenger(getInitializedPassenger());
+        return user;
+    }
+
+    private Passenger getInitializedPassenger() {
+        Passenger passenger = new Passenger(TEST_NAME, TEST_SURNAME, TEST_BIRTHDAY);
+        passenger.setId(1);
+        return passenger;
+    }
 
 }

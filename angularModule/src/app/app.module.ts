@@ -10,7 +10,6 @@ import {RoutingModule} from './routing/routing.module';
 import {AllTripsComponent} from './all-trips/all-trips.component';
 import {HttpClientModule} from '@angular/common/http';
 import {TripComponent} from './trip/trip.component';
-import {ChooseSeatComponent} from './choose-seat/choose-seat.component';
 import {ObjectPipe} from './pipe/object.pipe';
 import {StationsComponent} from './stations/stations.component';
 import {TimetableComponent} from './timetable/timetable.component';
@@ -31,6 +30,7 @@ import {DatetimepickerComponent} from './datetimepicker/datetimepicker.component
 import {DepartureListWithMenuComponent} from './departure-list-with-menu/departure-list-with-menu.component';
 import {DepartureListComponent} from './departure-list/departure-list.component';
 import {ErrorDialogComponent} from './dialog/error-dialog/error-dialog.component';
+import { ChooseSeatDialogComponent } from './dialog/choose-seat-dialog/choose-seat-dialog.component';
 
 window['$'] = $;
 window['jQuery'] = $;
@@ -44,7 +44,6 @@ window['jQuery'] = $;
     HomeComponent,
     AllTripsComponent,
     TripComponent,
-    ChooseSeatComponent,
     ObjectPipe,
     StationsComponent,
     DepartureListComponent,
@@ -54,6 +53,7 @@ window['jQuery'] = $;
     FindTripComponent,
     DatetimepickerComponent,
     ErrorDialogComponent,
+    ChooseSeatDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -73,7 +73,8 @@ window['jQuery'] = $;
     RoutingModule
   ],
   entryComponents: [
-    ErrorDialogComponent
+    ErrorDialogComponent,
+    ChooseSeatDialogComponent
   ],
   providers: [],
   bootstrap: [AppComponent]
