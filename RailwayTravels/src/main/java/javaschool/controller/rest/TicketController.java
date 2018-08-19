@@ -9,9 +9,11 @@ import java.util.Map;
 import java.util.TreeMap;
 import javaschool.controller.dtoentity.TicketBuyDTO;
 import javaschool.controller.dtoentity.TicketDTO;
+import javaschool.controller.dtoentity.TicketUpdateDTO;
 import javaschool.entity.Ticket;
 import javaschool.service.api.MailSender;
 import javaschool.service.api.PassengerService;
+import javaschool.service.api.StompMessageSender;
 import javaschool.service.impl.TicketToPDFTicketConverter;
 import javax.activation.DataSource;
 import javax.mail.MessagingException;
@@ -32,14 +34,17 @@ public class TicketController {
     private PassengerService passengerService;
     private TicketToPDFTicketConverter ticketToPDFTicketConverter;
     private MailSender mailSender;
+    private StompMessageSender stompMessageSender;
 
     @Autowired
     public TicketController(PassengerService passengerService,
                             TicketToPDFTicketConverter ticketToPDFTicketConverter,
-                            MailSender mailSender) {
+                            MailSender mailSender,
+                            StompMessageSender stompMessageSender) {
         this.passengerService = passengerService;
         this.ticketToPDFTicketConverter = ticketToPDFTicketConverter;
         this.mailSender = mailSender;
+        this.stompMessageSender = stompMessageSender;
     }
 
     @PostMapping(path = "/buy")
@@ -51,6 +56,9 @@ public class TicketController {
                 ticketBuy.getDepartureToIndex(),
                 ticketBuy.getCoachNumber(),
                 ticketBuy.getSeatNum());
+        stompMessageSender.sendToDefaultPrefix("/" + ticketBuy.getTripId(),
+                new TicketUpdateDTO(TicketUpdateDTO.BUY, ticketBuy.getDepartureFromIndex(), ticketBuy.getDepartureToIndex(),
+                        ticketBuy.getCoachNumber(), ticketBuy.getSeatNum()));
         Map<String, DataSource> attachment = new TreeMap<>();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         ticketToPDFTicketConverter.writePDFTicket(outputStream, ticket);
@@ -68,7 +76,10 @@ public class TicketController {
 
     @DeleteMapping(path = "/{ticketId}")
     public void returnTicket(@PathVariable Integer ticketId, Principal principal) {
-        passengerService.returnTicket(principal.getName(), ticketId);
+        TicketBuyDTO ticket = passengerService.returnTicket(principal.getName(), ticketId);
+        stompMessageSender.sendToDefaultPrefix("/" + ticket.getTripId(),
+                new TicketUpdateDTO(TicketUpdateDTO.RETURN, ticket.getDepartureFromIndex(),
+                        ticket.getDepartureToIndex(), ticket.getCoachNumber(), ticket.getSeatNum()));
     }
 
 }

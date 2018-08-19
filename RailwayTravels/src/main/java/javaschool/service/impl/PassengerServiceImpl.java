@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javaschool.controller.dtoentity.PassengerWithoutTickets;
+import javaschool.controller.dtoentity.TicketBuyDTO;
 import javaschool.controller.dtoentity.TicketDTO;
 import javaschool.dao.api.DepartureDAO;
 import javaschool.dao.api.OccupiedSeatDAO;
@@ -171,17 +172,25 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     @Transactional
-    public void returnTicket(String username, Integer ticketId) {
+    public TicketBuyDTO returnTicket(String username, Integer ticketId) {
         Passenger passenger = passengerDAO.findByUsername(username);
         if (passenger == null) {
             throw new IllegalArgumentException("Invalid user");
         }
         Ticket ticket = ticketDAO.findByTicketIdAndPassenger(ticketId, passenger);
+        TicketBuyDTO ticketDTO = new TicketBuyDTO();
         if(ticket == null) {
             throw new IllegalArgumentException("You don\'t have such ticket");
         } else {
+            ticketDTO.setTripId(ticket.getTrip().getId());
+            ticketDTO.setDepartureFromIndex(ticket.getFrom().getNumberInTrip());
+            ticketDTO.setDepartureToIndex(ticket.getTo().getNumberInTrip());
+            OccupiedSeat occupiedSeat = ticket.getOccupiedSeats().get(0);
+            ticketDTO.setCoachNumber(occupiedSeat.getSeat().getCoachNumber());
+            ticketDTO.setSeatNum(occupiedSeat.getSeat().getSeatNumber());
             ticketDAO.delete(ticket);
         }
+        return ticketDTO;
     }
 
     @Override

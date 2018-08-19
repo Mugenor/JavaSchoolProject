@@ -13,7 +13,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Configuration
-@Import({JPAConfig.class, SecurityConfig.class, RabbitConfig.class})
+@Import({JPAConfig.class, SecurityConfig.class, RabbitConfig.class, SecurityWebSocketConfig.class})
 @ComponentScan({"javaschool.service"})
 @PropertySource("classpath:mail.properties")
 @EnableScheduling

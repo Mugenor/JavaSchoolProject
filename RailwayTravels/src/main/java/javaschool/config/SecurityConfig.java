@@ -55,6 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/logout").authenticated()
                 .anyRequest().permitAll().and()
                 .httpBasic().and()
+                .cors().disable()
                 .csrf().disable();
     }
 

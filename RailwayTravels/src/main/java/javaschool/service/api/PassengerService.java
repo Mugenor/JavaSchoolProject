@@ -2,6 +2,7 @@ package javaschool.service.api;
 
 import java.util.List;
 import javaschool.controller.dtoentity.PassengerWithoutTickets;
+import javaschool.controller.dtoentity.TicketBuyDTO;
 import javaschool.controller.dtoentity.TicketDTO;
 import javaschool.entity.Passenger;
 import javaschool.entity.Ticket;
@@ -75,8 +76,9 @@ public interface PassengerService {
      *
      * @param username passenger's username
      * @param ticketId ticket's id
+     * @return deleted ticket
      */
-    void returnTicket(String username, Integer ticketId);
+    TicketBuyDTO returnTicket(String username, Integer ticketId);
 
     /**
      * Finds out if passenger with specified username is registered on trip with specified id

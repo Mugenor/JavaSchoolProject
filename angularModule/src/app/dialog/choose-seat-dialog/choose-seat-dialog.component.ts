@@ -9,6 +9,7 @@ import {ErrorDialogComponent} from '../error-dialog/error-dialog.component';
 import {ActivatedRoute} from '@angular/router';
 import {TripService} from '../../service/trip.service';
 import {TicketService} from '../../service/ticket.service';
+import {StompService} from '../../service/stomp.service';
 
 @Component({
   selector: 'app-choose-seat-dialog',
@@ -18,6 +19,7 @@ import {TicketService} from '../../service/ticket.service';
 export class ChooseSeatDialogComponent implements OnInit {
   private static REGISTERED_MESSAGE = 'You already bought a ticket on this trip';
   private static TICKET_BOUGHT_MESSAGE = 'You bought a ticket';
+  private subscriptionForTickets: any;
   tripInfo: TripInfo;
   tripId: number;
   departureFromIndex: number;
@@ -30,8 +32,36 @@ export class ChooseSeatDialogComponent implements OnInit {
               private tripService: TripService,
               private ticketService: TicketService,
               private dialogRef: MatDialogRef<ChooseSeatDialogComponent>,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private stompService: StompService) {
     this.coaches = [];
+    this.dialogRef.afterOpen().subscribe(() => {
+      console.log('After open');
+      this.subscriptionForTickets = this.stompService.subscribeForTicketId(this.data.tripId, (message) => {
+        console.log(message);
+        const resp = JSON.parse(message.body);
+        if (!(this.data.departureFromIndex > resp.departureToIndex ||
+          this.data.departureToIndex < resp.departureFromIndex)) {
+          for (let i = 0; i < this.coaches.length; ++i) {
+            if (this.coaches[i].coachNumber === resp.coachNumber) {
+              for (let j = 0; i < this.coaches[i].seats.length; ++j) {
+                if (this.coaches[i].seats[j].seatNumber === resp.seatNumber) {
+                  this.coaches[i].seats[j].engaged = resp.status === 'buy';
+                  if (this.isChosen(this.coaches[i], this.coaches[i].seats[j])) {
+                    this.chosenSeat = null;
+                  }
+                  return;
+                }
+              }
+            }
+          }
+        }
+      });
+    });
+    this.dialogRef.beforeClose().subscribe(() => {
+      console.log('Before close');
+      this.subscriptionForTickets.unsubscribe();
+    });
   }
 
   isChosen(coach: Coach, seat: Seat): boolean {
@@ -58,7 +88,7 @@ export class ChooseSeatDialogComponent implements OnInit {
         .subscribe((data) => {
           this.dialogRef.close();
           this.dialog.open(ErrorDialogComponent, {
-            data: { message: ChooseSeatDialogComponent.TICKET_BOUGHT_MESSAGE}
+            data: {message: ChooseSeatDialogComponent.TICKET_BOUGHT_MESSAGE}
           });
         }, error => {
           this.dialog.open(ErrorDialogComponent, {

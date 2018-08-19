@@ -5,6 +5,7 @@ import {MatButton, MatDialog, MatTable, MatTableDataSource} from '@angular/mater
 import {Subject} from 'rxjs';
 import {DateToStringService} from '../service/date-to-string.service';
 import {ErrorDialogComponent} from '../dialog/error-dialog/error-dialog.component';
+import {StompService} from '../service/stomp.service';
 
 
 @Component({

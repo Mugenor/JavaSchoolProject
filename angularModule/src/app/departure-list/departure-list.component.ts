@@ -26,7 +26,7 @@ export class DepartureListComponent implements OnInit {
       data: {
         tripId: trip.id,
         departureFromIndex: trip.chosen[0],
-        departureToIndex: trip.chosen[1]
+        departureToIndex: trip.chosen[1] - 1
       }
     });
   }
