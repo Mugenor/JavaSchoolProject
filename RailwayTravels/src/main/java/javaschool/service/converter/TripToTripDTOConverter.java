@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 public class TripToTripDTOConverter implements ClassConverter<Trip, TripDTO> {
     private DepartureToDepartureDTOConverter departureToDepartureDTOConverter;
 
+    private TripToTripDTOConverter() {}
+
     @Autowired
     public TripToTripDTOConverter(DepartureToDepartureDTOConverter departureToDepartureDTOConverter) {
         this.departureToDepartureDTOConverter = departureToDepartureDTOConverter;
