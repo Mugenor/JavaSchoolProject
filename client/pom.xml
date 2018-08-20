@@ -45,8 +45,18 @@
             <artifactId>primefaces</artifactId>
             <version>6.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.primefaces.themes</groupId>
+            <artifactId>cruze</artifactId>
+            <version>1.0.10</version>
+        </dependency>
     </dependencies>
-
+    <repositories>
+        <repository>
+            <id>repository.primefaces.org</id>
+            <url>http://repository.primefaces.org/</url>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>
@@ -74,6 +84,7 @@
                     <warSourceDirectory>src/main/webapp</warSourceDirectory>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                     <warName>client</warName>
+                    <webappDirectory>target/client</webappDirectory>
                 </configuration>
             </plugin>
         </plugins>

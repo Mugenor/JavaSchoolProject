@@ -78,19 +78,19 @@ public class FindWayWithTransfersTest {
 
     @Test
     public void failureSearchTest() {
-        List<Trip> emptyList = new LinkedList<>();
-        when(tripDAO.findByStationTitleFromDateTimeFromBetween(
-                anyString(), any(LocalDateTime.class), any(LocalDateTime.class)
-        )).thenReturn(emptyList);
+//        List<Trip> emptyList = new LinkedList<>();
+//        when(tripDAO.findByStationTitleFromDateTimeFromBetween(
+//                anyString(), any(LocalDateTime.class), any(LocalDateTime.class)
+//        )).thenReturn(emptyList);
 
         when(tripDAO.findByStationTitleFromDateTimeFromBetween(
                 eq(TITLES[0]), any(LocalDateTime.class), any(LocalDateTime.class)
         )).thenReturn(generateListWithOneTrip(1, LocalDateTime.now().plusHours(1), TITLES[0], TITLES[1], TITLES[2], TITLES[4]));
 
-        when(tripDAO.findByStationTitleFromDateTimeFromBetween(
-                eq(TITLES[1]), any(LocalDateTime.class), any(LocalDateTime.class)
-        )).thenReturn(generateListWithOneTrip(2, LocalDateTime.now().plusHours(2).plusMinutes(30),
-                TITLES[1], TITLES[3], TITLES[4]));
+//        when(tripDAO.findByStationTitleFromDateTimeFromBetween(
+//                eq(TITLES[1]), any(LocalDateTime.class), any(LocalDateTime.class)
+//        )).thenReturn(generateListWithOneTrip(2, LocalDateTime.now().plusHours(2).plusMinutes(30),
+//                TITLES[1], TITLES[3], TITLES[4]));
 
         List<List<TripDTO>> fromToBetweenWithTransfers = searchTripsWithTransfers
                 .findFromToBetweenWithTransfers(TITLES[0], TITLES[4],
