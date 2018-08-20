@@ -5,12 +5,21 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-public class TripDTO implements Serializable, Cloneable {
+public class TripDTO implements Serializable {
     private Integer id;
     private int coachCount;
     private List<DepartureDTO> departures;
 
     public TripDTO() {
+    }
+
+    public TripDTO(TripDTO tripDTO) {
+        this.id = tripDTO.id;
+        this.coachCount = tripDTO.coachCount;
+        this.departures = new LinkedList<>();
+        for (DepartureDTO departureDTO: tripDTO.departures) {
+            this.departures.add(new DepartureDTO(departureDTO));
+        }
     }
 
     public TripDTO(Integer id, List<DepartureDTO> departures, Integer coachCount) {
@@ -66,16 +75,5 @@ public class TripDTO implements Serializable, Cloneable {
                 "id=" + id +
                 ", departures=" + departures +
                 '}';
-    }
-
-    @Override
-    public TripDTO clone() throws CloneNotSupportedException {
-        LinkedList<DepartureDTO> departureDTOS = new LinkedList<>();
-        for(DepartureDTO departureDTO: departures) {
-            departureDTOS.addLast(departureDTO.clone());
-        }
-        TripDTO tripDTO = (TripDTO) super.clone();
-        tripDTO.setDepartures(departureDTOS);
-        return tripDTO;
     }
 }

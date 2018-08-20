@@ -22,6 +22,7 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 public class TripUpdatesConsumer implements Consumer {
+    private static final String PUSH_EVENT = "tripUpdate";
 
     private final TreeNode root;
     private final PushContext pushContext;
@@ -39,27 +40,27 @@ public class TripUpdatesConsumer implements Consumer {
 
     @Override
     public void handleConsumeOk(String consumerTag) {
-
+        //unnecessary
     }
 
     @Override
     public void handleCancelOk(String consumerTag) {
-
+        //unnecessary
     }
 
     @Override
     public void handleCancel(String consumerTag) throws IOException {
-
+        //unnecessary
     }
 
     @Override
     public void handleShutdownSignal(String consumerTag, ShutdownSignalException sig) {
-
+        //unnecessary
     }
 
     @Override
     public void handleRecoverOk(String consumerTag) {
-
+        //unnecessary
     }
 
     @Override
@@ -76,10 +77,9 @@ public class TripUpdatesConsumer implements Consumer {
                     break;
                 case TripUpdate.DELETE:
                     doDeleteTrip(tripUpdate.getTrip());
-                    break;
             }
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -93,7 +93,7 @@ public class TripUpdatesConsumer implements Consumer {
                 root.getChildren().add(updateNode);
             }
             tripDTOSet.add(trip);
-            pushContext.send("tripUpdate");
+            pushContext.send(PUSH_EVENT);
         } else {
             if (tripDTOSet.contains(trip)) {
                 doDeleteTrip(trip);
@@ -105,7 +105,7 @@ public class TripUpdatesConsumer implements Consumer {
         if (tripDTOSet.remove(trip)) {
             TreeNode deleteNode = createTripNode(trip);
             deleteFromChildren((TableModel) deleteNode.getData(), root.getChildren());
-            pushContext.send("tripUpdate");
+            pushContext.send(PUSH_EVENT);
         }
     }
 
@@ -113,7 +113,7 @@ public class TripUpdatesConsumer implements Consumer {
         if (containsTodayDepartures(trip.getDepartures())) {
             root.getChildren().add(createTripNode(trip));
             tripDTOSet.add(trip);
-            pushContext.send("tripUpdate");
+            pushContext.send(PUSH_EVENT);
         }
     }
 

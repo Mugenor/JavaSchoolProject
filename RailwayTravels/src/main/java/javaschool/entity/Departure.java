@@ -18,8 +18,8 @@ import org.joda.time.LocalDateTime;
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"station_from", "station_to", "dateTimeFrom", "dateTimeTo"})})
 public class Departure {
-    public final static Integer NUMBER_IN_TRIP_OFFSET = 1;
-    public final static Integer DEFAULT_SEATS_COUNT_IN_COACH = 36;
+    public static final Integer NUMBER_IN_TRIP_OFFSET = 1;
+    public static final Integer DEFAULT_SEATS_COUNT_IN_COACH = 36;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

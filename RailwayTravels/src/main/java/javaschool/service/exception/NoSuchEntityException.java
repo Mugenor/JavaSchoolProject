@@ -1,7 +1,7 @@
 package javaschool.service.exception;
 
 public class NoSuchEntityException extends RuntimeException {
-    private Class entityClass;
+    private final Class entityClass;
 
     public NoSuchEntityException(Class entityClass) {
         this.entityClass = entityClass;

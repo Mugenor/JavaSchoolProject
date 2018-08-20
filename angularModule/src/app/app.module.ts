@@ -19,9 +19,11 @@ import {FindTripComponent} from './find-trip/find-trip.component';
 import {
   MatAutocompleteModule,
   MatButtonModule,
-  MatCheckboxModule, MatDialogModule,
+  MatCheckboxModule,
+  MatDialogModule,
   MatFormFieldModule,
-  MatInputModule, MatProgressSpinnerModule,
+  MatInputModule,
+  MatProgressSpinnerModule,
   MatTableModule
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -30,7 +32,7 @@ import {DatetimepickerComponent} from './datetimepicker/datetimepicker.component
 import {DepartureListWithMenuComponent} from './departure-list-with-menu/departure-list-with-menu.component';
 import {DepartureListComponent} from './departure-list/departure-list.component';
 import {ErrorDialogComponent} from './dialog/error-dialog/error-dialog.component';
-import { ChooseSeatDialogComponent } from './dialog/choose-seat-dialog/choose-seat-dialog.component';
+import {ChooseSeatDialogComponent} from './dialog/choose-seat-dialog/choose-seat-dialog.component';
 
 window['$'] = $;
 window['jQuery'] = $;

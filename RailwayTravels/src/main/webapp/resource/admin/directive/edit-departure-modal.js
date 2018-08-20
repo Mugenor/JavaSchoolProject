@@ -64,7 +64,6 @@ adminApp.directive('editDepartureModal', function (stationService, editTripServi
             scope.internalControl = scope.control || {};
             scope.internalControl.show = function (tripId, departureIndex, departureBefore, departure, departureAfter) {
                 scope.updateDepartureForm.$setPristine(true);
-                console.log(scope.updateDepartureForm);
                 scope.tripId = tripId;
                 scope.departureIndex = departureIndex;
                 scope.departure = {

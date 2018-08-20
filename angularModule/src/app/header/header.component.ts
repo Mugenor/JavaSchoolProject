@@ -15,7 +15,6 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     const usernameMetaTag: HTMLMetaElement = this.meta.getTag('name="username"');
-    console.log(usernameMetaTag.content);
     this.username = usernameMetaTag.content === null ? 'You' : usernameMetaTag.content;
   }
 

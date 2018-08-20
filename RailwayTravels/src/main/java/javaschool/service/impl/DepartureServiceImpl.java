@@ -6,7 +6,6 @@ import javaschool.controller.dtoentity.DepartureDTO;
 import javaschool.controller.dtoentity.NewDepartureDTO;
 import javaschool.dao.api.DepartureDAO;
 import javaschool.dao.api.StationDAO;
-import javaschool.dao.api.TripDAO;
 import javaschool.entity.Departure;
 import javaschool.entity.Station;
 import javaschool.service.api.DepartureService;
@@ -23,17 +22,15 @@ public class DepartureServiceImpl implements DepartureService {
     private DepartureToDepartureDTOConverter departureToDepartureDTOConverter;
     private DepartureToNewDepartureDTOConverter departureToNewDepartureDTOConverter;
     private DepartureDAO departureDAO;
-    private TripDAO tripDAO;
     private StationDAO stationDAO;
 
     @Autowired
-    public DepartureServiceImpl(DepartureDAO departureDAO, TripDAO tripDAO,
+    public DepartureServiceImpl(DepartureDAO departureDAO,
                                 StationDAO stationDAO,
                                 DepartureToDepartureDTOConverter departureDTOConverter,
                                 DepartureToNewDepartureDTOConverter departureToNewDepartureDTOConverter) {
         this.departureDAO = departureDAO;
         this.stationDAO = stationDAO;
-        this.tripDAO = tripDAO;
         this.departureToDepartureDTOConverter = departureDTOConverter;
         this.departureToNewDepartureDTOConverter = departureToNewDepartureDTOConverter;
     }
@@ -87,10 +84,12 @@ public class DepartureServiceImpl implements DepartureService {
     public void updateDeparture(Integer tripId, Integer departureIndex, NewDepartureDTO departureDTO) {
         List<Departure> departures = departureDAO.findByTripIdAndNumberInTripBetween(tripId, departureIndex - 1, departureIndex + 1,
                 true, true);
-        if (departures == null || departures.size() == 0) {
+        if (departures == null || departures.isEmpty()) {
             throw new IllegalArgumentException("Invalid query");
         }
-        Departure departure = null, departureBefore = null, departureAfter = null;
+        Departure departure = null;
+        Departure departureBefore = null;
+        Departure departureAfter = null;
         for (Departure curDep : departures) {
             if (departureIndex.equals(curDep.getNumberInTrip())) {
                 departure = curDep;
@@ -99,6 +98,9 @@ public class DepartureServiceImpl implements DepartureService {
             } else {
                 departureAfter = curDep;
             }
+        }
+        if (departure == null) {
+            throw new IllegalArgumentException("Invalid query");
         }
         if (departureDTO.getStationFrom().equals(departureDTO.getStationTo())) {
             throw new IllegalArgumentException("Departure station and arrival station must be different");

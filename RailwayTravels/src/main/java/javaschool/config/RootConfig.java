@@ -19,10 +19,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableAsync
 public class RootConfig {
-    private static final String protocolPropName = "mail.transport.protocol";
-    private static final String authPropName = "mail.smtp.auth";
-    private static final String starttlsEnablePropName = "mail.smtp.starttls.enable";
-    private static final String debugPropName = "mail.debug";
+    private static final String PROTOCOL_PROP_NAME = "mail.transport.protocol";
+    private static final String AUTH_PROP_NAME = "mail.smtp.auth";
+    private static final String STARTTLS_ENABLE_PROP_NAME = "mail.smtp.starttls.enable";
+    private static final String DEBUG_PROP_NAME = "mail.debug";
     @Value("${mail.host}")
     private String mailHost;
     @Value("${mail.username}")
@@ -48,10 +48,10 @@ public class RootConfig {
         mailSender.setPassword(password);
 
         Properties properties = mailSender.getJavaMailProperties();
-        properties.put(protocolPropName, protocol);
-        properties.put(authPropName, auth);
-        properties.put(starttlsEnablePropName, starttls);
-        properties.put(debugPropName, debug);
+        properties.put(PROTOCOL_PROP_NAME, protocol);
+        properties.put(AUTH_PROP_NAME, auth);
+        properties.put(STARTTLS_ENABLE_PROP_NAME, starttls);
+        properties.put(DEBUG_PROP_NAME, debug);
 
         return mailSender;
     }

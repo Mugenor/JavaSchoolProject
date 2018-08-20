@@ -72,10 +72,10 @@ public class SearchTripsWithTransfersImpl implements SearchTripsWithTransfers {
                         pathFound = true;
                         break;
                     }
-                    if(foundStartStation && currentTransfersCount < maxTransfersCount) {
-                            step(resultTrips, tripPath, tripsVisited, departureDTO.getStationTo(), endStation,
-                                    departureDTO.getDateTimeFrom(), dateTimeTo,
-                                    currentTransfersCount + 1, maxTransfersCount);
+                    if (foundStartStation && currentTransfersCount < maxTransfersCount) {
+                        step(resultTrips, tripPath, tripsVisited, departureDTO.getStationTo(), endStation,
+                                departureDTO.getDateTimeFrom(), dateTimeTo,
+                                currentTransfersCount + 1, maxTransfersCount);
                     }
                 }
                 if (pathFound) {
@@ -88,14 +88,10 @@ public class SearchTripsWithTransfersImpl implements SearchTripsWithTransfers {
     }
 
     private LinkedList<TripDTO> deepCloneLinkedList(LinkedList<TripDTO> linkedList) {
-        try {
-            LinkedList<TripDTO> clone = new LinkedList<>();
-            for (TripDTO v : linkedList) {
-                clone.addLast(v.clone());
-            }
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
+        LinkedList<TripDTO> clone = new LinkedList<>();
+        for (TripDTO v : linkedList) {
+            clone.addLast(new TripDTO(v));
         }
+        return clone;
     }
 }

@@ -9,7 +9,6 @@ import javaschool.service.api.MailSender;
 import javaschool.service.api.ReCaptchaApiClient;
 import javaschool.service.api.UserService;
 import javaschool.service.converter.NewUserToAlmostUserConverter;
-import javaschool.service.converter.NewUserToUserConverter;
 import javaschool.service.exception.EntityAlreadyExistsException;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
@@ -39,7 +38,6 @@ public class UserController {
     private static final String RE_CAPTCHA_PARAM = "g-recaptcha-response";
 
     private UserService userService;
-    private NewUserToUserConverter userConverter;
     private AlmostUserService almostUserService;
     private ReCaptchaApiClient reCaptchaApiClient;
     private NewUserToAlmostUserConverter newUserToAlmostUserConverter;
@@ -51,12 +49,11 @@ public class UserController {
     private String subject;
 
     @Autowired
-    public UserController(UserService userService, NewUserToUserConverter userConverter,
+    public UserController(UserService userService,
                           ReCaptchaApiClient reCaptchaApiClient, AlmostUserService almostUserService,
                           NewUserToAlmostUserConverter newUserToAlmostUserConverter,
                           MailSender mailSender) {
         this.userService = userService;
-        this.userConverter = userConverter;
         this.reCaptchaApiClient = reCaptchaApiClient;
         this.almostUserService = almostUserService;
         this.newUserToAlmostUserConverter = newUserToAlmostUserConverter;

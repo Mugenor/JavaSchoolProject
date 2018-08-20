@@ -4,17 +4,13 @@ import java.util.List;
 import javaschool.dao.api.DepartureDAO;
 import javaschool.entity.Departure;
 import javaschool.entity.Departure_;
-import javaschool.entity.Station;
-import javaschool.entity.Station_;
 import javaschool.entity.Trip;
 import javaschool.entity.Trip_;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import org.joda.time.LocalDateTime;
 import org.springframework.stereotype.Repository;
 
 @Repository

@@ -1,7 +1,6 @@
 package javaschool.controller.dtoentity;
 
 import javaschool.controller.validator.LocalDateTimeValidator;
-import javaschool.controller.validator.annotation.LocalDateConstraint;
 import javaschool.controller.validator.annotation.LocalDateTimeConstraint;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -24,14 +23,6 @@ public class NewDepartureDTO {
     private int coachCount;
 
     public NewDepartureDTO() {
-    }
-
-    public NewDepartureDTO(String stationFrom, String stationTo, LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo, int coachCount) {
-        this.stationFrom = stationFrom;
-        this.stationTo = stationTo;
-        this.dateTimeFrom = dateTimeFrom;
-        this.dateTimeTo = dateTimeTo;
-        this.coachCount = coachCount;
     }
 
     public String getStationFrom() {

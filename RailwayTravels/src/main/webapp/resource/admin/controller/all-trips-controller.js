@@ -15,6 +15,7 @@ adminApp.controller('allTripsController', function ($scope, $location, tripTable
     $scope.newTrip = {
         departures: $scope.departuresInNewTrip
     };
+
     function showError(resp) {
         $scope.modalControl.show(resp.data);
     }
@@ -78,8 +79,6 @@ adminApp.controller('allTripsController', function ($scope, $location, tripTable
         endDate: endDate,
         immediateUpdates: true
     });
-
-    console.log(dateTimeFromInput.data('datetimepicker'));
 
     $scope.checkStation = function (station) {
         if ($scope.stationNames) {
@@ -189,8 +188,8 @@ adminApp.controller('allTripsController', function ($scope, $location, tripTable
             $scope.newTrip = {
                 departures: $scope.departuresInNewTrip
             };
-            $scope.newDeparture = {};
-            console.log($scope.departuresInNewTrip);
+            $scope.clearTrip();
+            $scope.coachCount = null;
             tripTableService.saveTrip(departures).then(function (trip) {
                 tripTableService.addDepartureToNewDepartureList(tripTableService.convertTrip(trip), $scope.trips);
             }, showError);

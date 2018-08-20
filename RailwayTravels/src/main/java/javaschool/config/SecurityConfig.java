@@ -4,7 +4,6 @@ import javaschool.controller.handler.UserAdminUrlAuthenticationSuccessHandler;
 import javaschool.dao.api.UserDAO;
 import javaschool.service.SecurityUserDetailService;
 import javax.sql.DataSource;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +21,6 @@ import static javaschool.service.SecurityUserDetailService.ROLE_PASSENGER;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private static final Logger log = Logger.getLogger(SecurityConfig.class);
     private DataSource dataSource;
     private UserDAO userDAO;
 

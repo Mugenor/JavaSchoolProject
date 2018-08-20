@@ -20,13 +20,11 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class PassengerDAOImpl extends GenericAbstractDAO<Passenger, Integer> implements PassengerDAO {
-    private static final Logger log = Logger.getLogger(PassengerDAOImpl.class);
 
     @Override
     public Passenger findByNameAndSurnameAndBirthday(String name, String surname, LocalDate birthday) {

@@ -88,7 +88,7 @@ public class PassengerServiceImpl implements PassengerService {
         notNullElseThrowException(trip, new NoSuchEntityException("There is no such trip!", Trip.class));
         List<Departure> departures = departureDAO.findByTripIdAndNumberInTripBetween(trip.getId(),
                 leftDepartureIndex, rightDepartureIndex, false, true);
-        if (departures.size() == 0) {
+        if (departures.isEmpty()) {
             throw boundsExc;
         }
         if (isRegistered(tripId, username)) {

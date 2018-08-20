@@ -24,7 +24,6 @@ export class AllTripsComponent implements OnInit {
   ngOnInit() {
     this.tripService.getAvailableTrips().subscribe((data) => {
       this.trips = data.map(trip => TripDTOToTripConverterService.convert(trip));
-      console.log(this.trips);
     }, error => {
       this.dialog.open(ErrorDialogComponent, {
         data: {message: error.error}

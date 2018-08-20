@@ -1,5 +1,4 @@
 adminApp.directive('trip', function () {
-    console.log('in trip');
     return {
         restrict: 'E',
         scope: {

@@ -1,6 +1,5 @@
 package client;
 
-import java.util.HashSet;
 import java.util.Set;
 import javaschool.controller.dtoentity.TripDTO;
 import javax.ejb.Stateless;

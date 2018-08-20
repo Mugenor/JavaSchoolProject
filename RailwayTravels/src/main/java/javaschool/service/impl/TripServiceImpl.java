@@ -19,12 +19,12 @@ import javaschool.dao.api.TripDAO;
 import javaschool.entity.Departure;
 import javaschool.entity.OccupiedSeat;
 import javaschool.entity.Trip;
-import javaschool.service.api.RabbitService;
 import javaschool.service.api.SearchTripsWithTransfers;
 import javaschool.service.api.TripService;
 import javaschool.service.converter.DepartureToDepartureDTOConverter;
 import javaschool.service.converter.DepartureToNewDepartureDTOConverter;
 import javaschool.service.converter.TripToTripDTOConverter;
+import org.joda.time.Duration;
 import org.joda.time.Instant;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -35,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TripServiceImpl implements TripService {
+    public static final Duration CURRENT_TIME_OFFSET = Duration.standardMinutes(10);
     private TripDAO tripDAO;
     private TicketDAO ticketDAO;
     private DepartureDAO departureDAO;
@@ -42,31 +43,22 @@ public class TripServiceImpl implements TripService {
     private TripToTripDTOConverter tripToTripDTOConverter;
     private DepartureToNewDepartureDTOConverter departureToNewDepartureDTOConverter;
     private OccupiedSeatDAO occupiedSeatDAO;
-    private RabbitService rabbitService;
-    private TripService selfProxy;
     private SearchTripsWithTransfers searchTripsWithTransfers;
 
     @Autowired
     public TripServiceImpl(TripDAO tripDAO, DepartureDAO departureDAO,
                            DepartureToNewDepartureDTOConverter departureToNewDepartureDTOConverter,
                            TripToTripDTOConverter tripToTripDTOConverter, SearchTripsWithTransfers searchTripsWithTransfers,
-                           DepartureToDepartureDTOConverter departureDTOConverter, RabbitService rabbitService,
+                           DepartureToDepartureDTOConverter departureDTOConverter,
                            OccupiedSeatDAO occupiedSeatDAO, TicketDAO ticketDAO) {
         this.tripDAO = tripDAO;
         this.departureDAO = departureDAO;
         this.departureToNewDepartureDTOConverter = departureToNewDepartureDTOConverter;
         this.tripToTripDTOConverter = tripToTripDTOConverter;
         this.departureToDepartureDTOConverter = departureDTOConverter;
-        this.rabbitService = rabbitService;
         this.searchTripsWithTransfers = searchTripsWithTransfers;
         this.occupiedSeatDAO = occupiedSeatDAO;
         this.ticketDAO = ticketDAO;
-    }
-
-    @Autowired
-    public TripServiceImpl setSelfProxy(TripService selfProxy) {
-        this.selfProxy = selfProxy;
-        return this;
     }
 
     @Override
@@ -130,6 +122,8 @@ public class TripServiceImpl implements TripService {
                                                               int maxTransfersCount) {
         if (stFrom.equals(stTo)) {
             throw new IllegalArgumentException("Stations must be different!");
+        } else if(dateTimeFrom.compareTo(LocalDateTime.now()) < 0) {
+            throw new IllegalArgumentException("Departure time must be after current time!");
         } else if (dateTimeFrom.compareTo(dateTimeTo) >= 0) {
             throw new IllegalArgumentException("Departure time must be lower then arrival time!");
         } else if (maxTransfersCount < 0) {
@@ -165,7 +159,7 @@ public class TripServiceImpl implements TripService {
         List<TripDTO> resultList = new LinkedList<>();
         for (Trip trip : trips) {
             List<Departure> departures = trip.getDepartures();
-            if (departures.size() == 0) continue;
+            if (departures.isEmpty()) continue;
             int coachCount = departures.get(0).getCoachCount();
             List<DepartureDTO> departureDTOS = new LinkedList<>();
             boolean found = false;
@@ -177,7 +171,7 @@ public class TripServiceImpl implements TripService {
                     departureDTOS.add(departureToDepartureDTOConverter.convertTo(departure));
                 }
             }
-            if (departureDTOS.size() == 0) continue;
+            if (departureDTOS.isEmpty()) continue;
             resultList.add(new TripDTO(trip.getId(), departureDTOS, coachCount));
         }
         return resultList;
@@ -189,7 +183,7 @@ public class TripServiceImpl implements TripService {
         List<OccupiedSeat> occupiedSeats = occupiedSeatDAO.
                 findByTripIdAndNumberInTripBounds(tripId, departureFromIndex, departureToIndex);
         int coachNumber;
-        if (occupiedSeats.size() == 0) {
+        if (occupiedSeats.isEmpty()) {
             Trip trip = tripDAO.findById(tripId);
             if (trip != null) {
                 coachNumber = trip.getDepartures().get(0).getCoachCount();
@@ -211,11 +205,11 @@ public class TripServiceImpl implements TripService {
     public TripInfo getTripInfo(Integer tripId, Integer departureFromIndex, Integer departureToIndex) {
         List<Departure> departures = departureDAO.findByTripIdAndNumberInTripBetween(tripId, departureFromIndex, departureToIndex,
                 true, true);
-        if (departures.size() == 0) {
+        if (departures.isEmpty()) {
             throw new IllegalArgumentException("Trip does not exist");
         }
-        Departure first = departures.get(0),
-                last = departures.get(departures.size() - 1);
+        Departure first = departures.get(0);
+        Departure last = departures.get(departures.size() - 1);
         return new TripInfo(first.getStationFrom().getTitle(), last.getStationTo().getTitle(),
                 Instant.parse(first.getDateTimeFrom().toString()).getMillis(),
                 Instant.parse(last.getDateTimeTo().toString()).getMillis(),
@@ -225,7 +219,7 @@ public class TripServiceImpl implements TripService {
     @Override
     @Transactional
     public TripDTO save(List<NewDepartureDTO> departureDTOS) {
-        if (departureDTOS == null || departureDTOS.size() == 0) {
+        if (departureDTOS == null || departureDTOS.isEmpty()) {
             throw new InvalidParameterException("Departure list must contain at least one departure!");
         }
         int numInTrip = Departure.NUMBER_IN_TRIP_OFFSET;

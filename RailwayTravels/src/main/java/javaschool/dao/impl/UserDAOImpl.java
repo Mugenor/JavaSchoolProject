@@ -9,12 +9,10 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class UserDAOImpl extends GenericAbstractDAO<User, Integer> implements UserDAO {
-    private static final Logger log = Logger.getLogger(UserDAOImpl.class);
     @Override
     public User findByUsername(String username) {
         try {
@@ -45,17 +43,13 @@ public class UserDAOImpl extends GenericAbstractDAO<User, Integer> implements Us
 
     @Override
     public List<User> findByUsernameOrEmail(String username, String email) {
-        try {
-            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<User> query = builder.createQuery(User.class);
-            Root<User> from = query.from(User.class);
-            Predicate usernameOrEmailEq = builder.or(builder.equal(from.get(User_.username), username),
-                    builder.equal(from.get(User_.email), email));
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> query = builder.createQuery(User.class);
+        Root<User> from = query.from(User.class);
+        Predicate usernameOrEmailEq = builder.or(builder.equal(from.get(User_.username), username),
+                builder.equal(from.get(User_.email), email));
 
-            return entityManager.createQuery(query.select(from).where(usernameOrEmailEq))
-                    .getResultList();
-        } catch (NoResultException e) {
-            return null;
-        }
+        return entityManager.createQuery(query.select(from).where(usernameOrEmailEq))
+                .getResultList();
     }
 }

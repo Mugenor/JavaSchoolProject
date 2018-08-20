@@ -297,7 +297,6 @@ class DateState {
 
 export class DateTimeErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    console.log('error state matcher: ', control, form);
     return true;
   }
 }

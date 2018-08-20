@@ -1,7 +1,6 @@
 package javaschool.service.api;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import javax.activation.DataSource;
 import javax.mail.MessagingException;

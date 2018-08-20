@@ -1,6 +1,5 @@
 package javaschool.controller.validator;
 
-import javaschool.controller.validator.annotation.LocalDateConstraint;
 import javaschool.controller.validator.annotation.LocalDateTimeConstraint;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -18,7 +17,6 @@ public class LocalDateTimeValidator implements ConstraintValidator<LocalDateTime
 
     @Override
     public boolean isValid(LocalDateTime localDate, ConstraintValidatorContext constraintValidatorContext) {
-        System.out.println(localDate);
         if(isMinDateTimeNow) {
             minDateTime = new LocalDateTime();
         }

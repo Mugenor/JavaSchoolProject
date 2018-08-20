@@ -23,7 +23,7 @@ public class SecurityUserDetailService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
         User user = userDAO.findByUsername(username);
         log.info(username + " trying to find");
         if(user == null) throw new UsernameNotFoundException(username + " not found");

@@ -45,7 +45,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   returnTicket(button: MatButton, ticket: TicketToDisplay) {
-    console.log(button, ticket);
     button.disabled = true;
     this.ticketService.returnTicket(ticket.id)
       .subscribe((data) => {

@@ -1,6 +1,5 @@
 package javaschool.service.impl;
 
-import com.lowagie.text.BadElementException;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Image;
 import com.lowagie.text.pdf.BarcodePDF417;
@@ -18,7 +17,6 @@ import javaschool.entity.Ticket;
 import javaschool.service.converter.StringToLocalDateConverter;
 import javaschool.service.converter.StringToLocalDateTimeConverter;
 import javax.annotation.PostConstruct;
-import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -65,7 +63,7 @@ public class TicketToPDFTicketConverter {
         pdfStamper.close();
     }
 
-    private void writeBarcode(PdfContentByte stream, Ticket ticket, int x, int y) throws BadElementException, DocumentException {
+    private void writeBarcode(PdfContentByte stream, Ticket ticket, int x, int y) throws DocumentException {
         BarcodePDF417 barcode = new BarcodePDF417();
         barcode.setText(ticket.getUuid().toString());
         Image image = barcode.getImage();

@@ -1,9 +1,7 @@
 package javaschool.controller.dtoentity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import javaschool.controller.validator.annotation.IsEmail;
 import javaschool.controller.validator.annotation.LocalDateConstraint;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 import org.joda.time.LocalDate;
