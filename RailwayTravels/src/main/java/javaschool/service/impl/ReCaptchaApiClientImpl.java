@@ -8,6 +8,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * The type Re captcha api client.
+ */
 @Service
 public class ReCaptchaApiClientImpl implements ReCaptchaApiClient {
     private static final String SECRET_PROP = "secret";

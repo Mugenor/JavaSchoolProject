@@ -4,6 +4,9 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 import org.joda.time.LocalDate;
 
+/**
+ * The type Local date attribute converter.
+ */
 @Converter(autoApply = true)
 public class LocalDateAttributeConverter implements AttributeConverter<LocalDate, Long> {
     @Override

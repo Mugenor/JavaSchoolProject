@@ -28,6 +28,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * The type Ticket controller.
+ */
 @RestController
 @RequestMapping("/client/tickets")
 public class TicketController {
@@ -36,6 +39,14 @@ public class TicketController {
     private MailSender mailSender;
     private StompMessageSender stompMessageSender;
 
+    /**
+     * Instantiates a new Ticket controller.
+     *
+     * @param passengerService           the passenger service
+     * @param ticketToPDFTicketConverter the ticket to pdf ticket converter
+     * @param mailSender                 the mail sender
+     * @param stompMessageSender         the stomp message sender
+     */
     @Autowired
     public TicketController(PassengerService passengerService,
                             TicketToPDFTicketConverter ticketToPDFTicketConverter,
@@ -47,6 +58,15 @@ public class TicketController {
         this.stompMessageSender = stompMessageSender;
     }
 
+    /**
+     * Buy ticket.
+     *
+     * @param ticketBuy the ticket buy
+     * @param principal the principal
+     * @throws IOException        the io exception
+     * @throws DocumentException  the document exception
+     * @throws MessagingException the messaging exception
+     */
     @PostMapping(path = "/buy")
     public void buyTicket(@Valid @RequestBody TicketBuyDTO ticketBuy, Principal principal) throws IOException, DocumentException,
             MessagingException {
@@ -69,11 +89,23 @@ public class TicketController {
                 "Ticket", attachment);
     }
 
+    /**
+     * Gets passenger tickets.
+     *
+     * @param principal the principal
+     * @return the passenger tickets
+     */
     @GetMapping
     public List<TicketDTO> getPassengerTickets(Principal principal) {
         return passengerService.getPassengerTickets(principal.getName());
     }
 
+    /**
+     * Return ticket.
+     *
+     * @param ticketId  the ticket id
+     * @param principal the principal
+     */
     @DeleteMapping(path = "/{ticketId}")
     public void returnTicket(@PathVariable Integer ticketId, Principal principal) {
         TicketBuyDTO ticket = passengerService.returnTicket(principal.getName(), ticketId);

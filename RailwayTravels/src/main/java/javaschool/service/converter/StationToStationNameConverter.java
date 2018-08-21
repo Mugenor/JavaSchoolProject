@@ -4,6 +4,9 @@ import javaschool.controller.dtoentity.StationName;
 import javaschool.entity.Station;
 import org.springframework.stereotype.Service;
 
+/**
+ * The type Station to station name converter.
+ */
 @Service
 public class StationToStationNameConverter implements ClassConverter<Station, StationName> {
     @Override

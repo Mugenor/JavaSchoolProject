@@ -8,12 +8,20 @@ import javaschool.entity.Trip;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * The type Trip to trip dto converter.
+ */
 @Service
 public class TripToTripDTOConverter implements ClassConverter<Trip, TripDTO> {
     private DepartureToDepartureDTOConverter departureToDepartureDTOConverter;
 
     private TripToTripDTOConverter() {}
 
+    /**
+     * Instantiates a new Trip to trip dto converter.
+     *
+     * @param departureToDepartureDTOConverter the departure to departure dto converter
+     */
     @Autowired
     public TripToTripDTOConverter(DepartureToDepartureDTOConverter departureToDepartureDTOConverter) {
         this.departureToDepartureDTOConverter = departureToDepartureDTOConverter;
@@ -38,6 +46,12 @@ public class TripToTripDTOConverter implements ClassConverter<Trip, TripDTO> {
         return trip;
     }
 
+    /**
+     * Convert trip.
+     *
+     * @param trip the trip
+     * @param res  the res
+     */
     protected void convertTrip(Trip trip, TripDTO res) {
         res.setCoachCount(trip.getDepartures().get(0).getCoachCount());
         LinkedList<DepartureDTO> departures = new LinkedList<>();

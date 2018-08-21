@@ -18,6 +18,9 @@ import javax.persistence.criteria.Root;
 import org.joda.time.LocalDateTime;
 import org.springframework.stereotype.Repository;
 
+/**
+ * The type Trip dao.
+ */
 @Repository
 public class TripDAOImpl extends GenericAbstractDAO<Trip, Integer> implements TripDAO {
 

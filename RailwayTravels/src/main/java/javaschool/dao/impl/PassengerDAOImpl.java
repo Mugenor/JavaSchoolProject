@@ -23,6 +23,9 @@ import javax.persistence.criteria.Root;
 import org.joda.time.LocalDate;
 import org.springframework.stereotype.Repository;
 
+/**
+ * The type Passenger dao.
+ */
 @Repository
 public class PassengerDAOImpl extends GenericAbstractDAO<Passenger, Integer> implements PassengerDAO {
 

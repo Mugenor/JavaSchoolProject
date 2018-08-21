@@ -21,6 +21,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
+/**
+ * The type Ticket to pdf ticket converter.
+ */
 @Service
 public class TicketToPDFTicketConverter {
     private static final int FONT_SIZE_SMALL = 16;
@@ -35,12 +38,23 @@ public class TicketToPDFTicketConverter {
     private StringToLocalDateConverter stringToLocalDateConverter;
     private StringToLocalDateTimeConverter stringToLocalDateTimeConverter;
 
+    /**
+     * Instantiates a new Ticket to pdf ticket converter.
+     *
+     * @param stringToLocalDateConverter     the string to local date converter
+     * @param stringToLocalDateTimeConverter the string to local date time converter
+     */
     public TicketToPDFTicketConverter(StringToLocalDateConverter stringToLocalDateConverter,
                                       StringToLocalDateTimeConverter stringToLocalDateTimeConverter) {
         this.stringToLocalDateConverter = stringToLocalDateConverter;
         this.stringToLocalDateTimeConverter = stringToLocalDateTimeConverter;
     }
 
+    /**
+     * Init.
+     *
+     * @throws IOException the io exception
+     */
     @PostConstruct
     public void init() throws IOException {
         String absolutePathToTicketTemplate = new ClassPathResource(pathToTicketTemplate).getFile().getAbsolutePath();
@@ -48,6 +62,14 @@ public class TicketToPDFTicketConverter {
     }
 
 
+    /**
+     * Write pdf ticket.
+     *
+     * @param dist   the dist
+     * @param ticket the ticket
+     * @throws IOException       the io exception
+     * @throws DocumentException the document exception
+     */
     public void writePDFTicket(OutputStream dist, Ticket ticket) throws IOException, DocumentException {
         PdfReader reader = new PdfReader(ticketTemplate);
         PdfStamper pdfStamper = new PdfStamper(reader, dist);

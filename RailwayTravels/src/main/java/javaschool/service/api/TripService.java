@@ -7,6 +7,9 @@ import javaschool.controller.dtoentity.TripDTO;
 import javaschool.controller.dtoentity.TripInfo;
 import org.joda.time.LocalDateTime;
 
+/**
+ * The interface Trip service.
+ */
 public interface TripService {
     /**
      * Finds all trips
@@ -26,6 +29,12 @@ public interface TripService {
      */
     List<TripDTO> findFromToBetween(String stFrom, String stTo, LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo);
 
+    /**
+     * Find by id trip dto.
+     *
+     * @param tripId the trip id
+     * @return the trip dto
+     */
     TripDTO findById(Integer tripId);
 
     /**
@@ -71,7 +80,7 @@ public interface TripService {
      * @param tripId             trip's id
      * @param departureFromIndex left bound for part of trip (departure's numberInTrip)
      * @param departureToIndex   right bound for part of trip (departure's numberInTrip)
-     * @return
+     * @return departure info by trip id and departure bounds
      */
     TrainInfo getDepartureInfoByTripIdAndDepartureBounds(Integer tripId, Integer departureFromIndex, Integer departureToIndex);
 
@@ -89,12 +98,13 @@ public interface TripService {
      * @param tripId             trip's id
      * @param departureFromIndex left bound for part of trip (departure's numberInTrip)
      * @param departureToIndex   right bound for part of trip (departure's numberInTrip)
-     * @return
+     * @return trip info
      */
     TripInfo getTripInfo(Integer tripId, Integer departureFromIndex, Integer departureToIndex);
 
     /**
      * Deletes trip if no passengers is registered on this trip
+     *
      * @param tripId trip's id
      * @return deleted trip converted to TripDTO.class
      */

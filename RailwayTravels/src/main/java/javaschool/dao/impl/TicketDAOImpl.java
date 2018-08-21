@@ -15,6 +15,9 @@ import javax.persistence.criteria.Root;
 import org.joda.time.LocalDateTime;
 import org.springframework.stereotype.Repository;
 
+/**
+ * The type Ticket dao.
+ */
 @Repository
 public class TicketDAOImpl extends GenericAbstractDAO<Ticket, Integer> implements TicketDAO {
     @Override

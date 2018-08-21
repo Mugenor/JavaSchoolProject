@@ -6,6 +6,9 @@ import org.joda.time.format.DateTimeFormatter;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
 
+/**
+ * The type String to local date converter.
+ */
 @Service
 public class StringToLocalDateConverter implements Converter<String, LocalDate>, ClassConverter<String, LocalDate> {
     private static final DateTimeFormatter format = DateTimeFormat.forPattern("dd.MM.yyyy");

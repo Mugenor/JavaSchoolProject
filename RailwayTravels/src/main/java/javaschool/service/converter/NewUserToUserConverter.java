@@ -7,10 +7,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * The type New user to user converter.
+ */
 @Service
 public class NewUserToUserConverter implements ClassConverter<NewUser, User> {
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * Instantiates a new New user to user converter.
+     *
+     * @param passwordEncoder the password encoder
+     */
     @Autowired
     public NewUserToUserConverter(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;

@@ -10,6 +10,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+/**
+ * The type Station.
+ */
 @Entity
 public class Station {
     @Id
@@ -20,33 +23,72 @@ public class Station {
     @OneToMany(mappedBy = "stationFrom", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Departure> departures;
 
+    /**
+     * Instantiates a new Station.
+     */
     public Station() {}
 
+    /**
+     * Instantiates a new Station.
+     *
+     * @param title the title
+     */
     public Station(String title) {
         this.title = title;
     }
 
+    /**
+     * Gets departures.
+     *
+     * @return the departures
+     */
     public List<Departure> getDepartures() {
         return departures;
     }
 
+    /**
+     * Sets departures.
+     *
+     * @param departures the departures
+     */
     public void setDepartures(List<Departure> departures) {
         this.departures = departures;
     }
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public Integer getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     * @return the id
+     */
     public Station setId(Integer id) {
         this.id = id;
         return this;
     }
 
+    /**
+     * Gets title.
+     *
+     * @return the title
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Sets title.
+     *
+     * @param title the title
+     */
     public void setTitle(String title) {
         this.title = title;
     }

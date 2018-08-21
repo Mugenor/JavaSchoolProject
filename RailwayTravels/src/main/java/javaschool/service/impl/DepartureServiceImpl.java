@@ -17,6 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * The type Departure service.
+ */
 @Service
 public class DepartureServiceImpl implements DepartureService {
     private DepartureToDepartureDTOConverter departureToDepartureDTOConverter;
@@ -24,6 +27,14 @@ public class DepartureServiceImpl implements DepartureService {
     private DepartureDAO departureDAO;
     private StationDAO stationDAO;
 
+    /**
+     * Instantiates a new Departure service.
+     *
+     * @param departureDAO                        the departure dao
+     * @param stationDAO                          the station dao
+     * @param departureDTOConverter               the departure dto converter
+     * @param departureToNewDepartureDTOConverter the departure to new departure dto converter
+     */
     @Autowired
     public DepartureServiceImpl(DepartureDAO departureDAO,
                                 StationDAO stationDAO,

@@ -4,6 +4,9 @@ import java.util.List;
 import javaschool.entity.AlmostUser;
 import javaschool.entity.User;
 
+/**
+ * The interface User service.
+ */
 public interface UserService {
     /**
      * Saves new user
@@ -37,7 +40,8 @@ public interface UserService {
 
     /**
      * Saving almostUser as normal user
-     * @param almostUser    almost user to save
+     *
+     * @param almostUser almost user to save
      */
     void save(AlmostUser almostUser);
 }

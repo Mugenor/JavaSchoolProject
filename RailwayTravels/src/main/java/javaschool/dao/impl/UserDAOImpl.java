@@ -11,6 +11,9 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 
+/**
+ * The type User dao.
+ */
 @Repository
 public class UserDAOImpl extends GenericAbstractDAO<User, Integer> implements UserDAO {
     @Override

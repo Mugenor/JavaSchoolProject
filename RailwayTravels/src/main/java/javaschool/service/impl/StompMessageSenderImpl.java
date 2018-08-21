@@ -8,6 +8,9 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+/**
+ * The type Stomp message sender.
+ */
 @Service
 public class StompMessageSenderImpl implements StompMessageSender {
     private static final Logger log = Logger.getLogger(StompMessageSenderImpl.class);
@@ -15,6 +18,11 @@ public class StompMessageSenderImpl implements StompMessageSender {
     private String TICKET_ENDPOINT_PREFIX;
     private SimpMessageSendingOperations sendingOperations;
 
+    /**
+     * Instantiates a new Stomp message sender.
+     *
+     * @param sendingOperations the sending operations
+     */
     @Autowired
     public StompMessageSenderImpl(SimpMessageSendingOperations sendingOperations) {
         this.sendingOperations = sendingOperations;

@@ -33,8 +33,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * The type Trip service.
+ */
 @Service
 public class TripServiceImpl implements TripService {
+    /**
+     * The constant CURRENT_TIME_OFFSET.
+     */
     public static final Duration CURRENT_TIME_OFFSET = Duration.standardMinutes(10);
     private TripDAO tripDAO;
     private TicketDAO ticketDAO;
@@ -45,6 +51,18 @@ public class TripServiceImpl implements TripService {
     private OccupiedSeatDAO occupiedSeatDAO;
     private SearchTripsWithTransfers searchTripsWithTransfers;
 
+    /**
+     * Instantiates a new Trip service.
+     *
+     * @param tripDAO                             the trip dao
+     * @param departureDAO                        the departure dao
+     * @param departureToNewDepartureDTOConverter the departure to new departure dto converter
+     * @param tripToTripDTOConverter              the trip to trip dto converter
+     * @param searchTripsWithTransfers            the search trips with transfers
+     * @param departureDTOConverter               the departure dto converter
+     * @param occupiedSeatDAO                     the occupied seat dao
+     * @param ticketDAO                           the ticket dao
+     */
     @Autowired
     public TripServiceImpl(TripDAO tripDAO, DepartureDAO departureDAO,
                            DepartureToNewDepartureDTOConverter departureToNewDepartureDTOConverter,

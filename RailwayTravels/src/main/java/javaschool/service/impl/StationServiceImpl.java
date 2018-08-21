@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * The type Station service.
+ */
 @Service
 public class StationServiceImpl implements StationService {
     private static final String TITLE_NULL_MESSAGE = "Station title must not be null!";
@@ -21,11 +24,21 @@ public class StationServiceImpl implements StationService {
     private StationDAO stationDAO;
     private StationService selfProxy;
 
+    /**
+     * Instantiates a new Station service.
+     *
+     * @param stationDAO the station dao
+     */
     @Autowired
     public StationServiceImpl(StationDAO stationDAO) {
         this.stationDAO = stationDAO;
     }
 
+    /**
+     * Sets self proxy.
+     *
+     * @param selfProxy the self proxy
+     */
     @Autowired
     public void setSelfProxy(StationService selfProxy) {
         this.selfProxy = selfProxy;

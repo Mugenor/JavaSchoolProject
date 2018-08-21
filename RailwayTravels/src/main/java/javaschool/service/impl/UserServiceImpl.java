@@ -18,6 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static javaschool.service.impl.AlmostUserServiceImpl.EXPIRED_DELAY;
 
+/**
+ * The type User service.
+ */
 @Service
 public class UserServiceImpl implements UserService {
     private UserDAO userDAO;
@@ -25,6 +28,14 @@ public class UserServiceImpl implements UserService {
     private AlmostUserDAO almostUserDAO;
     private AlmostUserToUserConverter almostUserToUserConverter;
 
+    /**
+     * Instantiates a new User service.
+     *
+     * @param userDAO                   the user dao
+     * @param passengerDAO              the passenger dao
+     * @param almostUserDAO             the almost user dao
+     * @param almostUserToUserConverter the almost user to user converter
+     */
     @Autowired
     public UserServiceImpl(UserDAO userDAO, PassengerDAO passengerDAO, AlmostUserDAO almostUserDAO,
                            AlmostUserToUserConverter almostUserToUserConverter) {

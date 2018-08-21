@@ -4,6 +4,9 @@ import java.util.List;
 import javaschool.controller.dtoentity.StationName;
 import javaschool.entity.Station;
 
+/**
+ * The interface Station service.
+ */
 public interface StationService {
     /**
      * Saves new station

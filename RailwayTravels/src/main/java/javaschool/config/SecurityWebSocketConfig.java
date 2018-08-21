@@ -7,6 +7,9 @@ import org.springframework.security.config.annotation.web.socket.AbstractSecurit
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 
+/**
+ * The type Security web socket config.
+ */
 @Configuration
 @EnableWebSocketMessageBroker
 @ComponentScan({"javaschool.controller.stomp"})

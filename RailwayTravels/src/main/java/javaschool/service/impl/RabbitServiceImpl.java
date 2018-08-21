@@ -8,11 +8,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+/**
+ * The type Rabbit service.
+ */
 @Service
 public class RabbitServiceImpl implements RabbitService {
     private Logger log = Logger.getLogger(RabbitServiceImpl.class);
     private RabbitTemplate rabbitTemplate;
 
+    /**
+     * Instantiates a new Rabbit service.
+     *
+     * @param rabbitTemplate the rabbit template
+     */
     @Autowired
     public RabbitServiceImpl(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;

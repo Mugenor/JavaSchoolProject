@@ -21,6 +21,9 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+/**
+ * The type Jpa config.
+ */
 @Configuration
 @EnableTransactionManagement
 @PropertySource("classpath:application.properties")
@@ -38,6 +41,11 @@ public class JPAConfig {
     @Resource
     private Environment env;
 
+    /**
+     * Data source data source.
+     *
+     * @return the data source
+     */
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -49,6 +57,11 @@ public class JPAConfig {
         return dataSource;
     }
 
+    /**
+     * Entity manager factory local container entity manager factory bean.
+     *
+     * @return the local container entity manager factory bean
+     */
     @Bean
     @DependsOn("flyway")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
@@ -63,6 +76,12 @@ public class JPAConfig {
         return entityManagerFactoryBean;
     }
 
+    /**
+     * Transaction manager platform transaction manager.
+     *
+     * @param entityManagerFactory the entity manager factory
+     * @return the platform transaction manager
+     */
     @Bean
     public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
@@ -71,11 +90,21 @@ public class JPAConfig {
         return transactionManager;
     }
 
+    /**
+     * Exception translation persistence exception translation post processor.
+     *
+     * @return the persistence exception translation post processor
+     */
     @Bean
     public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
         return new PersistenceExceptionTranslationPostProcessor();
     }
 
+    /**
+     * Flyway flyway.
+     *
+     * @return the flyway
+     */
     @Bean(initMethod = "migrate")
     public Flyway flyway() {
         Flyway flyway = new Flyway();

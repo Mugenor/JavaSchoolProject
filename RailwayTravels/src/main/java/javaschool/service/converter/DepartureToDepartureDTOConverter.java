@@ -7,6 +7,9 @@ import javaschool.service.exception.ClassConvertingException;
 import org.joda.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 
+/**
+ * The type Departure to departure dto converter.
+ */
 @Service
 public class DepartureToDepartureDTOConverter implements ClassConverter<Departure, DepartureDTO> {
     private static final String CONVERTING_EXC_MESSAGE = "Station is not found for this departure";

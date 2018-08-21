@@ -6,14 +6,16 @@ import javaschool.controller.dtoentity.NewDepartureDTO;
 import javaschool.entity.Departure;
 import org.joda.time.LocalDateTime;
 
+/**
+ * The interface Departure service.
+ */
 public interface DepartureService {
     /**
      * Finds departure by id and returns it converted to DepartureDTO.class
      *
      * @param id            Departure id
      * @param fetchStations If you want to work with departure's stations
-     * @return Departure with transmitted id and converted to DepartureDTO.class
-     * or null if there is no departure with specified id
+     * @return Departure with transmitted id and converted to DepartureDTO.class or null if there is no departure with specified id
      */
     DepartureDTO findById(Integer id, boolean fetchStations);
 
@@ -22,8 +24,7 @@ public interface DepartureService {
      *
      * @param id            Departure id
      * @param fetchStations If you want to work with departure's stations
-     * @return Departure with transmitted id
-     * or null if there is no departure with specified id
+     * @return Departure with transmitted id or null if there is no departure with specified id
      */
     Departure findByIdRaw(Integer id, boolean fetchStations);
 
@@ -34,6 +35,7 @@ public interface DepartureService {
      * @return List of departures converted to DepartureDTO.class
      */
     List<DepartureDTO> findAll(boolean fetchStations);
+
     /**
      * Saves new departure with specified parameters.
      *
@@ -54,5 +56,12 @@ public interface DepartureService {
      */
     Departure save(NewDepartureDTO newDepartureDTO);
 
+    /**
+     * Update departure.
+     *
+     * @param tripId         the trip id
+     * @param departureIndex the departure index
+     * @param departureDTO   the departure dto
+     */
     void updateDeparture(Integer tripId, Integer departureIndex, NewDepartureDTO departureDTO);
 }

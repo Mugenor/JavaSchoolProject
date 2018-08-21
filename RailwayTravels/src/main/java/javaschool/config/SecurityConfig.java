@@ -18,12 +18,21 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import static javaschool.service.SecurityUserDetailService.ROLE_ADMIN;
 import static javaschool.service.SecurityUserDetailService.ROLE_PASSENGER;
 
+/**
+ * The type Security config.
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private DataSource dataSource;
     private UserDAO userDAO;
 
+    /**
+     * Instantiates a new Security config.
+     *
+     * @param dataSource the data source
+     * @param userDAO    the user dao
+     */
     @Autowired
     public SecurityConfig(DataSource dataSource, UserDAO userDAO) {
         this.dataSource = dataSource;
@@ -57,11 +66,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable();
     }
 
+    /**
+     * Authentication success handler user admin url authentication success handler.
+     *
+     * @return the user admin url authentication success handler
+     */
     @Bean
     public UserAdminUrlAuthenticationSuccessHandler authenticationSuccessHandler() {
         return new UserAdminUrlAuthenticationSuccessHandler();
     }
 
+    /**
+     * Password encoder b crypt password encoder.
+     *
+     * @return the b crypt password encoder
+     */
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

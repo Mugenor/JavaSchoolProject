@@ -10,10 +10,18 @@ import javaschool.service.exception.StationEqualsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * The type Departure to new departure dto converter.
+ */
 @Service
 public class DepartureToNewDepartureDTOConverter implements ClassConverter<Departure, NewDepartureDTO> {
     private StationDAO stationDAO;
 
+    /**
+     * Instantiates a new Departure to new departure dto converter.
+     *
+     * @param stationDAO the station dao
+     */
     @Autowired
     public DepartureToNewDepartureDTOConverter(StationDAO stationDAO) {
         this.stationDAO = stationDAO;

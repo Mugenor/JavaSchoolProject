@@ -7,6 +7,9 @@ import javaschool.controller.dtoentity.TicketDTO;
 import javaschool.entity.Passenger;
 import javaschool.entity.Ticket;
 
+/**
+ * The interface Passenger service.
+ */
 public interface PassengerService {
     /**
      * Finds all passengers and convert them to PassengerWithoutTickets.class
@@ -33,10 +36,12 @@ public interface PassengerService {
     /**
      * Make user buy ticket for specified departure and seat. User this method instead of buyTicketTransactional method.
      *
-     * @param username    User's username
-     * @param tripId      Trip's id
-     * @param coachNumber Number of coach with specified seat
-     * @param seatNumber  Number of seat in specified coach
+     * @param username            User's username
+     * @param tripId              Trip's id
+     * @param leftDepartureIndex  the left departure index
+     * @param rightDepartureIndex the right departure index
+     * @param coachNumber         Number of coach with specified seat
+     * @param seatNumber          Number of seat in specified coach
      * @return Saved ticket
      */
     Ticket buyTicket(String username, Integer tripId, Integer leftDepartureIndex,
@@ -50,6 +55,12 @@ public interface PassengerService {
      */
     List<PassengerWithoutTickets> findAllPassengersByDepartureId(Integer departureId);
 
+    /**
+     * Find all passengers by trip id list.
+     *
+     * @param tripId the trip id
+     * @return the list
+     */
     List<PassengerWithoutTickets> findAllPassengersByTripId(Integer tripId);
 
     /**
@@ -85,7 +96,7 @@ public interface PassengerService {
      *
      * @param tripId   trip's id
      * @param username passenger's username
-     * @return  true if passenger is registered on trip. Otherwise - false
+     * @return true if passenger is registered on trip. Otherwise - false
      */
     Boolean isRegistered(Integer tripId, String username);
 }

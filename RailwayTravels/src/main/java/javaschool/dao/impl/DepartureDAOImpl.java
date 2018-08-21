@@ -13,6 +13,9 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 
+/**
+ * The type Departure dao.
+ */
 @Repository
 public class DepartureDAOImpl extends GenericAbstractDAO<Departure, Integer> implements DepartureDAO {
 

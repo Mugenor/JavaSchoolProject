@@ -17,11 +17,19 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+/**
+ * The type Mail sender.
+ */
 @Service
 public class MailSenderImpl implements MailSender {
     private static final Logger log = Logger.getLogger(MailSenderImpl.class);
     private JavaMailSender mailSender;
 
+    /**
+     * Instantiates a new Mail sender.
+     *
+     * @param mailSender the mail sender
+     */
     @Autowired
     public MailSenderImpl(JavaMailSender mailSender) {
         this.mailSender = mailSender;

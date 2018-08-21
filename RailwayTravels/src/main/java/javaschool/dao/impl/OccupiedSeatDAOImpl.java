@@ -17,6 +17,9 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 
+/**
+ * The type Occupied seat dao.
+ */
 @Repository
 public class OccupiedSeatDAOImpl extends GenericAbstractDAO<OccupiedSeat, SeatId> implements OccupiedSeatDAO {
 

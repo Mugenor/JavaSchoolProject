@@ -13,14 +13,27 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * The type Almost user service.
+ */
 @Service
 public class AlmostUserServiceImpl implements AlmostUserService {
+    /**
+     * The constant EXPIRED_DELAY.
+     */
     public static final Duration EXPIRED_DELAY = Duration.standardMinutes(10);
 
     private AlmostUserDAO almostUserDAO;
     private UserDAO userDAO;
     private PassengerDAO passengerDAO;
 
+    /**
+     * Instantiates a new Almost user service.
+     *
+     * @param almostUserDAO the almost user dao
+     * @param userDAO       the user dao
+     * @param passengerDAO  the passenger dao
+     */
     @Autowired
     public AlmostUserServiceImpl(AlmostUserDAO almostUserDAO, UserDAO userDAO,
                                  PassengerDAO passengerDAO) {

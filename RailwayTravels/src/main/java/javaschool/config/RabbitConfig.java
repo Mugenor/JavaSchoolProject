@@ -8,14 +8,27 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * The type Rabbit config.
+ */
 @Configuration
 @EnableRabbit
 public class RabbitConfig {
+    /**
+     * Hello queue.
+     *
+     * @return the queue
+     */
     @Bean
     public Queue hello() {
         return new Queue("hello");
     }
 
+    /**
+     * Connection factory connection factory.
+     *
+     * @return the connection factory
+     */
     @Bean
     public ConnectionFactory connectionFactory() {
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
@@ -25,6 +38,11 @@ public class RabbitConfig {
         return connectionFactory;
     }
 
+    /**
+     * Rabbit template rabbit template.
+     *
+     * @return the rabbit template
+     */
     @Bean
     public RabbitTemplate rabbitTemplate() {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory());

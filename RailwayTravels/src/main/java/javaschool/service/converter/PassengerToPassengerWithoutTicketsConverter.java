@@ -5,6 +5,9 @@ import javaschool.entity.Passenger;
 import org.joda.time.LocalDate;
 import org.springframework.stereotype.Service;
 
+/**
+ * The type Passenger to passenger without tickets converter.
+ */
 @Service
 public class PassengerToPassengerWithoutTicketsConverter implements ClassConverter<Passenger, PassengerWithoutTickets> {
     @Override

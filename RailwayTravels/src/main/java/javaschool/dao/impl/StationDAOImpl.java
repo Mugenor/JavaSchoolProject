@@ -9,6 +9,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 
+/**
+ * The type Station dao.
+ */
 @Repository
 public class StationDAOImpl extends GenericAbstractDAO<Station, Integer> implements StationDAO {
     @Override

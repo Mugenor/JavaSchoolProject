@@ -4,6 +4,9 @@ import java.util.UUID;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
+/**
+ * The type Uuid attribute converter.
+ */
 @Converter(autoApply = true)
 public class UUIDAttributeConverter implements AttributeConverter<UUID, String> {
     @Override

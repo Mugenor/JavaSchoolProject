@@ -14,11 +14,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * The type Search trips with transfers.
+ */
 @Service
 public class SearchTripsWithTransfersImpl implements SearchTripsWithTransfers {
     private TripDAO tripDAO;
     private TripToTripDTOConverter tripToTripDTOConverter;
 
+    /**
+     * Instantiates a new Search trips with transfers.
+     *
+     * @param tripDAO                the trip dao
+     * @param tripToTripDTOConverter the trip to trip dto converter
+     */
     @Autowired
     public SearchTripsWithTransfersImpl(TripDAO tripDAO,
                                         TripToTripDTOConverter tripToTripDTOConverter) {

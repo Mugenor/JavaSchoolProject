@@ -14,6 +14,9 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.springframework.stereotype.Repository;
 
+/**
+ * The type Almost user dao.
+ */
 @Repository
 public class AlmostUserDAOImpl extends GenericAbstractDAO<AlmostUser, String> implements AlmostUserDAO {
 

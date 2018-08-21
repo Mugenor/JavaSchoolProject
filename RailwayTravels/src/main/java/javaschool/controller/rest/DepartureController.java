@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * The type Departure controller.
+ */
 @RestController
 @RequestMapping(path = "/departure", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class DepartureController {
@@ -20,6 +23,13 @@ public class DepartureController {
     private TripService tripService;
     private RabbitService rabbitService;
 
+    /**
+     * Instantiates a new Departure controller.
+     *
+     * @param departureService the departure service
+     * @param tripService      the trip service
+     * @param rabbitService    the rabbit service
+     */
     @Autowired
     public DepartureController(DepartureService departureService,
                                TripService tripService,
@@ -29,6 +39,11 @@ public class DepartureController {
         this.rabbitService = rabbitService;
     }
 
+    /**
+     * Change departure station.
+     *
+     * @param updateDepartureInfo the update departure info
+     */
     @PostMapping("/update")
     public void changeDepartureStation(@Valid @RequestBody UpdateDepartureInfo updateDepartureInfo) {
         departureService.updateDeparture(updateDepartureInfo.getTripId(),

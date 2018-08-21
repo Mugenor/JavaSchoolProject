@@ -5,6 +5,9 @@ import javaschool.entity.Passenger;
 import javaschool.entity.User;
 import org.springframework.stereotype.Service;
 
+/**
+ * The type Almost user to user converter.
+ */
 @Service
 public class AlmostUserToUserConverter implements ClassConverter<AlmostUser, User> {
     @Override

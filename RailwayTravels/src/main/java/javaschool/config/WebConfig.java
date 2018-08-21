@@ -17,11 +17,19 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+/**
+ * The type Web config.
+ */
 @Configuration
 @EnableWebMvc
 @ComponentScan("javaschool.controller")
 public class WebConfig implements WebMvcConfigurer {
 
+    /**
+     * View resolver internal resource view resolver.
+     *
+     * @return the internal resource view resolver
+     */
     @Bean
     public InternalResourceViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
@@ -55,6 +63,11 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addConverter(new LongToLocalDateTimeConverter());
     }
 
+    /**
+     * Mapping jackson 2 http message converter mapping jackson 2 http message converter.
+     *
+     * @return the mapping jackson 2 http message converter
+     */
     @Bean
     public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();

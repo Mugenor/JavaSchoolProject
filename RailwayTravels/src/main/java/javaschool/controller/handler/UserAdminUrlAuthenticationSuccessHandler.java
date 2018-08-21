@@ -18,6 +18,9 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import static javaschool.service.SecurityUserDetailService.ROLE_ADMIN;
 import static javaschool.service.SecurityUserDetailService.ROLE_PASSENGER;
 
+/**
+ * The type User admin url authentication success handler.
+ */
 public class UserAdminUrlAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     private static final Logger log = Logger.getLogger(UserAdminUrlAuthenticationSuccessHandler.class);
     private static final String CLIENT_URL = "/client";

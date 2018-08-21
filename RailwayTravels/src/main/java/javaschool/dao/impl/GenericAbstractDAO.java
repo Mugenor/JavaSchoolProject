@@ -10,17 +10,40 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 
+/**
+ * The type Generic abstract dao.
+ *
+ * @param <T>  the type parameter
+ * @param <ID> the type parameter
+ */
 public abstract class GenericAbstractDAO<T, ID> implements GenericDAO<T, ID> {
+    /**
+     * The Entity manager.
+     */
     protected EntityManager entityManager;
+    /**
+     * The Entity class.
+     */
     protected Class<T> entityClass;
+    /**
+     * The Id class.
+     */
     protected Class<T> idClass;
 
+    /**
+     * Instantiates a new Generic abstract dao.
+     */
     public GenericAbstractDAO() {
         ParameterizedType type = (ParameterizedType) this.getClass().getGenericSuperclass();
         this.entityClass = (Class<T>) type.getActualTypeArguments()[0];
         this.idClass = (Class<T>) type.getActualTypeArguments()[1];
     }
 
+    /**
+     * Sets entity manager.
+     *
+     * @param entityManager the entity manager
+     */
     @PersistenceContext
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;

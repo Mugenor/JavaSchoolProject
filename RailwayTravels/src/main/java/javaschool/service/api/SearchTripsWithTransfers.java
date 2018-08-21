@@ -4,6 +4,9 @@ import java.util.List;
 import javaschool.controller.dtoentity.TripDTO;
 import org.joda.time.LocalDateTime;
 
+/**
+ * The interface Search trips with transfers.
+ */
 public interface SearchTripsWithTransfers {
 
     /**

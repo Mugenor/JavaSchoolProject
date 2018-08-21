@@ -27,6 +27,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * The type User controller.
+ */
 @Controller
 public class UserController {
     private static final Logger log = Logger.getLogger(UserController.class);
@@ -48,6 +51,15 @@ public class UserController {
     @Value("${mail.registerMessage.subject}")
     private String subject;
 
+    /**
+     * Instantiates a new User controller.
+     *
+     * @param userService                  the user service
+     * @param reCaptchaApiClient           the re captcha api client
+     * @param almostUserService            the almost user service
+     * @param newUserToAlmostUserConverter the new user to almost user converter
+     * @param mailSender                   the mail sender
+     */
     @Autowired
     public UserController(UserService userService,
                           ReCaptchaApiClient reCaptchaApiClient, AlmostUserService almostUserService,
@@ -60,6 +72,13 @@ public class UserController {
         this.mailSender = mailSender;
     }
 
+    /**
+     * Login page model and view.
+     *
+     * @param error  the error
+     * @param logout the logout
+     * @return the model and view
+     */
     @GetMapping("/login")
     public ModelAndView loginPage(@RequestParam(value = LOGIN_ERROR_PARAM, required = false) String error,
                                   @RequestParam(value = LOGIN_LOGOUT_PARAM, required = false) String logout) {
@@ -73,6 +92,12 @@ public class UserController {
         return view;
     }
 
+    /**
+     * Register page string.
+     *
+     * @param model the model
+     * @return the string
+     */
     @GetMapping("/register")
     public String registerPage(Model model) {
         model.addAttribute("newUser", new NewUser());
@@ -80,6 +105,16 @@ public class UserController {
         return REGISTER_VIEW;
     }
 
+    /**
+     * Register user model and view.
+     *
+     * @param newUser           the new user
+     * @param reCaptchaResponse the re captcha response
+     * @param errors            the errors
+     * @return the model and view
+     * @throws IOException        the io exception
+     * @throws MessagingException the messaging exception
+     */
     @PostMapping("/register")
     public ModelAndView registerUser(@Valid NewUser newUser, @RequestParam(value = RE_CAPTCHA_PARAM) String reCaptchaResponse,
                                Errors errors) throws IOException, MessagingException {
@@ -100,6 +135,12 @@ public class UserController {
         return modelAndView;
     }
 
+    /**
+     * Finish registration model and view.
+     *
+     * @param hash the hash
+     * @return the model and view
+     */
     @GetMapping("/register/end/{hash}")
     public ModelAndView finishRegistration(@PathVariable String hash) {
         ModelAndView modelAndView = new ModelAndView(MESSAGE_VIEW);
@@ -115,6 +156,13 @@ public class UserController {
     }
 
 
+    /**
+     * Register error handler string.
+     *
+     * @param model the model
+     * @param exc   the exc
+     * @return the string
+     */
     @ExceptionHandler({ValidationException.class, EntityAlreadyExistsException.class,})
     public String registerErrorHandler(RedirectAttributes model, Exception exc) {
         model.addFlashAttribute("error", exc.getMessage());

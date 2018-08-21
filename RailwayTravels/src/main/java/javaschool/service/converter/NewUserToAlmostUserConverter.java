@@ -5,6 +5,9 @@ import javaschool.entity.AlmostUser;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * The type New user to almost user converter.
+ */
 @Service
 public class NewUserToAlmostUserConverter implements ClassConverter<NewUser, AlmostUser> {
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();

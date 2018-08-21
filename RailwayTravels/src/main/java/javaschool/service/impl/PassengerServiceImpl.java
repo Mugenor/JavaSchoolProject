@@ -31,6 +31,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * The type Passenger service.
+ */
 @Service
 public class PassengerServiceImpl implements PassengerService {
     private static final Logger log = Logger.getLogger(PassengerServiceImpl.class);
@@ -42,6 +45,16 @@ public class PassengerServiceImpl implements PassengerService {
     private TicketDAO ticketDAO;
     private PassengerToPassengerWithoutTicketsConverter passengerConverter;
 
+    /**
+     * Instantiates a new Passenger service.
+     *
+     * @param passengerDAO       the passenger dao
+     * @param departureDAO       the departure dao
+     * @param tripDAO            the trip dao
+     * @param passengerConverter the passenger converter
+     * @param occupiedSeatDAO    the occupied seat dao
+     * @param ticketDAO          the ticket dao
+     */
     @Autowired
     public PassengerServiceImpl(PassengerDAO passengerDAO,
                                 DepartureDAO departureDAO, TripDAO tripDAO,

@@ -11,6 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 
+/**
+ * The type Trip.
+ */
 @Entity
 public class Trip {
     @Id
@@ -20,19 +23,41 @@ public class Trip {
     @OrderBy("numberInTrip")
     private List<Departure> departures;
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public Integer getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     * @return the id
+     */
     public Trip setId(Integer id) {
         this.id = id;
         return this;
     }
 
+    /**
+     * Gets departures.
+     *
+     * @return the departures
+     */
     public List<Departure> getDepartures() {
         return departures;
     }
 
+    /**
+     * Sets departures.
+     *
+     * @param departures the departures
+     * @return the departures
+     */
     public Trip setDepartures(List<Departure> departures) {
         this.departures = departures;
         return this;

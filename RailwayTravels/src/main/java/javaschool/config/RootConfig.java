@@ -12,6 +12,9 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+/**
+ * The type Root config.
+ */
 @Configuration
 @Import({JPAConfig.class, SecurityConfig.class, RabbitConfig.class, SecurityWebSocketConfig.class})
 @ComponentScan({"javaschool.service"})
@@ -38,6 +41,11 @@ public class RootConfig {
     @Value("${mail.debug}")
     private String debug;
 
+    /**
+     * Gets java mail sender.
+     *
+     * @return the java mail sender
+     */
     @Bean
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
